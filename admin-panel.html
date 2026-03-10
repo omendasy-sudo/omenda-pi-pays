@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Omenda Pi Pays</title>
+    <style>
+        :root {
+            --bg: #0a0a0e;
+            --card: #14141a;
+            --border: rgba(255,255,255,0.08);
+            --text: #f4f4f5;
+            --muted: #a1a1aa;
+            --purple: #7c3aed;
+            --green: #22c55e;
+            --red: #ef4444;
+            --amber: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: Inter, Segoe UI, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        h1 { font-size: 1.5rem; }
+        .btn {
+            border: 1px solid var(--border);
+            background: #1b1b23;
+            color: var(--text);
+            border-radius: 10px;
+            padding: 9px 12px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn.primary { background: var(--purple); border-color: transparent; }
+        .btn.success { background: rgba(34,197,94,0.16); border-color: rgba(34,197,94,0.32); color: #86efac; }
+        .btn.danger { background: rgba(239,68,68,0.16); border-color: rgba(239,68,68,0.32); color: #fca5a5; }
+        .btn.warn { background: rgba(245,158,11,0.16); border-color: rgba(245,158,11,0.32); color: #fcd34d; }
+        .btn.small { padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .label { color: var(--muted); font-size: 0.8rem; margin-bottom: 5px; }
+        .value { font-size: 1.3rem; font-weight: 800; }
+        .value.warn { color: #fcd34d; }
+        .value.alert { color: #fca5a5; }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .tab-btn {
+            border: 1px solid var(--border);
+            background: #17171f;
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.82rem;
+        }
+        .tab-btn.active {
+            color: #fff;
+            background: rgba(124,58,237,0.2);
+            border-color: rgba(124,58,237,0.45);
+        }
+        .panel {
+            display: none;
+            margin-bottom: 16px;
+        }
+        .panel.active { display: block; }
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .panel h2 { font-size: 1.04rem; }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .table th { color: var(--muted); font-weight: 700; }
+        .table tr:last-child td { border-bottom: 0; }
+        .status {
+            font-size: 0.74rem;
+            border-radius: 999px;
+            padding: 4px 9px;
+            border: 1px solid var(--border);
+            display: inline-block;
+            font-weight: 700;
+        }
+        .status.pending { color: #fcd34d; border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.1); }
+        .status.approved { color: #86efac; border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.1); }
+        .status.rejected { color: #fca5a5; border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.1); }
+        .status.blocked { color: #fca5a5; border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.14); }
+        .status.active { color: #93c5fd; border-color: rgba(59,130,246,0.35); background: rgba(59,130,246,0.14); }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .search {
+            border: 1px solid var(--border);
+            background: #101017;
+            color: var(--text);
+            border-radius: 10px;
+            padding: 8px 10px;
+            min-width: 220px;
+        }
+        .log {
+            background: #111119;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.82rem;
+            color: var(--muted);
+            min-height: 42px;
+        }
+        .kyc-detail {
+            margin-top: 10px;
+            background: #101017;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .kyc-detail h3 { font-size: 0.92rem; margin-bottom: 8px; }
+        .kyc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .kyc-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            background: #141420;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+        .kyc-item strong { color: var(--text); }
+        .doc-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+        .doc-chip {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 0.78rem;
+            color: var(--text);
+            text-decoration: none;
+            background: #171724;
+        }
+        .doc-chip:hover { border-color: rgba(124,58,237,0.4); }
+        @media (max-width: 800px) {
+            .table { display: block; overflow-x: auto; }
+            .top { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top">
+            <h1>Omenda Admin Panel</h1>
+            <div style="display:flex;gap:8px">
+                <a class="btn" href="index.html" style="text-decoration:none">Marketplace</a>
+                <button class="btn primary" id="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card"><div class="label">Total Orders</div><div class="value" id="total-orders-count">0</div></div>
+            <div class="card"><div class="label">Completed Payments</div><div class="value" id="completed-count">0</div></div>
+            <div class="card"><div class="label">Pending KYC Reviews</div><div class="value warn" id="pending-kyc-count">3</div></div>
+            <div class="card"><div class="label">Blocked Scam Accounts</div><div class="value alert" id="blocked-count">1</div></div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="contact">Contact Users</button>
+            <button class="tab-btn" data-tab="kyc">Business KYC Approval</button>
+            <button class="tab-btn" data-tab="records">Records</button>
+            <button class="tab-btn" data-tab="scam">Scam Control</button>
+        </div>
+
+        <section class="panel active" id="panel-contact">
+            <div class="panel-head">
+                <h2>Contact All Users</h2>
+                <div class="toolbar">
+                    <input id="contact-search" class="search" placeholder="Search username or email">
+                    <button class="btn small" id="btn-contact-all">Contact All</button>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Last Active</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="contact-tbody"></tbody>
+            </table>
+        </section>
+
+        <section class="panel" id="panel-kyc">
+            <div class="panel-head">
+                <h2>Approve Business KYC</h2>
+                <div class="toolbar">
+                    <button class="btn small success" id="btn-approve-all">Approve All Pending</button>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Business</th>
+                        <th>Owner</th>
+                        <th>License ID</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="kyc-tbody"></tbody>
+            </table>
+            <div class="kyc-detail" id="kyc-detail-box">
+                <h3>KYC Documents and ID Details</h3>
+                <div id="kyc-detail-content" class="label">Select "View Docs" on any business to review uploaded documents and ID before approval.</div>
+            </div>
+        </section>
+
+        <section class="panel" id="panel-records">
+            <div class="panel-head">
+                <h2>Records</h2>
+                <div class="toolbar">
+                    <input id="records-search" class="search" placeholder="Search order, user, type">
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Amount (Pi)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="records-tbody"></tbody>
+            </table>
+        </section>
+
+        <section class="panel" id="panel-scam">
+            <div class="panel-head">
+                <h2>Block Scam Accounts</h2>
+                <div class="toolbar">
+                    <button class="btn small warn" id="btn-unblock-all">Unblock All</button>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Reason</th>
+                        <th>Risk</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="scam-tbody"></tbody>
+            </table>
+        </section>
+
+        <div class="log" id="admin-log">Admin actions will appear here.</div>
+    </div>
+
+    <script>
+        (function () {
+            "use strict";
+            var KEY = "omenda_admin_auth";
+            var TOKEN_KEY = "omenda_admin_token";
+            var API_BASE_KEY = "omenda_admin_api_base";
+            var DEFAULT_API_BASE = "https://109.199.109.143";
+            var ADMIN_API_BASE = sessionStorage.getItem(API_BASE_KEY) || DEFAULT_API_BASE;
+            if (sessionStorage.getItem(KEY) !== "1") {
+                window.location.href = "admin-login.html";
+                return;
+            }
+
+            var users = [
+                { username: "@FatmaH", email: "fatma@example.com", lastActive: "5m ago" },
+                { username: "@JohnM", email: "john@example.com", lastActive: "11m ago" },
+                { username: "@AminaK", email: "amina@example.com", lastActive: "22m ago" },
+                { username: "@PeterN", email: "peter@example.com", lastActive: "41m ago" }
+            ];
+
+            var kycRows = [
+                { id: "kyc-1", business: "Amina Stays", owner: "@AminaK", license: "LIC-7721", idType: "National ID", idNumber: "TZ-IDA-2291772", country: "Tanzania", submittedAt: "2026-03-08T08:30:00Z", reviewed: false, documents: [{ name: "ID Front", url: "#" }, { name: "Business License", url: "#" }], audits: [], status: "pending" },
+                { id: "kyc-2", business: "John Utilities", owner: "@JohnM", license: "LIC-9921", idType: "Passport", idNumber: "P-AR772193", country: "Kenya", submittedAt: "2026-03-08T09:00:00Z", reviewed: false, documents: [{ name: "Passport", url: "#" }, { name: "Proof Address", url: "#" }], audits: [], status: "pending" },
+                { id: "kyc-3", business: "Peter Fashion", owner: "@PeterN", license: "LIC-2244", idType: "National ID", idNumber: "KE-ID-7842218", country: "Kenya", submittedAt: "2026-03-07T14:00:00Z", reviewed: true, reviewedAt: "2026-03-07T14:15:00Z", reviewedBy: "admin", documents: [{ name: "ID Front", url: "#" }, { name: "Business License", url: "#" }], audits: [{ at: "2026-03-07T14:15:00Z", by: "admin", action: "viewed" }, { at: "2026-03-07T14:16:00Z", by: "admin", action: "approved" }], status: "approved" },
+                { id: "kyc-4", business: "Fatma Foods", owner: "@FatmaH", license: "LIC-3902", idType: "Driving License", idNumber: "TZ-DL-004882", country: "Tanzania", submittedAt: "2026-03-08T11:00:00Z", reviewed: false, documents: [{ name: "Driving License", url: "#" }, { name: "Selfie", url: "#" }], audits: [], status: "pending" }
+            ];
+            var selectedKycId = null;
+
+            var records = [
+                { order: "ORD-2026-101", user: "@FatmaH", type: "Transport", amount: "27.5", status: "Completed" },
+                { order: "ORD-2026-102", user: "@JohnM", type: "Bills", amount: "19", status: "Completed" },
+                { order: "ORD-2026-103", user: "@AminaK", type: "Hotels", amount: "140", status: "Pending" },
+                { order: "ORD-2026-104", user: "@PeterN", type: "Marketplace", amount: "65", status: "Completed" },
+                { order: "ORD-2026-105", user: "@MaryO", type: "Transport", amount: "31", status: "Cancelled" }
+            ];
+
+            var scamRows = [
+                { id: "mod-1", user: "@ScamWallet1", reason: "Fake payment proof", risk: "High", status: "blocked" },
+                { id: "mod-2", user: "@OfferHunter", reason: "Suspicious listings", risk: "Medium", status: "active" },
+                { id: "mod-3", user: "@PiCloneStore", reason: "Identity spoofing", risk: "High", status: "active" }
+            ];
+
+            function apiUrl(path) {
+                return ADMIN_API_BASE ? ADMIN_API_BASE.replace(/\/$/, "") + path : path;
+            }
+
+            async function apiGet(path) {
+                var res = await fetch(apiUrl(path));
+                if (!res.ok) throw new Error("API GET failed: " + path);
+                return res.json();
+            }
+
+            async function apiPatch(path, payload) {
+                var res = await fetch(apiUrl(path), {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Admin-Token": sessionStorage.getItem(TOKEN_KEY) || "",
+                    },
+                    body: JSON.stringify(payload || {}),
+                });
+                if (!res.ok) throw new Error("API PATCH failed: " + path);
+                return res.json();
+            }
+
+            function log(msg) {
+                document.getElementById("admin-log").textContent = new Date().toLocaleTimeString() + " - " + msg;
+            }
+
+            function renderContacts(filterText) {
+                var query = (filterText || "").toLowerCase();
+                var tbody = document.getElementById("contact-tbody");
+                var rows = users.filter(function (u) {
+                    return !query || u.username.toLowerCase().indexOf(query) > -1 || u.email.toLowerCase().indexOf(query) > -1;
+                }).map(function (u) {
+                    return '<tr>' +
+                        '<td>' + u.username + '</td>' +
+                        '<td>' + u.email + '</td>' +
+                        '<td>' + u.lastActive + '</td>' +
+                        '<td><button class="btn small" data-mail="' + u.email + '">Contact</button></td>' +
+                    '</tr>';
+                }).join("");
+                tbody.innerHTML = rows || '<tr><td colspan="4">No users found.</td></tr>';
+            }
+
+            function renderKyc() {
+                var tbody = document.getElementById("kyc-tbody");
+                tbody.innerHTML = kycRows.map(function (r) {
+                    var lockApprove = (r.status === "pending" && !r.reviewed) ? " disabled" : "";
+                    return '<tr>' +
+                        '<td>' + r.business + '</td>' +
+                        '<td>' + r.owner + '</td>' +
+                        '<td>' + r.license + '</td>' +
+                        '<td><span class="status ' + r.status + '">' + r.status.toUpperCase() + '</span></td>' +
+                        '<td>' +
+                            '<button class="btn small" data-view="' + r.id + '">View Docs</button> ' +
+                            '<button class="btn small success" data-approve="' + r.id + '"' + lockApprove + '>Approve</button> ' +
+                            '<button class="btn small danger" data-reject="' + r.id + '"' + lockApprove + '>Reject</button>' +
+                        '</td>' +
+                    '</tr>';
+                }).join("");
+                var pending = kycRows.filter(function (r) { return r.status === "pending"; }).length;
+                document.getElementById("pending-kyc-count").textContent = String(pending);
+                renderKycDetails();
+            }
+
+            function esc(v) {
+                return String(v || "").replace(/[&<>'"]/g, function (c) {
+                    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c];
+                });
+            }
+
+            function renderKycDetails() {
+                var box = document.getElementById("kyc-detail-content");
+                if (!selectedKycId) {
+                    box.className = "label";
+                    box.textContent = 'Select "View Docs" on any business to review uploaded documents and ID before approval.';
+                    return;
+                }
+                var row = kycRows.find(function (r) { return r.id === selectedKycId; });
+                if (!row) {
+                    box.className = "label";
+                    box.textContent = "KYC record not found.";
+                    return;
+                }
+
+                var docs = (row.documents || []).map(function (d) {
+                    var href = d.url || "#";
+                    return '<a class="doc-chip" href="' + esc(href) + '" target="_blank" rel="noopener">' + esc(d.name || "Document") + '</a>';
+                }).join("");
+
+                var audits = (row.audits || []).map(function (a) {
+                    return '<tr><td>' + esc(new Date(a.at).toLocaleString()) + '</td><td>' + esc(a.by) + '</td><td>' + esc(a.action) + '</td><td>' + esc(a.note || "-") + '</td></tr>';
+                }).join("");
+
+                box.className = "";
+                box.innerHTML =
+                    '<div class="kyc-grid">' +
+                        '<div class="kyc-item">Business: <strong>' + esc(row.business) + '</strong></div>' +
+                        '<div class="kyc-item">Owner: <strong>' + esc(row.owner) + '</strong></div>' +
+                        '<div class="kyc-item">ID Type: <strong>' + esc(row.idType || "-") + '</strong></div>' +
+                        '<div class="kyc-item">ID Number: <strong>' + esc(row.idNumber || "-") + '</strong></div>' +
+                        '<div class="kyc-item">Country: <strong>' + esc(row.country || "-") + '</strong></div>' +
+                        '<div class="kyc-item">Submitted: <strong>' + esc(row.submittedAt ? new Date(row.submittedAt).toLocaleString() : "-") + '</strong></div>' +
+                        '<div class="kyc-item">Reviewed: <strong>' + (row.reviewed ? 'Yes' : 'No') + '</strong></div>' +
+                        '<div class="kyc-item">Reviewed By: <strong>' + esc(row.reviewedBy || "-") + '</strong></div>' +
+                    '</div>' +
+                    '<div class="label" style="margin-bottom:6px">Uploaded Documents</div>' +
+                    '<div class="doc-list">' + (docs || '<span class="label">No documents uploaded</span>') + '</div>' +
+                    '<div class="label" style="margin:8px 0 6px">KYC Audit Record</div>' +
+                    '<table class="table"><thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Note</th></tr></thead><tbody>' +
+                        (audits || '<tr><td colspan="4">No audit entries yet.</td></tr>') +
+                    '</tbody></table>';
+            }
+
+            function renderRecords(filterText) {
+                var query = (filterText || "").toLowerCase();
+                var tbody = document.getElementById("records-tbody");
+                var rows = records.filter(function (r) {
+                    var hay = (r.order + " " + r.user + " " + r.type + " " + r.status).toLowerCase();
+                    return !query || hay.indexOf(query) > -1;
+                }).map(function (r) {
+                    return '<tr>' +
+                        '<td>' + r.order + '</td>' +
+                        '<td>' + r.user + '</td>' +
+                        '<td>' + r.type + '</td>' +
+                        '<td>' + r.amount + '</td>' +
+                        '<td>' + r.status + '</td>' +
+                    '</tr>';
+                }).join("");
+                tbody.innerHTML = rows || '<tr><td colspan="5">No records found.</td></tr>';
+            }
+
+            function renderScam() {
+                var tbody = document.getElementById("scam-tbody");
+                tbody.innerHTML = scamRows.map(function (s) {
+                    var button = s.status === "blocked"
+                        ? '<button class="btn small" data-unblock="' + s.id + '">Unblock</button>'
+                        : '<button class="btn small danger" data-block="' + s.id + '">Block</button>';
+                    return '<tr>' +
+                        '<td>' + s.user + '</td>' +
+                        '<td>' + s.reason + '</td>' +
+                        '<td>' + s.risk + '</td>' +
+                        '<td><span class="status ' + s.status + '">' + s.status.toUpperCase() + '</span></td>' +
+                        '<td>' + button + '</td>' +
+                    '</tr>';
+                }).join("");
+                var blocked = scamRows.filter(function (s) { return s.status === "blocked"; }).length;
+                document.getElementById("blocked-count").textContent = String(blocked);
+            }
+
+            document.querySelectorAll(".tab-btn").forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    var tab = btn.getAttribute("data-tab");
+                    document.querySelectorAll(".tab-btn").forEach(function (b) { b.classList.remove("active"); });
+                    document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("active"); });
+                    btn.classList.add("active");
+                    document.getElementById("panel-" + tab).classList.add("active");
+                });
+            });
+
+            document.getElementById("contact-search").addEventListener("input", function (e) {
+                renderContacts(e.target.value);
+            });
+
+            document.getElementById("records-search").addEventListener("input", function (e) {
+                renderRecords(e.target.value);
+            });
+
+            document.getElementById("contact-tbody").addEventListener("click", function (e) {
+                var email = e.target.getAttribute("data-mail");
+                if (!email) return;
+                var subject = encodeURIComponent("Omenda Admin Contact");
+                var body = encodeURIComponent("Hello from Omenda Admin team.");
+                window.location.href = "mailto:" + email + "?subject=" + subject + "&body=" + body;
+                log("Opened contact for " + email);
+            });
+
+            document.getElementById("btn-contact-all").addEventListener("click", function () {
+                var list = users.map(function (u) { return u.email; }).join(",");
+                window.location.href = "mailto:" + list + "?subject=" + encodeURIComponent("Omenda Admin Broadcast");
+                log("Prepared contact message for all users.");
+            });
+
+            document.getElementById("kyc-tbody").addEventListener("click", function (e) {
+                var view = e.target.getAttribute("data-view");
+                var approve = e.target.getAttribute("data-approve");
+                var reject = e.target.getAttribute("data-reject");
+                if (view !== null) {
+                    var idxV = kycRows.findIndex(function (r) { return r.id === view; });
+                    if (idxV === -1) return;
+                    selectedKycId = view;
+                    kycRows[idxV].reviewed = true;
+                    kycRows[idxV].reviewedAt = new Date().toISOString();
+                    kycRows[idxV].reviewedBy = "admin";
+                    kycRows[idxV].audits = kycRows[idxV].audits || [];
+                    kycRows[idxV].audits.push({ at: new Date().toISOString(), by: "admin", action: "viewed", note: "Viewed documents before decision" });
+                    renderKyc();
+                    log("Viewed KYC docs for " + kycRows[idxV].business);
+                    apiPatch("/api/admin/kyc", { id: view, action: "view", admin: "admin" }).catch(function () {
+                        log("API not reachable: kept local docs review.");
+                    });
+                }
+                if (approve !== null) {
+                    var idxA = kycRows.findIndex(function (r) { return r.id === approve; });
+                    if (idxA === -1) return;
+                    if (!kycRows[idxA].reviewed) {
+                        log("Review docs first before approving " + kycRows[idxA].business);
+                        return;
+                    }
+                    kycRows[idxA].status = "approved";
+                    kycRows[idxA].audits = kycRows[idxA].audits || [];
+                    kycRows[idxA].audits.push({ at: new Date().toISOString(), by: "admin", action: "approved", note: "Approved after document review" });
+                    renderKyc();
+                    log("Approved KYC for " + kycRows[idxA].business);
+                    apiPatch("/api/admin/kyc", { id: approve, action: "approve" }).catch(function () {
+                        log("API not reachable: kept local KYC approval.");
+                    });
+                }
+                if (reject !== null) {
+                    var idxR = kycRows.findIndex(function (r) { return r.id === reject; });
+                    if (idxR === -1) return;
+                    if (!kycRows[idxR].reviewed) {
+                        log("Review docs first before rejecting " + kycRows[idxR].business);
+                        return;
+                    }
+                    kycRows[idxR].status = "rejected";
+                    kycRows[idxR].audits = kycRows[idxR].audits || [];
+                    kycRows[idxR].audits.push({ at: new Date().toISOString(), by: "admin", action: "rejected", note: "Rejected after document review" });
+                    renderKyc();
+                    log("Rejected KYC for " + kycRows[idxR].business);
+                    apiPatch("/api/admin/kyc", { id: reject, action: "reject" }).catch(function () {
+                        log("API not reachable: kept local KYC rejection.");
+                    });
+                }
+            });
+
+            document.getElementById("btn-approve-all").addEventListener("click", function () {
+                var skipped = 0;
+                kycRows.forEach(function (r) {
+                    if (r.status === "pending" && r.reviewed) {
+                        r.status = "approved";
+                        r.audits = r.audits || [];
+                        r.audits.push({ at: new Date().toISOString(), by: "admin", action: "approved", note: "Bulk approved" });
+                    } else if (r.status === "pending" && !r.reviewed) {
+                        skipped += 1;
+                    }
+                });
+                renderKyc();
+                log("Approved reviewed KYC records. Skipped unreviewed: " + skipped + ".");
+                apiPatch("/api/admin/kyc", { action: "approve-all" }).catch(function () {
+                    log("API not reachable: kept local approve-all.");
+                });
+            });
+
+            document.getElementById("scam-tbody").addEventListener("click", function (e) {
+                var block = e.target.getAttribute("data-block");
+                var unblock = e.target.getAttribute("data-unblock");
+                if (block !== null) {
+                    var idxB = scamRows.findIndex(function (s) { return s.id === block; });
+                    if (idxB === -1) return;
+                    scamRows[idxB].status = "blocked";
+                    renderScam();
+                    log("Blocked account " + scamRows[idxB].user + " for scam risk.");
+                    apiPatch("/api/admin/moderation", { id: block, action: "block" }).catch(function () {
+                        log("API not reachable: kept local block action.");
+                    });
+                }
+                if (unblock !== null) {
+                    var idxU = scamRows.findIndex(function (s) { return s.id === unblock; });
+                    if (idxU === -1) return;
+                    scamRows[idxU].status = "active";
+                    renderScam();
+                    log("Unblocked account " + scamRows[idxU].user + ".");
+                    apiPatch("/api/admin/moderation", { id: unblock, action: "unblock" }).catch(function () {
+                        log("API not reachable: kept local unblock action.");
+                    });
+                }
+            });
+
+            document.getElementById("btn-unblock-all").addEventListener("click", function () {
+                scamRows.forEach(function (s) { s.status = "active"; });
+                renderScam();
+                log("All scam blocks removed.");
+                apiPatch("/api/admin/moderation", { action: "unblock-all" }).catch(function () {
+                    log("API not reachable: kept local unblock-all.");
+                });
+            });
+
+            document.getElementById("logout-btn").addEventListener("click", function () {
+                sessionStorage.removeItem(KEY);
+                sessionStorage.removeItem(TOKEN_KEY);
+                window.location.href = "admin-login.html";
+            });
+
+            async function loadFromApi() {
+                try {
+                    var dashboard = await apiGet("/api/admin/dashboard");
+                    document.getElementById("total-orders-count").textContent = String(dashboard.totalOrders || 0);
+                    document.getElementById("completed-count").textContent = String(dashboard.completed || 0);
+                } catch (err) {
+                    console.warn("Dashboard API unavailable", err);
+                }
+
+                try {
+                    var usersRes = await apiGet("/api/admin/users");
+                    users = (usersRes.users || []).map(function (u) {
+                        return {
+                            username: "@" + (u.username || "user"),
+                            email: (u.username || "user") + "@omenda.local",
+                            lastActive: u.lastLogin ? "recent" : "unknown",
+                        };
+                    });
+                    renderContacts(document.getElementById("contact-search").value);
+                } catch (err2) {
+                    console.warn("Users API unavailable", err2);
+                }
+
+                try {
+                    var ordersRes = await apiGet("/api/admin/dashboard?view=orders&limit=30");
+                    records = (ordersRes.orders || []).map(function (o) {
+                        return {
+                            order: o.id,
+                            user: "@" + (o.username || "unknown"),
+                            type: o.serviceType,
+                            amount: String(o.total || o.amount || 0),
+                            status: o.status,
+                        };
+                    });
+                    renderRecords(document.getElementById("records-search").value);
+                } catch (err3) {
+                    console.warn("Orders API unavailable", err3);
+                }
+
+                try {
+                    var kycRes = await apiGet("/api/admin/kyc");
+                    if (kycRes.records && kycRes.records.length) {
+                        kycRows = kycRes.records;
+                        renderKyc();
+                    }
+                } catch (err4) {
+                    console.warn("KYC API unavailable", err4);
+                }
+
+                try {
+                    var modRes = await apiGet("/api/admin/moderation");
+                    if (modRes.records && modRes.records.length) {
+                        scamRows = modRes.records;
+                        renderScam();
+                    }
+                } catch (err5) {
+                    console.warn("Moderation API unavailable", err5);
+                }
+            }
+
+            renderContacts("");
+            renderKyc();
+            renderRecords("");
+            renderScam();
+            loadFromApi();
+        })();
+    </script>
+</body>
+</html>

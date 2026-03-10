@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scam Report | Omenda Pi Pays</title>
+    <style>
+        :root {
+            --bg: #09090b;
+            --card: #141419;
+            --border: rgba(255,255,255,0.08);
+            --text: #f4f4f5;
+            --muted: #a1a1aa;
+            --purple: #7c3aed;
+            --danger: #ef4444;
+            --ok: #22c55e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Inter, Segoe UI, Arial, sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(circle at top right, rgba(124,58,237,0.18), transparent 35%), var(--bg);
+            color: var(--text);
+            padding: 22px;
+        }
+
+        .wrap { max-width: 920px; margin: 0 auto; }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .top a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
+        }
+
+        .title {
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+
+        .sub {
+            color: var(--muted);
+            margin-bottom: 16px;
+            font-size: 0.92rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .field { margin-bottom: 10px; }
+
+        label {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            background: #101016;
+            color: var(--text);
+            border-radius: 10px;
+            padding: 10px 11px;
+            font-size: 0.92rem;
+            font-family: inherit;
+        }
+
+        textarea { min-height: 110px; resize: vertical; }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--purple);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            border: 1px solid var(--border);
+            background: #1a1a24;
+            color: var(--text);
+            border-radius: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+        }
+
+        .btn.primary {
+            border-color: transparent;
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .msg {
+            margin-top: 10px;
+            min-height: 18px;
+            font-size: 0.84rem;
+        }
+
+        .msg.ok { color: var(--ok); }
+        .msg.err { color: #fca5a5; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.86rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th { color: var(--muted); }
+
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(245,158,11,0.3);
+            background: rgba(245,158,11,0.12);
+            color: #fcd34d;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .small { color: var(--muted); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top">
+            <a href="index.html">Back to Marketplace</a>
+            <a href="admin-login.html">Admin Login</a>
+        </div>
+
+        <h1 class="title">Report Scam Activity</h1>
+        <p class="sub">Submit suspicious users, wallets, fake listings, or payment fraud. Reports are saved for admin review.</p>
+
+        <section class="card">
+            <form id="report-form">
+                <div class="grid">
+                    <div class="field">
+                        <label for="reporter">Your Username (optional)</label>
+                        <input id="reporter" placeholder="@yourname">
+                    </div>
+                    <div class="field">
+                        <label for="contact">Contact Email (optional)</label>
+                        <input id="contact" type="email" placeholder="you@example.com">
+                    </div>
+                    <div class="field">
+                        <label for="suspect">Suspect Username/ID</label>
+                        <input id="suspect" required placeholder="@suspect or user id">
+                    </div>
+                    <div class="field">
+                        <label for="wallet">Suspect Wallet (optional)</label>
+                        <input id="wallet" placeholder="pi_wallet_or_address">
+                    </div>
+                    <div class="field">
+                        <label for="type">Scam Type</label>
+                        <select id="type" required>
+                            <option value="">Select type</option>
+                            <option>Fake Payment Proof</option>
+                            <option>Fake Product Listing</option>
+                            <option>Identity Spoofing</option>
+                            <option>Chargeback/Fraud</option>
+                            <option>KYC Document Fraud</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="incidentDate">Incident Date</label>
+                        <input id="incidentDate" type="date" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="evidence">Evidence URL(s) (optional)</label>
+                    <input id="evidence" placeholder="https://... screenshot or proof links">
+                </div>
+
+                <div class="field">
+                    <label for="details">What happened?</label>
+                    <textarea id="details" required placeholder="Describe the scam, amount involved, and any chat/payment references."></textarea>
+                </div>
+
+                <div class="actions">
+                    <button class="btn primary" type="submit">Submit Scam Report</button>
+                    <button class="btn" type="button" id="clear-btn">Clear Form</button>
+                </div>
+                <div id="msg" class="msg"></div>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2 style="font-size:1rem;margin-bottom:8px">Recent Reports</h2>
+            <p class="small" style="margin-bottom:8px">Stored locally in this browser (`omenda_scam_reports`).</p>
+            <div style="overflow:auto">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Suspect</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reports-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        (function () {
+            "use strict";
+
+            var KEY = "omenda_scam_reports";
+            var form = document.getElementById("report-form");
+            var msg = document.getElementById("msg");
+            var tbody = document.getElementById("reports-tbody");
+
+            function getReports() {
+                try {
+                    return JSON.parse(localStorage.getItem(KEY) || "[]");
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function saveReports(items) {
+                localStorage.setItem(KEY, JSON.stringify(items));
+            }
+
+            function showMsg(text, cls) {
+                msg.textContent = text;
+                msg.className = "msg " + cls;
+            }
+
+            function renderReports() {
+                var items = getReports();
+                if (!items.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="small">No reports yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = items.slice().reverse().slice(0, 12).map(function (r) {
+                    return '<tr>' +
+                        '<td>' + new Date(r.createdAt).toLocaleString() + '</td>' +
+                        '<td>' + (r.suspect || "-") + '</td>' +
+                        '<td>' + (r.type || "-") + '</td>' +
+                        '<td><span class="status">PENDING</span></td>' +
+                    '</tr>';
+                }).join("");
+            }
+
+            function clearForm() {
+                form.reset();
+                showMsg("", "");
+            }
+
+            document.getElementById("clear-btn").addEventListener("click", clearForm);
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                var report = {
+                    reporter: document.getElementById("reporter").value.trim(),
+                    contact: document.getElementById("contact").value.trim(),
+                    suspect: document.getElementById("suspect").value.trim(),
+                    wallet: document.getElementById("wallet").value.trim(),
+                    type: document.getElementById("type").value,
+                    incidentDate: document.getElementById("incidentDate").value,
+                    evidence: document.getElementById("evidence").value.trim(),
+                    details: document.getElementById("details").value.trim(),
+                    createdAt: new Date().toISOString()
+                };
+
+                if (!report.suspect || !report.type || !report.incidentDate || !report.details) {
+                    showMsg("Please fill all required fields.", "err");
+                    return;
+                }
+
+                var items = getReports();
+                items.push(report);
+                saveReports(items);
+                showMsg("Scam report submitted successfully. Admin will review.", "ok");
+                form.reset();
+                renderReports();
+            });
+
+            renderReports();
+        })();
+    </script>
+</body>
+</html>

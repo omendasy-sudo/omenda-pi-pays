@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi Converter | Omenda Pi Pays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-purple: #7c3aed;
+            --bg-primary: #09090b;
+            --bg-card: rgba(255,255,255,0.05);
+            --border: rgba(255,255,255,0.10);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --radius: 16px;
+        }
+
+        html.light {
+            --bg-primary: #ffffff;
+            --bg-card: rgba(0,0,0,0.03);
+            --border: rgba(0,0,0,0.08);
+            --text-primary: #18181b;
+            --text-secondary: #52525b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(circle at top right, rgba(124,58,237,0.15), transparent 35%),
+                        radial-gradient(circle at bottom left, rgba(245,166,35,0.12), transparent 35%),
+                        var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            width: min(720px, 100%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            backdrop-filter: blur(8px);
+        }
+
+        .title {
+            font-size: clamp(1.7rem, 4vw, 2.4rem);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .rate-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(245,166,35,0.35);
+            color: var(--pi-gold);
+            background: rgba(245,166,35,0.10);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field label {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .field input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--text-primary);
+            padding: 12px 14px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .field input:focus {
+            outline: none;
+            border-color: var(--pi-purple);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-main {
+            background: var(--pi-purple);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .result {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+        }
+
+        .result strong {
+            color: var(--text-primary);
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .nav-back:hover { color: var(--text-primary); }
+
+        @media (max-width: 700px) {
+            .grid { grid-template-columns: 1fr; }
+            .card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <h1 class="title">Pi GCV Converter</h1>
+        <p class="subtitle">Convert Pi and USD using Global Consensus Value.</p>
+        <div class="rate-chip" id="rate-chip">1 Pi = 314,159 USD</div>
+
+        <section class="grid">
+            <div class="field">
+                <label for="pi-input">Pi amount</label>
+                <input id="pi-input" type="number" step="any" min="0" placeholder="Enter Pi">
+            </div>
+            <div class="field">
+                <label for="usd-input">USD amount</label>
+                <input id="usd-input" type="number" step="any" min="0" placeholder="Enter USD">
+            </div>
+        </section>
+
+        <div class="actions">
+            <button class="btn-main" id="convert-pi-btn">Convert Pi to USD</button>
+            <button class="btn-main" id="convert-usd-btn">Convert USD to Pi</button>
+            <button class="btn-secondary" id="clear-btn">Clear</button>
+        </div>
+
+        <div class="result" id="result">Enter a value to convert using GCV.</div>
+
+        <a class="nav-back" href="index.html">Back to Marketplace</a>
+    </main>
+
+    <script>
+        (function () {
+            "use strict";
+
+            var RATE = (window.OmendaGcv && window.OmendaGcv.GCV_RATE) ? window.OmendaGcv.GCV_RATE : 314159;
+            var piInput = document.getElementById("pi-input");
+            var usdInput = document.getElementById("usd-input");
+            var result = document.getElementById("result");
+            var rateChip = document.getElementById("rate-chip");
+
+            rateChip.textContent = "1 Pi = " + RATE.toLocaleString() + " USD";
+
+            function formatUsd(v) {
+                return Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+
+            function formatPi(v) {
+                return Number(v).toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+            }
+
+            function convertPiToUsd() {
+                var pi = parseFloat(piInput.value);
+                if (isNaN(pi) || pi < 0) {
+                    result.textContent = "Please enter a valid Pi amount.";
+                    return;
+                }
+                var usd = pi * RATE;
+                usdInput.value = usd;
+                result.innerHTML = "<strong>" + pi.toLocaleString() + " Pi</strong> = <strong>$" + formatUsd(usd) + "</strong>";
+            }
+
+            function convertUsdToPi() {
+                var usd = parseFloat(usdInput.value);
+                if (isNaN(usd) || usd < 0) {
+                    result.textContent = "Please enter a valid USD amount.";
+                    return;
+                }
+                var pi = usd / RATE;
+                piInput.value = pi;
+                result.innerHTML = "<strong>$" + formatUsd(usd) + "</strong> = <strong>" + formatPi(pi) + " Pi</strong>";
+            }
+
+            function clearAll() {
+                piInput.value = "";
+                usdInput.value = "";
+                result.textContent = "Enter a value to convert using GCV.";
+            }
+
+            document.getElementById("convert-pi-btn").addEventListener("click", convertPiToUsd);
+            document.getElementById("convert-usd-btn").addEventListener("click", convertUsdToPi);
+            document.getElementById("clear-btn").addEventListener("click", clearAll);
+
+            piInput.addEventListener("input", function () {
+                if (piInput.value === "") return;
+                convertPiToUsd();
+            });
+
+            usdInput.addEventListener("input", function () {
+                if (usdInput.value === "") return;
+                convertUsdToPi();
+            });
+        })();
+    </script>
+</body>
+</html>

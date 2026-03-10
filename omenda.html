@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>Pi SDK Sandbox | Omenda Pi Pays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-gold-light: rgba(245,166,35,0.12);
+            --pi-purple: #7c3aed;
+            --pi-purple-light: rgba(124,58,237,0.10);
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success: #22c55e;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --error: #dc2626; --warning: #d97706; --info: #2563eb;
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .bg-ambient {
+            position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .bg-ambient::before {
+            content: ''; position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+            top: -200px; right: -100px;
+        }
+        .bg-ambient::after {
+            content: ''; position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
+            bottom: -150px; left: -100px;
+        }
+
+        /* Nav */
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px; height: 64px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .topbar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .topbar-logo img { width: 32px; height: 32px; border-radius: 8px; }
+        .topbar-logo span { font-weight: 700; font-size: 1.05rem; color: var(--text-primary); }
+        .topbar-badge {
+            background: var(--warning); color: #000; font-size: 0.65rem; font-weight: 700;
+            padding: 2px 8px; border-radius: 6px; letter-spacing: 0.5px;
+        }
+        .topbar-nav { display: flex; gap: 6px; margin-left: auto; }
+        .topbar-nav a {
+            color: var(--text-secondary); text-decoration: none; padding: 8px 14px;
+            border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .topbar-nav a:hover { background: var(--bg-card); color: var(--text-primary); }
+
+        .pi-connect-btn {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 8px 18px; border-radius: var(--radius-sm);
+            font-weight: 600; cursor: pointer; font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .pi-connect-btn:hover { filter: brightness(1.15); }
+        .pi-connect-btn.connected { background: var(--success); }
+
+        /* Layout */
+        .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+        
+        .sandbox-header {
+            text-align: center; margin-bottom: 40px;
+        }
+        .sandbox-header h1 {
+            font-size: 2.2rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--pi-purple), var(--pi-gold));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .sandbox-header p { color: var(--text-secondary); font-size: 0.95rem; }
+
+        /* Status Banner */
+        .status-banner {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px 20px; margin-bottom: 32px;
+        }
+        .status-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--error); flex-shrink: 0;
+        }
+        .status-dot.active { background: var(--success); animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+        }
+        .status-text { font-size: 0.85rem; color: var(--text-secondary); }
+        .status-text strong { color: var(--text-primary); }
+
+        /* SDK Method Cards Grid */
+        .methods-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px; margin-bottom: 32px;
+        }
+
+        .method-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .method-card:hover { border-color: var(--border-hover); }
+
+        .method-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 16px 20px; border-bottom: 1px solid var(--border);
+        }
+        .method-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .method-icon.auth { background: rgba(124,58,237,0.15); }
+        .method-icon.pay { background: rgba(245,166,35,0.15); }
+        .method-icon.share { background: rgba(59,130,246,0.15); }
+        .method-icon.ads { background: rgba(34,197,94,0.15); }
+        .method-icon.chat { background: rgba(236,72,153,0.15); }
+        .method-icon.native { background: rgba(168,85,247,0.15); }
+        .method-icon.perm { background: rgba(249,115,22,0.15); }
+        .method-icon.copy { background: rgba(6,182,212,0.15); }
+        .method-icon.url { background: rgba(99,102,241,0.15); }
+        .method-icon.feat { background: rgba(139,92,246,0.15); }
+
+        .method-name { font-weight: 700; font-size: 0.95rem; }
+        .method-tag {
+            font-size: 0.6rem; font-weight: 600; padding: 2px 6px;
+            border-radius: 4px; margin-left: auto; text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .method-tag.core { background: rgba(124,58,237,0.2); color: #a78bfa; }
+        .method-tag.utility { background: rgba(59,130,246,0.2); color: #93c5fd; }
+        .method-tag.monetize { background: rgba(245,166,35,0.2); color: #fbbf24; }
+
+        .method-body { padding: 16px 20px; }
+        .method-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+
+        .method-inputs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+        .method-input {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            color: var(--text-primary); padding: 10px 14px; border-radius: var(--radius-sm);
+            font-size: 0.8rem; font-family: inherit; width: 100%;
+            transition: border-color 0.2s;
+        }
+        .method-input:focus { outline: none; border-color: var(--pi-purple); }
+        .method-input::placeholder { color: var(--text-muted); }
+
+        .method-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-test {
+            flex: 1; min-width: 100px; padding: 10px 16px;
+            border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.8rem; cursor: pointer; border: none;
+            transition: all 0.2s; font-family: inherit;
+        }
+        .btn-test.primary {
+            background: var(--pi-purple); color: #fff;
+        }
+        .btn-test.primary:hover { filter: brightness(1.15); }
+        .btn-test.secondary {
+            background: transparent; color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-test.secondary:hover { border-color: var(--border-hover); color: var(--text-primary); }
+        .btn-test.gold { background: var(--pi-gold); color: #000; }
+        .btn-test.gold:hover { filter: brightness(1.1); }
+        .btn-test:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Console Log */
+        .console-section {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden;
+        }
+        .console-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 20px; border-bottom: 1px solid var(--border);
+        }
+        .console-header h3 { font-size: 0.9rem; font-weight: 700; }
+        .console-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .console-dots { display: flex; gap: 6px; margin-left: auto; }
+        .dot.red { background: #ef4444; } .dot.yellow { background: #f59e0b; } .dot.green { background: #22c55e; }
+
+        .console-clear {
+            background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+            padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; cursor: pointer;
+            font-family: inherit; margin-left: 8px;
+        }
+        .console-clear:hover { color: var(--text-primary); border-color: var(--border-hover); }
+
+        .console-body {
+            max-height: 340px; overflow-y: auto; padding: 12px 20px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.75rem;
+            line-height: 1.8;
+        }
+        .log-entry { display: flex; gap: 8px; align-items: flex-start; }
+        .log-time { color: var(--text-muted); flex-shrink: 0; }
+        .log-type {
+            font-weight: 600; flex-shrink: 0; min-width: 48px; text-align: center;
+            padding: 0 4px; border-radius: 3px; font-size: 0.65rem;
+        }
+        .log-type.info { color: var(--info); background: rgba(59,130,246,0.1); }
+        .log-type.success { color: var(--success); background: rgba(34,197,94,0.1); }
+        .log-type.error { color: var(--error); background: rgba(239,68,68,0.1); }
+        .log-type.warn { color: var(--warning); background: rgba(245,158,11,0.1); }
+        .log-msg { color: var(--text-secondary); word-break: break-all; }
+
+        .console-body::-webkit-scrollbar { width: 6px; }
+        .console-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* User info panel */
+        .user-panel {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; margin-bottom: 32px;
+            display: none;
+        }
+        .user-panel.visible { display: block; }
+        .user-panel h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
+        .user-info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .user-info-item { background: var(--bg-secondary); padding: 12px; border-radius: var(--radius-sm); }
+        .user-info-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .user-info-value { font-size: 0.85rem; font-weight: 600; color: var(--pi-gold); word-break: break-all; }
+
+        @media (max-width: 768px) {
+            .methods-grid { grid-template-columns: 1fr; }
+            .sandbox-header h1 { font-size: 1.6rem; }
+            .topbar-nav { display: none; }
+            .container { padding: 20px 16px 80px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-ambient"></div>
+
+    <!-- Top Bar -->
+    <header class="topbar">
+        <a href="index.html" class="topbar-logo">
+            <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+            <span>Omenda Pi Pays</span>
+        </a>
+        <span class="topbar-badge">SANDBOX</span>
+        <nav class="topbar-nav">
+            <a href="index.html" data-i18n="nav.marketplace">Marketplace</a>
+            <a href="new.html" data-i18n="nav.explore">Explore</a>
+            <a href="map.html" data-i18n="nav.map">Map</a>
+            <a href="social.html" data-i18n="nav.social">Social</a>
+            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="transport.html" data-i18n="nav.transport">Transport</a>
+            <a href="pi-converter.html">Pi Converter</a>
+        </nav>
+        <span id="pi-username" style="color:#f5a623;font-weight:600;font-size:0.8rem;display:none"></span>
+        <a href="https://109.199.109.143/services" target="_blank" class="pi-connect-btn" style="background:transparent;border:1px solid var(--border);color:var(--text-primary);text-decoration:none;display:inline-flex;align-items:center;justify-content:center">All Services</a>
+        <button id="pi-connect-btn" class="pi-connect-btn" onclick="testAuth()" data-i18n="nav.connectPi">Login with Pi</button>
+    </header>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="sandbox-header">
+            <h1>&#960; Pi SDK Sandbox</h1>
+            <p>Test all 10 Pi SDK methods in sandbox mode. Open in Pi Browser for full functionality.</p>
+        </div>
+
+        <!-- Status Banner -->
+        <div class="status-banner">
+            <div class="status-dot" id="sdk-status-dot"></div>
+            <div class="status-text" id="sdk-status-text">
+                <strong>SDK Status:</strong> Checking...
+            </div>
+        </div>
+
+        <!-- Authenticated User Panel -->
+        <div class="user-panel" id="user-panel">
+            <h3>&#128100; Authenticated User</h3>
+            <div class="user-info-grid">
+                <div class="user-info-item">
+                    <div class="user-info-label">Username</div>
+                    <div class="user-info-value" id="info-username">—</div>
+                </div>
+                <div class="user-info-item">
+                    <div class="user-info-label">User ID (UID)</div>
+                    <div class="user-info-value" id="info-uid">—</div>
+                </div>
+                <div class="user-info-item">
+                    <div class="user-info-label">Access Token</div>
+                    <div class="user-info-value" id="info-token">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SDK Methods Grid -->
+        <div class="methods-grid">
+
+            <!-- 1. Authenticate -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon auth">&#128274;</div>
+                    <span class="method-name">Pi.authenticate</span>
+                    <span class="method-tag core">Core</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Authenticate the user with Pi Network. Returns username, UID, and access token. Required before payments.</p>
+                    <div class="method-actions">
+                        <button class="btn-test primary" onclick="testAuth()">&#128274; Authenticate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Create Payment -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon pay">&#960;</div>
+                    <span class="method-name">Pi.createPayment</span>
+                    <span class="method-tag core">Core</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Create a Pi payment. Enter amount and memo. Callbacks simulate server approval and completion.</p>
+                    <div class="method-inputs">
+                        <input type="number" class="method-input" id="pay-amount" placeholder="Amount in Pi (e.g. 1.5)" step="0.01" min="0.01" value="1">
+                        <input type="text" class="method-input" id="pay-memo" placeholder="Payment memo" value="Sandbox test payment" maxlength="200">
+                    </div>
+                    <div class="method-actions">
+                        <button class="btn-test gold" onclick="testPayment()" id="btn-pay">&#960; Create Payment</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. openShareDialog -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon share">&#128228;</div>
+                    <span class="method-name">Pi.openShareDialog</span>
+                    <span class="method-tag utility">Utility</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Open the Pi Browser native share dialog with a title and message.</p>
+                    <div class="method-inputs">
+                        <input type="text" class="method-input" id="share-title" placeholder="Share title" value="Check out Omenda Pi Pays!" maxlength="200">
+                        <input type="text" class="method-input" id="share-msg" placeholder="Share message" value="Your decentralized marketplace on Pi Network &#960;" maxlength="500">
+                    </div>
+                    <div class="method-actions">
+                        <button class="btn-test primary" onclick="testShare()">&#128228; Share</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. openConversation -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon chat">&#128172;</div>
+                    <span class="method-name">Pi.openConversation</span>
+                    <span class="method-tag utility">Utility</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Open a Pi Messenger conversation with a specific user by their UID.</p>
+                    <div class="method-inputs">
+                        <input type="text" class="method-input" id="chat-uid" placeholder="Target user UID" maxlength="100">
+                    </div>
+                    <div class="method-actions">
+                        <button class="btn-test primary" onclick="testConversation()">&#128172; Open Chat</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Ads - isAdReady -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon ads">&#128250;</div>
+                    <span class="method-name">Pi.Ads</span>
+                    <span class="method-tag monetize">Monetize</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Check ad availability, request an ad from Pi's ad network, and show a rewarded interstitial ad.</p>
+                    <div class="method-actions">
+                        <button class="btn-test secondary" onclick="testAdReady()">Check Ready</button>
+                        <button class="btn-test secondary" onclick="testRequestAd()">Request Ad</button>
+                        <button class="btn-test primary" onclick="testShowAd()">&#128250; Show Ad</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. copyText -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon copy">&#128203;</div>
+                    <span class="method-name">Pi.copyText</span>
+                    <span class="method-tag utility">Utility</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Copy text to the device clipboard via Pi Browser's native clipboard API.</p>
+                    <div class="method-inputs">
+                        <input type="text" class="method-input" id="copy-text" placeholder="Text to copy" value="Omenda Pi Pays &#960; - Decentralized Commerce" maxlength="500">
+                    </div>
+                    <div class="method-actions">
+                        <button class="btn-test primary" onclick="testCopy()">&#128203; Copy Text</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. openUrlInSystemBrowser -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon url">&#127760;</div>
+                    <span class="method-name">Pi.openUrlInSystemBrowser</span>
+                    <span class="method-tag utility">Utility</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Open a URL in the device's system browser (Chrome, Safari, etc.) outside Pi Browser.</p>
+                    <div class="method-inputs">
+                        <input type="url" class="method-input" id="open-url" placeholder="https://example.com" value="https://minepi.com">
+                    </div>
+                    <div class="method-actions">
+                        <button class="btn-test primary" onclick="testOpenUrl()">&#127760; Open URL</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. nativeFeaturesList -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon feat">&#9881;</div>
+                    <span class="method-name">Pi.nativeFeaturesList</span>
+                    <span class="method-tag utility">Utility</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Get the list of native features supported by the current Pi Browser version.</p>
+                    <div class="method-actions">
+                        <button class="btn-test primary" onclick="testNativeFeatures()">&#9881; Get Features</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. requestPermission -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon perm">&#128275;</div>
+                    <span class="method-name">Pi.requestPermission</span>
+                    <span class="method-tag utility">Utility</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Request a device permission (camera, microphone, etc.) from within Pi Browser.</p>
+                    <div class="method-inputs">
+                        <select class="method-input" id="perm-type">
+                            <option value="camera">Camera</option>
+                            <option value="microphone">Microphone</option>
+                            <option value="gallery">Gallery</option>
+                            <option value="location">Location</option>
+                            <option value="notifications">Notifications</option>
+                        </select>
+                    </div>
+                    <div class="method-actions">
+                        <button class="btn-test primary" onclick="testPermission()">&#128275; Request Permission</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. Init (info card) -->
+            <div class="method-card">
+                <div class="method-header">
+                    <div class="method-icon native">&#128640;</div>
+                    <span class="method-name">Pi.init</span>
+                    <span class="method-tag core">Core</span>
+                </div>
+                <div class="method-body">
+                    <p class="method-desc">Initialize the Pi SDK. This runs automatically on page load. Toggle sandbox mode below.</p>
+                    <div class="method-actions">
+                        <button class="btn-test secondary" id="btn-sandbox-toggle" onclick="toggleSandbox()">&#127919; Sandbox: ON</button>
+                        <button class="btn-test primary" onclick="reinitSDK()">&#128260; Re-initialize</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Console Log -->
+        <div class="console-section">
+            <div class="console-header">
+                <h3>&#9002; Console Output</h3>
+                <div class="console-dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <button class="console-clear" onclick="clearConsole()">Clear</button>
+            </div>
+            <div class="console-body" id="console-log">
+                <!-- Logs appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── State ──
+        var sandboxMode = true;
+        var piUser = null;
+
+        // ── Console Logger ──
+        function logMsg(type, msg) {
+            var el = document.getElementById('console-log');
+            var now = new Date();
+            var time = now.toLocaleTimeString('en-GB', { hour12: false });
+            var safe = String(msg).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            el.innerHTML += '<div class="log-entry">' +
+                '<span class="log-time">[' + time + ']</span>' +
+                '<span class="log-type ' + type + '">' + type.toUpperCase() + '</span>' +
+                '<span class="log-msg">' + safe + '</span>' +
+                '</div>';
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('console-log').innerHTML = '';
+            logMsg('info', 'Console cleared.');
+        }
+
+        // ── SDK Status Check ──
+        function checkSDK() {
+            var dot = document.getElementById('sdk-status-dot');
+            var text = document.getElementById('sdk-status-text');
+            if (typeof window.Pi !== 'undefined') {
+                dot.classList.add('active');
+                text.innerHTML = '<strong>SDK Status:</strong> Pi SDK loaded &check; &nbsp;|&nbsp; Mode: ' +
+                    (sandboxMode ? '<span style="color:#f59e0b">Sandbox</span>' : '<span style="color:#22c55e">Production</span>');
+                logMsg('success', 'Pi SDK detected and ready (sandbox=' + sandboxMode + ')');
+            } else {
+                dot.classList.remove('active');
+                text.innerHTML = '<strong>SDK Status:</strong> <span style="color:#ef4444">Pi SDK not found</span> — Open this page in Pi Browser';
+                logMsg('warn', 'Pi SDK not detected. Ensure you are in Pi Browser.');
+            }
+        }
+
+        // ── 1. Pi.init ──
+        function initSDK() {
+            try {
+                Pi.init({ version: '2.0', sandbox: sandboxMode });
+                logMsg('success', 'Pi.init({ version: "2.0", sandbox: ' + sandboxMode + ' }) — OK');
+            } catch (e) {
+                logMsg('error', 'Pi.init failed: ' + e.message);
+            }
+        }
+
+        function toggleSandbox() {
+            sandboxMode = !sandboxMode;
+            var btn = document.getElementById('btn-sandbox-toggle');
+            btn.textContent = '\u{1F3AF} Sandbox: ' + (sandboxMode ? 'ON' : 'OFF');
+            logMsg('info', 'Sandbox mode toggled to: ' + sandboxMode);
+        }
+
+        function reinitSDK() {
+            initSDK();
+            checkSDK();
+        }
+
+        // ── 2. Pi.authenticate ──
+        function testAuth() {
+            if (typeof window.Pi === 'undefined') {
+                logMsg('error', 'Pi SDK not available. Open in Pi Browser.');
+                return;
+            }
+            logMsg('info', 'Calling Pi.authenticate([\"username\",\"payments\"])...');
+            Pi.authenticate(['username', 'payments'], {
+                onIncompletePaymentFound: function(payment) {
+                    logMsg('warn', 'Incomplete payment found: ' + JSON.stringify(payment));
+                }
+            }).then(function(auth) {
+                piUser = auth.user;
+                logMsg('success', 'Authenticated! User: @' + auth.user.username);
+                logMsg('info', 'UID: ' + auth.user.uid);
+                logMsg('info', 'Access Token: ' + auth.accessToken.substring(0, 20) + '...');
+
+                // Update UI
+                document.getElementById('pi-username').textContent = '@' + auth.user.username;
+                document.getElementById('pi-username').style.display = 'inline';
+                document.getElementById('pi-connect-btn').textContent = 'Connected';
+                document.getElementById('pi-connect-btn').classList.add('connected');
+                
+                // User panel
+                document.getElementById('user-panel').classList.add('visible');
+                document.getElementById('info-username').textContent = '@' + auth.user.username;
+                document.getElementById('info-uid').textContent = auth.user.uid;
+                document.getElementById('info-token').textContent = auth.accessToken.substring(0, 30) + '...';
+
+                sessionStorage.setItem('piUser', JSON.stringify(auth.user));
+            }).catch(function(e) {
+                logMsg('error', 'Authentication failed: ' + (e.message || JSON.stringify(e)));
+            });
+        }
+
+        // ── 3. Pi.createPayment ──
+        function testPayment() {
+            if (typeof window.Pi === 'undefined') {
+                logMsg('error', 'Pi SDK not available.');
+                return;
+            }
+            var amountStr = document.getElementById('pay-amount').value;
+            var amount = parseFloat(amountStr);
+            if (isNaN(amount) || amount <= 0) {
+                logMsg('error', 'Invalid payment amount. Enter a positive number.');
+                return;
+            }
+            var memo = document.getElementById('pay-memo').value.trim() || 'Test payment';
+            
+            logMsg('info', 'Creating payment: ' + amount + ' Pi — "' + memo + '"');
+
+            Pi.createPayment({
+                amount: amount,
+                memo: memo,
+                metadata: { sandbox: true, timestamp: Date.now() }
+            }, {
+                onReadyForServerApproval: function(paymentId) {
+                    logMsg('info', 'Payment ready for server approval. ID: ' + paymentId);
+                    logMsg('warn', '[Sandbox] Simulating server approval...');
+                    // In production: POST to your server /api/payments/approve
+                    setTimeout(function() {
+                        logMsg('success', 'Server approval simulated for: ' + paymentId);
+                    }, 1000);
+                },
+                onReadyForServerCompletion: function(paymentId, txid) {
+                    logMsg('info', 'Payment ready for server completion. TxID: ' + txid);
+                    logMsg('warn', '[Sandbox] Simulating server completion...');
+                    setTimeout(function() {
+                        logMsg('success', 'Payment completed! TxID: ' + txid);
+                    }, 1000);
+                },
+                onCancel: function(paymentId) {
+                    logMsg('warn', 'Payment cancelled by user. ID: ' + paymentId);
+                },
+                onError: function(error, payment) {
+                    logMsg('error', 'Payment error: ' + (error.message || JSON.stringify(error)));
+                }
+            });
+        }
+
+        // ── 4. Pi.openShareDialog ──
+        function testShare() {
+            if (typeof window.Pi === 'undefined') {
+                logMsg('error', 'Pi SDK not available.');
+                return;
+            }
+            var title = document.getElementById('share-title').value.trim();
+            var msg = document.getElementById('share-msg').value.trim();
+            if (!title) { logMsg('error', 'Share title is required.'); return; }
+            logMsg('info', 'Opening share dialog: "' + title + '"');
+            try {
+                Pi.openShareDialog(title, msg || '');
+                logMsg('success', 'Share dialog opened.');
+            } catch (e) {
+                logMsg('error', 'openShareDialog failed: ' + e.message);
+            }
+        }
+
+        // ── 5. Pi.openConversation ──
+        function testConversation() {
+            if (typeof window.Pi === 'undefined') {
+                logMsg('error', 'Pi SDK not available.');
+                return;
+            }
+            var uid = document.getElementById('chat-uid').value.trim();
+            if (!uid) { logMsg('error', 'Enter a user UID to open a conversation.'); return; }
+            logMsg('info', 'Opening conversation with UID: ' + uid);
+            try {
+                Pi.openConversation(uid);
+                logMsg('success', 'Conversation opened for UID: ' + uid);
+            } catch (e) {
+                logMsg('error', 'openConversation failed: ' + e.message);
+            }
+        }
+
+        // ── 6. Pi.Ads ──
+        function testAdReady() {
+            if (typeof window.Pi === 'undefined' || typeof Pi.Ads === 'undefined') {
+                logMsg('error', 'Pi.Ads not available.');
+                return;
+            }
+            logMsg('info', 'Checking Pi.Ads.isAdReady()...');
+            Pi.Ads.isAdReady().then(function(ready) {
+                logMsg(ready ? 'success' : 'warn', 'Ad ready: ' + ready);
+            }).catch(function(e) {
+                logMsg('error', 'isAdReady failed: ' + e.message);
+            });
+        }
+
+        function testRequestAd() {
+            if (typeof window.Pi === 'undefined' || typeof Pi.Ads === 'undefined') {
+                logMsg('error', 'Pi.Ads not available.');
+                return;
+            }
+            logMsg('info', 'Requesting ad via Pi.Ads.requestAd()...');
+            Pi.Ads.requestAd().then(function() {
+                logMsg('success', 'Ad request successful — ad is queued.');
+            }).catch(function(e) {
+                logMsg('error', 'requestAd failed: ' + e.message);
+            });
+        }
+
+        function testShowAd() {
+            if (typeof window.Pi === 'undefined' || typeof Pi.Ads === 'undefined') {
+                logMsg('error', 'Pi.Ads not available.');
+                return;
+            }
+            logMsg('info', 'Showing ad via Pi.Ads.showAd()...');
+            Pi.Ads.showAd().then(function() {
+                logMsg('success', 'Ad displayed successfully.');
+            }).catch(function(e) {
+                logMsg('error', 'showAd failed: ' + e.message);
+            });
+        }
+
+        // ── 7. Pi.copyText ──
+        function testCopy() {
+            if (typeof window.Pi === 'undefined') {
+                logMsg('error', 'Pi SDK not available.');
+                return;
+            }
+            var text = document.getElementById('copy-text').value;
+            if (!text) { logMsg('error', 'Enter text to copy.'); return; }
+            logMsg('info', 'Copying text to clipboard...');
+            try {
+                Pi.copyText(text);
+                logMsg('success', 'Text copied: "' + text.substring(0, 50) + (text.length > 50 ? '...' : '') + '"');
+            } catch (e) {
+                logMsg('error', 'copyText failed: ' + e.message);
+            }
+        }
+
+        // ── 8. Pi.openUrlInSystemBrowser ──
+        function testOpenUrl() {
+            if (typeof window.Pi === 'undefined') {
+                logMsg('error', 'Pi SDK not available.');
+                return;
+            }
+            var url = document.getElementById('open-url').value.trim();
+            if (!url) { logMsg('error', 'Enter a URL to open.'); return; }
+            logMsg('info', 'Opening URL in system browser: ' + url);
+            try {
+                Pi.openUrlInSystemBrowser(url);
+                logMsg('success', 'System browser opened with: ' + url);
+            } catch (e) {
+                logMsg('error', 'openUrlInSystemBrowser failed: ' + e.message);
+            }
+        }
+
+        // ── 9. Pi.nativeFeaturesList ──
+        function testNativeFeatures() {
+            if (typeof window.Pi === 'undefined') {
+                logMsg('error', 'Pi SDK not available.');
+                return;
+            }
+            logMsg('info', 'Calling Pi.nativeFeaturesList()...');
+            try {
+                var features = Pi.nativeFeaturesList();
+                if (features && features.length) {
+                    logMsg('success', 'Native features (' + features.length + '): ' + JSON.stringify(features));
+                } else {
+                    logMsg('warn', 'nativeFeaturesList returned: ' + JSON.stringify(features));
+                }
+            } catch (e) {
+                logMsg('error', 'nativeFeaturesList failed: ' + e.message);
+            }
+        }
+
+        // ── 10. Pi.requestPermission ──
+        function testPermission() {
+            if (typeof window.Pi === 'undefined') {
+                logMsg('error', 'Pi SDK not available.');
+                return;
+            }
+            var perm = document.getElementById('perm-type').value;
+            logMsg('info', 'Requesting permission: ' + perm);
+            try {
+                Pi.requestPermission(perm);
+                logMsg('success', 'Permission requested: ' + perm);
+            } catch (e) {
+                logMsg('error', 'requestPermission failed: ' + e.message);
+            }
+        }
+
+        // ── Init on page load ──
+        (function() {
+            // Restore session
+            var u = sessionStorage.getItem('piUser');
+            if (u) {
+                try {
+                    var user = JSON.parse(u);
+                    piUser = user;
+                    document.getElementById('pi-username').textContent = '@' + user.username;
+                    document.getElementById('pi-username').style.display = 'inline';
+                    document.getElementById('pi-connect-btn').textContent = 'Connected';
+                    document.getElementById('pi-connect-btn').classList.add('connected');
+                    document.getElementById('user-panel').classList.add('visible');
+                    document.getElementById('info-username').textContent = '@' + user.username;
+                    document.getElementById('info-uid').textContent = user.uid || '—';
+                } catch(e) {}
+            }
+
+            // Init SDK
+            logMsg('info', 'Initializing Pi SDK Sandbox...');
+            if (typeof window.Pi !== 'undefined') {
+                initSDK();
+                // Auto-login in Pi Browser
+                if (!piUser) {
+                    logMsg('info', 'Auto-authenticating with Pi Browser...');
+                    testAuth();
+                }
+            } else {
+                logMsg('warn', 'Pi SDK not loaded — some features require Pi Browser.');
+            }
+            checkSDK();
+            logMsg('info', 'Ready. Test any method above.');
+        })();
+    </script>
+</body>
+</html>

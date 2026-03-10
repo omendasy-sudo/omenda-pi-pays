@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport & Rides | Omenda Pi Pays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-gold-light: rgba(245,166,35,0.12);
+            --pi-purple: #7c3aed;
+            --pi-purple-light: rgba(124,58,237,0.10);
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --cyan: #06b6d4;
+            --cyan-light: rgba(6,182,212,0.10);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06); --danger: #dc2626;
+            --cyan-light: rgba(6,182,212,0.08);
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            min-height: 100vh; -webkit-font-smoothing: antialiased;
+        }
+
+        .bg-ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .bg-ambient::before {
+            content: ''; position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%);
+            top: -200px; right: -100px;
+        }
+        .bg-ambient::after {
+            content: ''; position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
+            bottom: -100px; left: -100px;
+        }
+
+        /* Nav */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 max(5%,24px); height: 72px;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+        .logo span { color: var(--pi-gold); }
+        .nav-center { display: flex; gap: 8px; }
+        .nav-center a {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
+        }
+        .nav-center a:hover, .nav-center a.active { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .wallet-chip {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--pi-gold-light); border: 1px solid rgba(245,166,35,0.2);
+            padding: 8px 16px; border-radius: 100px; font-size: 0.8125rem; font-weight: 600; color: var(--pi-gold);
+        }
+        .wallet-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+        .btn-primary {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 10px 22px; border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.875rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); }
+        .btn-services {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.8125rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .btn-services:hover { border-color: var(--cyan); color: var(--cyan); }
+
+        .quick-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 10px max(5%,24px) 0;
+        }
+        .quick-link {
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 48px max(5%,24px) 32px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(6,182,212,0.06), transparent 50%, rgba(245,166,35,0.04));
+        }
+        .hero-content { position: relative; max-width: 800px; margin: 0 auto; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;
+            background: var(--cyan-light); border: 1px solid rgba(6,182,212,0.2);
+            padding: 8px 20px; border-radius: 100px; font-size: 0.8125rem; font-weight: 600; color: var(--cyan);
+        }
+        .hero-badge .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; line-height: 1.15; }
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--cyan) 0%, #22d3ee 50%, var(--pi-gold) 100%);
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p { color: var(--text-secondary); font-size: 1.0625rem; max-width: 600px; margin: 0 auto 32px; line-height: 1.6; }
+
+        /* Stats row */
+        .stats-row {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+            max-width: 700px; margin: 0 auto 40px;
+        }
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 16px; text-align: center;
+        }
+        .stat-card .stat-icon { font-size: 1.5rem; margin-bottom: 6px; }
+        .stat-card .stat-val { font-size: 1.5rem; font-weight: 800; }
+        .stat-card .stat-label { font-size: 0.6875rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* Service Tabs */
+        .service-tabs {
+            display: flex; gap: 8px; justify-content: center; margin-bottom: 32px;
+            flex-wrap: wrap; padding: 0 max(5%,24px);
+        }
+        .service-tab {
+            padding: 12px 24px; border-radius: 100px; font-size: 0.875rem;
+            font-weight: 600; border: 1px solid var(--border); background: none; color: var(--text-muted);
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .service-tab:hover { border-color: var(--border-hover); color: var(--text-secondary); }
+        .service-tab.active { background: var(--cyan); color: #fff; border-color: var(--cyan); }
+
+        /* Main section */
+        .main-section {
+            max-width: 1200px; margin: 0 auto; padding: 0 max(5%,24px);
+        }
+
+        /* Booking Form Card */
+        .booking-card {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 28px; margin-bottom: 32px;
+        }
+        .booking-card h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: 20px; }
+        .booking-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+        .form-group input, .form-group select {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 12px 16px; color: var(--text-primary);
+            font-size: 0.9375rem; font-family: inherit; outline: none; transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { border-color: var(--cyan); }
+        .form-group select option { background: var(--bg-secondary); }
+
+        .btn-book {
+            background: linear-gradient(135deg, var(--cyan), #0891b2); color: #fff; border: none;
+            padding: 14px 40px; border-radius: 100px; font-weight: 700; font-size: 1rem;
+            cursor: pointer; font-family: inherit; transition: all 0.2s; margin-top: 16px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-book:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(6,182,212,0.3); }
+
+        .reg-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-top: 20px;
+        }
+        .reg-panel h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; }
+        .reg-actions { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 18px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+        .trace-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 14px;
+        }
+        .trace-card h4 { font-size: 0.92rem; margin-bottom: 8px; }
+        .trace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .trace-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 9px 10px;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+        .trace-item strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.84rem;
+            margin-top: 4px;
+            word-break: break-word;
+        }
+        .trace-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 6px;
+        }
+        .trace-status.pending { background: rgba(245,166,35,0.12); color: var(--pi-gold); border-color: rgba(245,166,35,0.26); }
+        .trace-status.transit { background: rgba(6,182,212,0.12); color: var(--cyan); border-color: rgba(6,182,212,0.26); }
+        .trace-status.arrived { background: rgba(34,197,94,0.12); color: var(--success); border-color: rgba(34,197,94,0.26); }
+
+        .recent-list {
+            margin-top: 12px;
+            display: grid;
+            gap: 8px;
+        }
+        .recent-item {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-card);
+            padding: 10px 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .recent-item strong { color: var(--text-primary); }
+
+        /* Live map + trip payment */
+        .map-section { margin-bottom: 36px; }
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 16px;
+        }
+        .map-card, .trip-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        .map-frame {
+            width: 100%;
+            height: 320px;
+            border: 0;
+            display: block;
+            background: var(--bg-card);
+        }
+        .trip-card { padding: 20px; }
+        .trip-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 12px; }
+        .trip-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .trip-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            font-size: 0.8125rem;
+        }
+        .trip-item span { color: var(--text-muted); }
+        .trip-item strong { color: var(--text-primary); text-align: right; }
+        .trip-item strong.status-idle { color: var(--text-secondary); }
+        .trip-item strong.status-live { color: var(--cyan); }
+        .trip-item strong.status-arrived { color: var(--success); }
+        .btn-arrive {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            color: #fff;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            transition: all 0.2s;
+        }
+        .btn-arrive:hover { transform: translateY(-1px); }
+        .btn-arrive:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Transport options cards */
+        .transport-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 40px; }
+
+        .transport-card {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px; cursor: pointer;
+            transition: all 0.25s; position: relative; overflow: hidden;
+        }
+        .transport-card:hover { border-color: var(--cyan); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(6,182,212,0.1); }
+        .transport-card.selected { border-color: var(--cyan); background: rgba(6,182,212,0.04); }
+        .transport-card .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+        .transport-card .card-icon { font-size: 2.5rem; }
+        .transport-card .card-badge {
+            padding: 4px 12px; border-radius: 100px; font-size: 0.6875rem; font-weight: 700;
+        }
+        .badge-popular { background: var(--pi-gold-light); color: var(--pi-gold); }
+        .badge-new { background: rgba(34,197,94,0.1); color: var(--success); }
+        .badge-premium { background: var(--pi-purple-light); color: #a78bfa; }
+        .transport-card h3 { font-size: 1.125rem; font-weight: 800; margin-bottom: 6px; }
+        .transport-card .card-desc { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px; }
+        .transport-card .card-features { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+        .transport-card .feature-tag {
+            padding: 4px 10px; border-radius: 100px; font-size: 0.6875rem;
+            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+        }
+        .transport-card .card-price { display: flex; justify-content: space-between; align-items: flex-end; }
+        .card-price .price-label { font-size: 0.6875rem; color: var(--text-muted); }
+        .card-price .price-val { font-size: 1.25rem; font-weight: 800; color: var(--cyan); }
+        .card-price .price-unit { font-size: 0.75rem; color: var(--text-muted); }
+        .card-price .pi-icon { color: var(--pi-gold); font-weight: 800; }
+
+        /* Driver section */
+        .driver-section {
+            background: linear-gradient(135deg, rgba(124,58,237,0.06), rgba(245,166,35,0.04));
+            border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 40px; margin-bottom: 40px; display: grid;
+            grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;
+        }
+        .driver-section h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 12px; }
+        .driver-section p { color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
+        .driver-benefits { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .driver-benefit {
+            display: flex; align-items: center; gap: 10px; font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        .driver-benefit .benefit-icon {
+            width: 36px; height: 36px; border-radius: 10px; display: flex;
+            align-items: center; justify-content: center; font-size: 1.1rem;
+            background: var(--pi-gold-light); flex-shrink: 0;
+        }
+        .btn-driver {
+            background: linear-gradient(135deg, var(--pi-purple), #6d28d9); color: #fff; border: none;
+            padding: 14px 32px; border-radius: 100px; font-weight: 700; font-size: 0.9375rem;
+            cursor: pointer; font-family: inherit; transition: all 0.2s; margin-top: 20px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-driver:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,237,0.3); }
+
+        .driver-illustration {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+        .driver-stat {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); padding: 20px; text-align: center;
+        }
+        .driver-stat .ds-icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .driver-stat .ds-val { font-size: 1.5rem; font-weight: 800; }
+        .driver-stat .ds-label { font-size: 0.6875rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* How it works */
+        .how-it-works {
+            margin-bottom: 40px;
+        }
+        .how-it-works h2 { font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 32px; }
+        .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .step-card {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px; text-align: center;
+            position: relative;
+        }
+        .step-card .step-num {
+            width: 32px; height: 32px; border-radius: 50%; background: var(--cyan);
+            color: #fff; font-weight: 800; font-size: 0.875rem;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px;
+        }
+        .step-card .step-icon { font-size: 2rem; margin-bottom: 10px; }
+        .step-card h4 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 6px; }
+        .step-card p { font-size: 0.8125rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* Airways section */
+        .airways-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 40px; }
+        .airway-card {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px; transition: all 0.25s;
+        }
+        .airway-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+        .airway-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .airway-logo { display: flex; align-items: center; gap: 10px; }
+        .airway-logo .airline-icon {
+            width: 44px; height: 44px; border-radius: 12px; display: flex;
+            align-items: center; justify-content: center; font-size: 1.5rem;
+        }
+        .airway-logo h4 { font-size: 0.9375rem; font-weight: 700; }
+        .airway-logo .airline-type { font-size: 0.6875rem; color: var(--text-muted); }
+        .route-info { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 12px; background: var(--bg-card); border-radius: var(--radius-sm); }
+        .route-city { text-align: center; }
+        .route-city .city-code { font-size: 1.125rem; font-weight: 800; }
+        .route-city .city-name { font-size: 0.6875rem; color: var(--text-muted); }
+        .route-line { flex: 1; display: flex; align-items: center; gap: 4px; }
+        .route-line .line { flex: 1; height: 1px; background: var(--border); }
+        .route-line .plane { color: var(--cyan); font-size: 1rem; }
+        .airway-details { display: flex; justify-content: space-between; align-items: center; }
+        .airway-detail { font-size: 0.75rem; color: var(--text-muted); }
+        .airway-detail strong { color: var(--text-primary); display: block; font-size: 0.875rem; }
+        .airway-price { text-align: right; }
+        .airway-price .price { font-size: 1.25rem; font-weight: 800; color: var(--pi-gold); }
+        .airway-price .per { font-size: 0.6875rem; color: var(--text-muted); }
+
+        .btn-flight {
+            width: 100%; margin-top: 14px; padding: 11px; border-radius: var(--radius-sm);
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-primary); font-weight: 700; font-size: 0.8125rem;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .btn-flight:hover { background: var(--cyan); border-color: var(--cyan); color: #fff; }
+
+        /* Services browser section */
+        .services-browser {
+            margin-bottom: 40px;
+        }
+        .services-browser-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 14px;
+        }
+        .service-browser-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            transition: all 0.2s;
+        }
+        .service-browser-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+        .service-browser-card h4 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        .service-browser-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-height: 36px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .btn-service-open {
+            width: 100%;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-service-open:hover {
+            background: var(--cyan);
+            border-color: var(--cyan);
+            color: #fff;
+        }
+
+        /* Section heading */
+        .section-heading {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px;
+        }
+        .section-heading h2 { font-size: 1.25rem; font-weight: 800; }
+        .section-heading .view-all {
+            color: var(--cyan); text-decoration: none; font-size: 0.8125rem;
+            font-weight: 600; cursor: pointer;
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999;
+            display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 32px; max-width: 420px; width: 90%;
+            text-align: center;
+        }
+        .modal .modal-icon { font-size: 3rem; margin-bottom: 16px; }
+        .modal h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; }
+        .modal p { color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 20px; line-height: 1.6; }
+        .modal .btn-close {
+            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary);
+            padding: 10px 28px; border-radius: 100px; font-weight: 600; font-size: 0.875rem;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .modal .btn-close:hover { border-color: var(--border-hover); }
+
+        /* Footer */
+        footer {
+            padding: 40px max(5%,24px); border-top: 1px solid var(--border); margin-top: 40px;
+        }
+        .footer-grid { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 32px; text-align: left; margin-bottom: 40px; }
+        .footer-col h4 { font-size: 0.8125rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .footer-col a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--text-primary); }
+        .footer-bottom { font-size: 0.8125rem; color: var(--text-muted); padding-top: 24px; border-top: 1px solid var(--border); }
+
+        @media (max-width: 900px) {
+            .nav-center { display: none; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid { grid-template-columns: 1fr 1fr; }
+            .driver-section { grid-template-columns: 1fr; }
+            .booking-grid { grid-template-columns: 1fr; }
+            .map-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-ambient"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo"><img src="logo.png/logo.png" alt="Logo">OMENDA <span>PI PAYS</span></div>
+        <div class="nav-center">
+            <a href="index.html" data-i18n="nav.marketplace">Marketplace</a>
+            <a href="new.html" data-i18n="nav.explore">Explore</a>
+            <a href="map.html" data-i18n="nav.map">Map</a>
+            <a href="social.html" data-i18n="nav.social">Social</a>
+            <a href="form.html" data-i18n="nav.register">Register</a>
+            <a href="Submit.html" data-i18n="nav.sell">Sell</a>
+            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="transport.html" class="active" data-i18n="nav.transport">Transport</a>
+        </div>
+        <div class="nav-right">
+            <div class="wallet-chip" id="wallet-balance" style="display:none">
+                <span class="dot"></span>
+                <span id="pi-username"></span>
+            </div>
+            <button class="btn-services" onclick="openServiceUrl('https://109.199.109.143/services')">All Services</button>
+            <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
+        </div>
+    </nav>
+
+    <div class="quick-links">
+        <a class="quick-link" href="index.html">Home</a>
+        <a class="quick-link" href="overview.html">Overview</a>
+        <a class="quick-link" href="transport.html">Transport</a>
+        <a class="quick-link" href="admin-panel.html">Admin</a>
+        <a class="quick-link" href="https://109.199.109.143/services" target="_blank" rel="noopener noreferrer">All Services</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge"><span class="pulse"></span> <span data-i18n="transport.badge">Pay with Pi Cryptocurrency</span></div>
+            <h1>&#128661; <span data-i18n="transport.heroTitle">City Transport &</span> <span class="gradient" data-i18n="transport.heroHighlight">Ride Services</span></h1>
+            <p data-i18n="transport.heroDesc">Book taxis, hire drivers, schedule city rides and fly anywhere — all powered by Pi Network payments</p>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon">&#128663;</div>
+                    <div class="stat-val">2,400+</div>
+                    <div class="stat-label" data-i18n="transport.activeDrivers">Active Drivers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#127961;</div>
+                    <div class="stat-val">86</div>
+                    <div class="stat-label" data-i18n="transport.citiesCovered">Cities Covered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#9992;&#65039;</div>
+                    <div class="stat-val">14</div>
+                    <div class="stat-label" data-i18n="transport.airlines">Airlines</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#11088;</div>
+                    <div class="stat-val">4.8</div>
+                    <div class="stat-label" data-i18n="transport.avgRating">Avg Rating</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Tabs -->
+    <div class="service-tabs">
+        <button class="service-tab active" data-tab="rides" onclick="switchTab('rides')">&#128661; <span data-i18n="transport.tabRides">City Rides</span></button>
+        <button class="service-tab" data-tab="taxi" onclick="switchTab('taxi')">&#128662; <span data-i18n="transport.tabTaxi">Taxi</span></button>
+        <button class="service-tab" data-tab="driver" onclick="switchTab('driver')">&#128100; <span data-i18n="transport.tabDriver">Hire Driver</span></button>
+        <button class="service-tab" data-tab="delivery" onclick="switchTab('delivery')">&#128230; <span data-i18n="transport.tabDelivery">Delivery</span></button>
+        <button class="service-tab" data-tab="airways" onclick="switchTab('airways')">&#9992;&#65039; <span data-i18n="transport.tabAirways">Airways</span></button>
+    </div>
+
+    <div class="main-section">
+
+        <!-- Booking Form -->
+        <div class="booking-card" id="booking-form">
+            <h2>&#128205; <span data-i18n="transport.bookRide">Book Your Ride</span></h2>
+            <div class="booking-grid">
+                <div class="form-group">
+                    <label data-i18n="transport.pickup">Pickup Location</label>
+                    <input type="text" id="pickup" placeholder="Enter pickup address" data-i18n-placeholder="transport.pickupPlaceholder">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="transport.destination">Destination</label>
+                    <input type="text" id="destination" placeholder="Where are you going?" data-i18n-placeholder="transport.destPlaceholder">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="transport.dateTime">Date & Time</label>
+                    <input type="datetime-local" id="ride-datetime">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="transport.passengers">Passengers</label>
+                    <select id="passengers">
+                        <option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Trip Distance (km)</label>
+                    <input type="number" id="trip-distance" min="0" step="0.1" placeholder="Optional. Auto estimate if empty">
+                </div>
+            </div>
+            <button class="btn-book" onclick="bookRide()">&#128661; <span data-i18n="transport.findRides">Find Available Rides</span></button>
+        </div>
+
+        <div class="map-section">
+            <div class="section-heading">
+                <h2>&#128506;&#65039; Live Trip Map</h2>
+            </div>
+            <div class="map-grid">
+                <div class="map-card">
+                    <iframe
+                        id="trip-map"
+                        class="map-frame"
+                        title="Trip route map"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.openstreetmap.org/export/embed.html?bbox=36.80%2C-1.34%2C36.90%2C-1.24&layer=mapnik&marker=-1.286389%2C36.817223">
+                    </iframe>
+                </div>
+                <div class="trip-card">
+                    <h3>Trip Payment Status</h3>
+                    <div class="trip-list">
+                        <div class="trip-item"><span>Status</span><strong id="trip-status" class="status-idle">Waiting</strong></div>
+                        <div class="trip-item"><span>Selected Ride</span><strong id="trip-ride">Not selected</strong></div>
+                        <div class="trip-item"><span>Distance</span><strong id="trip-distance-view">0.0 km</strong></div>
+                        <div class="trip-item"><span>Estimated Fare</span><strong id="trip-estimated">0.00 pi</strong></div>
+                        <div class="trip-item"><span>Final Payment</span><strong id="trip-final">Pending arrival</strong></div>
+                    </div>
+                    <button class="btn-arrive" id="arrive-btn" onclick="markArrived()" disabled>Arrived - Calculate and Pay</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIDES SECTION -->
+        <div id="section-rides" class="tab-content">
+            <div class="section-heading">
+                <h2>&#128663; <span data-i18n="transport.availableRides">Available Ride Options</span></h2>
+            </div>
+            <div class="transport-grid" id="rides-grid"></div>
+        </div>
+
+        <!-- TAXI SECTION -->
+        <div id="section-taxi" class="tab-content" style="display:none">
+            <div class="section-heading">
+                <h2>&#128662; <span data-i18n="transport.taxiServices">Taxi Services</span></h2>
+            </div>
+            <div class="transport-grid" id="taxi-grid"></div>
+        </div>
+
+        <!-- DRIVER SECTION -->
+        <div id="section-driver" class="tab-content" style="display:none">
+            <div class="driver-section">
+                <div>
+                    <h2>&#128100; <span data-i18n="transport.becomeDriver">Become a Deriver Cargo Agent</span></h2>
+                    <p data-i18n="transport.driverDesc">Join Omenda Pi Pays as a professional deriver cargo agent. Earn Pi cryptocurrency for every completed ride. Set your own schedule, choose your rides, and build your reputation.</p>
+                    <div class="driver-benefits">
+                        <div class="driver-benefit"><div class="benefit-icon">&#128176;</div> <span data-i18n="transport.earnPi">Earn in Pi cryptocurrency</span></div>
+                        <div class="driver-benefit"><div class="benefit-icon">&#128337;</div> <span data-i18n="transport.flexSchedule">Flexible schedule</span></div>
+                        <div class="driver-benefit"><div class="benefit-icon">&#128640;</div> <span data-i18n="transport.instantPayouts">Instant payouts</span></div>
+                        <div class="driver-benefit"><div class="benefit-icon">&#11088;</div> <span data-i18n="transport.ratingRewards">Rating rewards</span></div>
+                        <div class="driver-benefit"><div class="benefit-icon">&#127758;</div> <span data-i18n="transport.globalNetwork">Global driver network</span></div>
+                        <div class="driver-benefit"><div class="benefit-icon">&#128274;</div> <span data-i18n="transport.insured">Insurance coverage</span></div>
+                    </div>
+                    <button class="btn-driver" onclick="applyDriver()">&#128100; <span data-i18n="transport.applyNow">Apply as Deriver Cargo Agent</span></button>
+                </div>
+                <div class="driver-illustration">
+                    <div class="driver-stat"><div class="ds-icon">&#128176;</div><div class="ds-val" style="color:var(--pi-gold)">45π</div><div class="ds-label" data-i18n="transport.avgEarning">Avg Daily Earning</div></div>
+                    <div class="driver-stat"><div class="ds-icon">&#128663;</div><div class="ds-val" style="color:var(--cyan)">12</div><div class="ds-label" data-i18n="transport.ridesPerDay">Rides Per Day</div></div>
+                    <div class="driver-stat"><div class="ds-icon">&#11088;</div><div class="ds-val" style="color:var(--success)">4.9</div><div class="ds-label" data-i18n="transport.driverRating">Top Driver Rating</div></div>
+                    <div class="driver-stat"><div class="ds-icon">&#127758;</div><div class="ds-val">86</div><div class="ds-label" data-i18n="transport.citiesActive">Cities Active</div></div>
+                </div>
+            </div>
+
+            <div class="reg-panel">
+                <h3>&#128221; Deriver Cargo Agent Registration</h3>
+                <div class="booking-grid">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="driver-fullname" placeholder="Enter full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="driver-phone" placeholder="e.g. +2547...">
+                    </div>
+                    <div class="form-group">
+                        <label>Operating Place / City</label>
+                        <input type="text" id="driver-city" placeholder="Nairobi, Mombasa, Kampala...">
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Type</label>
+                        <select id="driver-vehicle">
+                            <option value="">Select vehicle type</option>
+                            <option>Motorbike</option>
+                            <option>Taxi Sedan</option>
+                            <option>SUV</option>
+                            <option>Van / Minibus</option>
+                            <option>Truck</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Plate Number</label>
+                        <input type="text" id="driver-plate" placeholder="KDA 123A">
+                    </div>
+                    <div class="form-group">
+                        <label>Experience (Years)</label>
+                        <input type="number" id="driver-experience" min="0" step="1" placeholder="0">
+                    </div>
+                </div>
+                <div class="reg-actions">
+                    <button class="btn-driver" onclick="registerDriverAgent()">Submit Driver Application</button>
+                    <button class="btn-secondary" onclick="openDriverCargoPage()">Open Deriver Cargo Agent Page</button>
+                </div>
+            </div>
+
+            <!-- Available deriver cargo agents -->
+            <div class="section-heading">
+                <h2>&#128100; <span data-i18n="transport.hireDrivers">Hire a Deriver Cargo Agent</span></h2>
+            </div>
+            <div class="transport-grid" id="driver-grid"></div>
+        </div>
+
+        <!-- DELIVERY SECTION -->
+        <div id="section-delivery" class="tab-content" style="display:none">
+            <div class="section-heading">
+                <h2>&#128230; <span data-i18n="transport.deliveryServices">Package Delivery</span></h2>
+            </div>
+            <div class="transport-grid" id="delivery-grid"></div>
+        </div>
+
+        <!-- AIRWAYS SECTION -->
+        <div id="section-airways" class="tab-content" style="display:none">
+            <!-- Flight booking form -->
+            <div class="booking-card">
+                <h2>&#9992;&#65039; <span data-i18n="transport.bookFlight">Book a Flight</span></h2>
+                <div class="booking-grid">
+                    <div class="form-group">
+                        <label data-i18n="transport.from">From</label>
+                        <select id="flight-from">
+                            <option value="NBO">Nairobi (NBO)</option>
+                            <option value="DAR">Dar es Salaam (DAR)</option>
+                            <option value="EBB">Entebbe (EBB)</option>
+                            <option value="ADD">Addis Ababa (ADD)</option>
+                            <option value="LOS">Lagos (LOS)</option>
+                            <option value="JNB">Johannesburg (JNB)</option>
+                            <option value="DXB">Dubai (DXB)</option>
+                            <option value="LHR">London (LHR)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="transport.to">To</label>
+                        <select id="flight-to">
+                            <option value="DXB">Dubai (DXB)</option>
+                            <option value="LHR">London (LHR)</option>
+                            <option value="CDG">Paris (CDG)</option>
+                            <option value="JFK">New York (JFK)</option>
+                            <option value="NRT">Tokyo (NRT)</option>
+                            <option value="SIN">Singapore (SIN)</option>
+                            <option value="NBO">Nairobi (NBO)</option>
+                            <option value="ADD">Addis Ababa (ADD)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="transport.departDate">Departure Date</label>
+                        <input type="date" id="flight-date">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="transport.class">Class</label>
+                        <select id="flight-class">
+                            <option data-i18n="transport.economy">Economy</option>
+                            <option data-i18n="transport.business">Business</option>
+                            <option data-i18n="transport.firstClass">First Class</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-book" onclick="searchFlights()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)">&#9992;&#65039; <span data-i18n="transport.searchFlights">Search Flights</span></button>
+            </div>
+
+            <div class="booking-card">
+                <h2>&#128230; Air Cargo Registration</h2>
+                <div class="booking-grid">
+                    <div class="form-group">
+                        <label>Sender Name</label>
+                        <input type="text" id="cargo-sender" placeholder="Sender full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Sender Phone</label>
+                        <input type="tel" id="cargo-phone" placeholder="Phone number">
+                    </div>
+                    <div class="form-group">
+                        <label>From Place</label>
+                        <input type="text" id="cargo-origin" placeholder="Origin airport/city">
+                    </div>
+                    <div class="form-group">
+                        <label>To Place</label>
+                        <input type="text" id="cargo-destination" placeholder="Destination airport/city">
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo Description</label>
+                        <input type="text" id="cargo-description" placeholder="Documents, electronics, samples...">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="cargo-weight" min="0.1" step="0.1" placeholder="0.1">
+                    </div>
+                </div>
+                <div class="reg-actions">
+                    <button class="btn-book" onclick="registerAirCargo()" style="margin-top:0">Register Cargo</button>
+                </div>
+                <div class="recent-list" id="cargo-recent-list"></div>
+            </div>
+
+            <div class="booking-card">
+                <h2>&#128269; Track / Trace Number</h2>
+                <div class="booking-grid">
+                    <div class="form-group">
+                        <label>Tracking Number</label>
+                        <input type="text" id="cargo-trace-number" placeholder="Enter tracking number (e.g. OPP-ACG-...)">
+                    </div>
+                </div>
+                <div class="reg-actions">
+                    <button class="btn-secondary" onclick="traceCargo()">Trace Cargo</button>
+                </div>
+                <div id="cargo-trace-result"></div>
+            </div>
+
+            <div class="section-heading">
+                <h2>&#9992;&#65039; <span data-i18n="transport.availableFlights">Available Flights</span></h2>
+            </div>
+            <div class="airways-grid" id="airways-grid"></div>
+        </div>
+
+        <!-- All Services in Browser -->
+        <div class="services-browser">
+            <div class="section-heading">
+                <h2>&#127760; Open All Services in Browser</h2>
+            </div>
+            <div class="services-browser-grid" id="services-browser-grid"></div>
+        </div>
+
+        <!-- How it Works -->
+        <div class="how-it-works">
+            <h2>&#129300; <span data-i18n="transport.howItWorks">How It Works</span></h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <div class="step-icon">&#128205;</div>
+                    <h4 data-i18n="transport.step1Title">Set Location</h4>
+                    <p data-i18n="transport.step1Desc">Enter your pickup point and destination</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <div class="step-icon">&#128663;</div>
+                    <h4 data-i18n="transport.step2Title">Choose Ride</h4>
+                    <p data-i18n="transport.step2Desc">Select from taxi, deriver cargo agent, or flight</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <div class="step-icon">&#128176;</div>
+                    <h4 data-i18n="transport.step3Title">Pay with Pi</h4>
+                    <p data-i18n="transport.step3Desc">Secure payment using Pi cryptocurrency</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">4</div>
+                    <div class="step-icon">&#127881;</div>
+                    <h4 data-i18n="transport.step4Title">Enjoy Ride</h4>
+                    <p data-i18n="transport.step4Desc">Track your ride in real-time and arrive safely</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-icon" id="modal-icon">&#9989;</div>
+            <h3 id="modal-title">Booking Confirmed!</h3>
+            <p id="modal-text">Your ride has been booked successfully. A driver will be assigned shortly.</p>
+            <button class="btn-close" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4 data-i18n="footer.marketplace">Marketplace</h4>
+                <a href="new.html" data-i18n="footer.exploreProducts">Explore Products</a>
+                <a href="new.html#fashion" data-i18n="products.fashion">Fashion</a>
+                <a href="new.html#electronics" data-i18n="products.electronics">Electronics</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.sellers">Sellers</h4>
+                <a href="form.html" data-i18n="cta.registerBusiness">Register Business</a>
+                <a href="Submit.html" data-i18n="footer.postProduct">Post Product</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav.services">Services</h4>
+                <a href="https://109.199.109.143/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="https://109.199.109.143/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="https://109.199.109.143/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="https://109.199.109.143/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="transport.html" data-i18n="transport.title">Transport</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.community">Community</h4>
+                <a href="social.html" data-i18n="nav.social">Social Feed</a>
+                <a href="map.html" data-i18n="footer.globalMap">Global Map</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.legal">Legal</h4>
+                <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
+                <a href="terms-of-service.html" data-i18n="footer.termsOfService">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
+        </div>
+    </footer>
+
+    <script>
+    // ── Pi Auth ──
+    let piUser = null;
+    const isPiBrowser = typeof window.Pi !== 'undefined';
+
+    async function piConnect() {
+        if (!isPiBrowser) { alert('Please open in Pi Browser'); return; }
+        try {
+            const auth = await window.Pi.authenticate(['username','payments'], function(p){ console.log('Incomplete', p); });
+            piUser = { uid: auth.user.uid, username: auth.user.username };
+            sessionStorage.setItem('pi_uid', piUser.uid);
+            sessionStorage.setItem('pi_username', piUser.username);
+            onAuth();
+        } catch(e) { console.error('Auth failed', e); }
+    }
+
+    function onAuth() {
+        document.getElementById('pi-username').textContent = '@' + piUser.username;
+        document.getElementById('wallet-balance').style.display = 'flex';
+        document.getElementById('pi-connect-btn').style.display = 'none';
+    }
+
+    (function restoreSession(){
+        const uid = sessionStorage.getItem('pi_uid');
+        const user = sessionStorage.getItem('pi_username');
+        if(uid && user){ piUser = { uid, username: user }; onAuth(); }
+        else if(isPiBrowser){ piConnect(); }
+    })();
+
+    if(isPiBrowser){ window.Pi.init({ version:'2.0', sandbox: true }); }
+
+    // ── Data ──
+    const rideOptions = [
+        { id: "economy", icon: "🚗", name: "Economy", desc: "Affordable everyday rides. Sedans with AC.", features: ["AC","4 seats","GPS Tracking"], price: "3-8 π", badge: "popular", badgeClass: "badge-popular" },
+        { id: "comfort", icon: "🚙", name: "Comfort Plus", desc: "Spacious SUVs with extra legroom and premium interiors.", features: ["Premium","6 seats","WiFi","Water"], price: "8-15 π", badge: "", badgeClass: "" },
+        { id: "luxury", icon: "🏎️", name: "Luxury", desc: "Executive cars for business trips and VIP transport.", features: ["Executive","4 seats","WiFi","Drinks","Privacy"], price: "15-30 π", badge: "premium", badgeClass: "badge-premium" },
+        { id: "minibus", icon: "🚐", name: "Minibus", desc: "Group travel for events, tours, or family trips.", features: ["12 seats","AC","Luggage"], price: "10-25 π", badge: "", badgeClass: "" },
+        { id: "moto", icon: "🏍️", name: "Boda / Motorbike", desc: "Quick motorcycle rides to beat city traffic.", features: ["1 rider","Fast","Helmet"], price: "1-4 π", badge: "popular", badgeClass: "badge-popular" },
+        { id: "tuktuk", icon: "🛺", name: "Tuk-Tuk", desc: "Fun three-wheeler rides for short city trips.", features: ["3 seats","Open air","Affordable"], price: "2-5 π", badge: "new", badgeClass: "badge-new" },
+    ];
+
+    const taxiOptions = [
+        { id: "city-taxi", icon: "🚕", name: "City Taxi", desc: "Licensed city taxis with metered fares paid in Pi.", features: ["Metered","Licensed","24/7"], price: "3-10 π", badge: "popular", badgeClass: "badge-popular" },
+        { id: "airport", icon: "✈️🚕", name: "Airport Transfer", desc: "Reliable airport pickup and drop-off service.", features: ["Flight tracking","Meet & greet","Luggage help"], price: "8-20 π", badge: "", badgeClass: "" },
+        { id: "intercity", icon: "🛣️", name: "Intercity Taxi", desc: "Long-distance taxi between cities and towns.", features: ["AC","Licensed","Long haul"], price: "15-50 π", badge: "", badgeClass: "" },
+        { id: "shared", icon: "👥", name: "Shared Ride", desc: "Share your ride with others heading the same way. Save Pi!", features: ["Shared","Eco-friendly","Save 40%"], price: "1-4 π", badge: "new", badgeClass: "badge-new" },
+    ];
+
+    const driverOptions = [
+        { id: "daily", icon: "👨‍✈️", name: "Daily Driver", desc: "Hire a personal driver for the full day. Perfect for tours and errands.", features: ["8hrs","Personal","Flexible"], price: "20-35 π/day", badge: "popular", badgeClass: "badge-popular" },
+        { id: "weekly", icon: "📅", name: "Weekly Package", desc: "Dedicated driver for 7 days. Best value for extended stays.", features: ["7 days","Dedicated","Discount"], price: "100-180 π/week", badge: "premium", badgeClass: "badge-premium" },
+        { id: "corporate", icon: "💼", name: "Corporate Driver", desc: "Professional chauffeur for business executives.", features: ["Suited","Executive car","Confidential"], price: "30-50 π/day", badge: "", badgeClass: "" },
+        { id: "tour", icon: "🗺️", name: "Tour Guide Driver", desc: "Local driver who doubles as a city tour guide.", features: ["Multilingual","Local knowledge","Camera stops"], price: "25-40 π/day", badge: "new", badgeClass: "badge-new" },
+    ];
+
+    const deliveryOptions = [
+        { id: "express", icon: "⚡", name: "Express Delivery", desc: "Same-day delivery within the city. Under 2 hours.", features: ["< 2hrs","Tracked","Insured"], price: "2-5 π", badge: "popular", badgeClass: "badge-popular" },
+        { id: "standard", icon: "📦", name: "Standard Delivery", desc: "Affordable delivery within 24 hours citywide.", features: ["24hrs","Tracked","Affordable"], price: "1-3 π", badge: "", badgeClass: "" },
+        { id: "heavy", icon: "🚛", name: "Heavy Cargo", desc: "Large items and furniture delivery with a truck.", features: ["Truck","Up to 500kg","2 helpers"], price: "10-30 π", badge: "", badgeClass: "" },
+        { id: "intercity-del", icon: "🌍", name: "Intercity Courier", desc: "Send packages between cities safely and quickly.", features: ["Intercity","Insured","48hrs"], price: "5-15 π", badge: "new", badgeClass: "badge-new" },
+    ];
+
+    const flights = [
+        { airline: "Kenya Airways", code: "KQ", icon: "🇰🇪", bg: "background:linear-gradient(135deg,#006600,#009900)", from: "NBO", fromCity: "Nairobi", to: "DXB", toCity: "Dubai", duration: "5h 20m", stops: "Direct", price: "85 π" },
+        { airline: "Ethiopian Airlines", code: "ET", icon: "🇪🇹", bg: "background:linear-gradient(135deg,#009639,#078930)", from: "ADD", fromCity: "Addis Ababa", to: "LHR", toCity: "London", duration: "8h 15m", stops: "Direct", price: "120 π" },
+        { airline: "Emirates", code: "EK", icon: "🇦🇪", bg: "background:linear-gradient(135deg,#c60c30,#d71920)", from: "DXB", fromCity: "Dubai", to: "JFK", toCity: "New York", duration: "13h 40m", stops: "Direct", price: "180 π" },
+        { airline: "RwandAir", code: "WB", icon: "🇷🇼", bg: "background:linear-gradient(135deg,#00a1de,#0074c8)", from: "NBO", fromCity: "Nairobi", to: "EBB", toCity: "Entebbe", duration: "1h 05m", stops: "Direct", price: "25 π" },
+        { airline: "Qatar Airways", code: "QR", icon: "🇶🇦", bg: "background:linear-gradient(135deg,#5c0931,#7b113a)", from: "NBO", fromCity: "Nairobi", to: "NRT", toCity: "Tokyo", duration: "18h 30m", stops: "1 Stop (DOH)", price: "210 π" },
+        { airline: "Turkish Airlines", code: "TK", icon: "🇹🇷", bg: "background:linear-gradient(135deg,#e30a17,#ff1a2a)", from: "DAR", fromCity: "Dar es Salaam", to: "CDG", toCity: "Paris", duration: "12h 45m", stops: "1 Stop (IST)", price: "145 π" },
+    ];
+
+    const browserServices = [
+        { name: 'All Services', desc: 'Open the complete Omenda services portal.', url: 'https://109.199.109.143/services' },
+        { name: 'Hotels', desc: 'Book and pay for hotels using Pi.', url: 'https://109.199.109.143/services/hotels' },
+        { name: 'Homes', desc: 'Browse homes and rentals available for Pi.', url: 'https://109.199.109.143/services/homes' },
+        { name: 'Bills', desc: 'Pay utility and service bills with Pi.', url: 'https://109.199.109.143/services/bills' },
+        { name: 'Map', desc: 'View verified Pi locations on the map.', url: 'map.html' },
+        { name: 'Social', desc: 'Open Pi social feed and community posts.', url: 'social.html' },
+        { name: 'Marketplace', desc: 'Shop products in the Pi marketplace.', url: 'index.html' },
+        { name: 'Explore', desc: 'Explore featured products and categories.', url: 'new.html' },
+    ];
+
+    // ── Render Functions ──
+    function escapeHtml(str) {
+        const d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
+
+    function renderCards(options, containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = options.map(o => `
+            <div class="transport-card" data-option-id="${escapeHtml(o.id)}" onclick="selectOption('${escapeHtml(o.id)}','${escapeHtml(o.name)}','${escapeHtml(o.price)}')">
+                <div class="card-header">
+                    <span class="card-icon">${o.icon}</span>
+                    ${o.badge ? `<span class="card-badge ${o.badgeClass}">${escapeHtml(o.badge.toUpperCase())}</span>` : ''}
+                </div>
+                <h3>${escapeHtml(o.name)}</h3>
+                <p class="card-desc">${escapeHtml(o.desc)}</p>
+                <div class="card-features">
+                    ${o.features.map(f => `<span class="feature-tag">${escapeHtml(f)}</span>`).join('')}
+                </div>
+                <div class="card-price">
+                    <div><span class="price-label">Starting from</span></div>
+                    <div><span class="price-val"><span class="pi-icon">π</span> ${escapeHtml(o.price)}</span></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    let selectedRide = null;
+    let currentTrip = null;
+    const PI_API_BASE = '';
+    const DRIVER_APPLICATIONS_KEY = 'omenda_driver_agent_apps';
+    const CARGO_RECORDS_KEY = 'omenda_air_cargo_records';
+
+    const rideRatePerKm = {
+        economy: 0.72,
+        comfort: 1.05,
+        luxury: 1.65,
+        minibus: 1.2,
+        moto: 0.45,
+        tuktuk: 0.6,
+        "city-taxi": 0.86,
+        airport: 1.25,
+        intercity: 1.5,
+        shared: 0.38,
+        daily: 1.18,
+        weekly: 1.04,
+        corporate: 1.58,
+        tour: 1.34,
+        express: 0.95,
+        standard: 0.62,
+        heavy: 1.72,
+        "intercity-del": 1.3,
+    };
+
+    function round2(v) {
+        return Math.round(v * 100) / 100;
+    }
+
+    function estimateDistanceKm(pickup, destination) {
+        const mix = (pickup + "|" + destination).toLowerCase();
+        let hash = 0;
+        for (let i = 0; i < mix.length; i++) {
+            hash = ((hash << 5) - hash) + mix.charCodeAt(i);
+            hash |= 0;
+        }
+        const normalized = Math.abs(hash % 35) + 3;
+        return round2(normalized);
+    }
+
+    function computeFarePi(rideId, distanceKm, passengers) {
+        const rate = rideRatePerKm[rideId] || 0.8;
+        const passengerSurcharge = Math.max(0, passengers - 1) * 0.35;
+        const baseFee = 1.2;
+        return round2(baseFee + (distanceKm * rate) + passengerSurcharge);
+    }
+
+    function readJsonList(key) {
+        try {
+            const raw = localStorage.getItem(key);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveJsonList(key, list) {
+        localStorage.setItem(key, JSON.stringify(list));
+    }
+
+    function buildTrackingNumber() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const rand = String(Math.floor(1000 + Math.random() * 9000));
+        return 'OPP-ACG-' + y + m + day + '-' + rand;
+    }
+
+    function deriveCargoStatus(record) {
+        const minutes = Math.round((Date.now() - Number(record.createdAt || Date.now())) / 60000);
+        if (minutes < 15) return { key: 'pending', label: 'Registered / Pending Pickup' };
+        if (minutes < 120) return { key: 'transit', label: 'In Transit' };
+        return { key: 'arrived', label: 'Arrived at Destination Hub' };
+    }
+
+    function renderCargoRecent() {
+        const holder = document.getElementById('cargo-recent-list');
+        if (!holder) return;
+        const rows = readJsonList(CARGO_RECORDS_KEY).slice(-4).reverse();
+        if (!rows.length) {
+            holder.innerHTML = '<div class="recent-item">No cargo registrations yet.</div>';
+            return;
+        }
+        holder.innerHTML = rows.map(function(r) {
+            const status = deriveCargoStatus(r);
+            return '<div class="recent-item"><strong>' + escapeHtml(r.traceNumber) + '</strong> | ' + escapeHtml(r.origin) + ' → ' + escapeHtml(r.destination) + ' | ' + escapeHtml(status.label) + '</div>';
+        }).join('');
+    }
+
+    function buildMapSrc(pickup, destination) {
+        if (!pickup || !destination) {
+            return 'https://www.openstreetmap.org/export/embed.html?bbox=36.80%2C-1.34%2C36.90%2C-1.24&layer=mapnik&marker=-1.286389%2C36.817223';
+        }
+        const query = encodeURIComponent(pickup + ' to ' + destination);
+        return 'https://www.google.com/maps?q=' + query + '&output=embed';
+    }
+
+    function setTripStatus(label, cls) {
+        const statusEl = document.getElementById('trip-status');
+        statusEl.textContent = label;
+        statusEl.className = cls;
+    }
+
+    function getApiUrl(path) {
+        return PI_API_BASE ? (PI_API_BASE.replace(/\/$/, '') + path) : path;
+    }
+
+    async function postPiPayment(path, payload) {
+        try {
+            await fetch(getApiUrl(path), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            return true;
+        } catch (err) {
+            console.warn('Pi payment server callback failed:', path, err);
+            return false;
+        }
+    }
+
+    function processTripPiPayment(amountPi, memo, metadata) {
+        return new Promise(function(resolve, reject) {
+            if (!isPiBrowser || !window.Pi || typeof window.Pi.createPayment !== 'function') {
+                reject(new Error('Please open in Pi Browser to complete payment.'));
+                return;
+            }
+            if (!piUser) {
+                reject(new Error('Please connect your Pi wallet first.'));
+                return;
+            }
+
+            window.Pi.createPayment(
+                {
+                    amount: amountPi,
+                    memo: memo,
+                    metadata: metadata,
+                },
+                {
+                    onReadyForServerApproval: function(paymentId) {
+                        postPiPayment('/api/pi_payment/approve', { paymentId: paymentId });
+                    },
+                    onReadyForServerCompletion: function(paymentId, txid) {
+                        postPiPayment('/api/pi_payment/complete', { paymentId: paymentId, txid: txid });
+                        resolve({ paymentId: paymentId, txid: txid });
+                    },
+                    onCancel: function(paymentId) {
+                        postPiPayment('/api/pi_payment/cancel', { paymentId: paymentId });
+                        reject(new Error('Payment cancelled by user.'));
+                    },
+                    onError: function(error, payment) {
+                        const pid = payment && payment.identifier ? payment.identifier : null;
+                        if (pid) postPiPayment('/api/pi_payment/cancel', { paymentId: pid });
+                        reject(error || new Error('Payment failed.'));
+                    },
+                }
+            );
+        });
+    }
+
+    function renderFlights() {
+        const container = document.getElementById('airways-grid');
+        container.innerHTML = flights.map(f => `
+            <div class="airway-card">
+                <div class="airway-header">
+                    <div class="airway-logo">
+                        <div class="airline-icon" style="${f.bg}">${f.icon}</div>
+                        <div>
+                            <h4>${escapeHtml(f.airline)}</h4>
+                            <span class="airline-type">${escapeHtml(f.code)}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="route-info">
+                    <div class="route-city">
+                        <div class="city-code">${escapeHtml(f.from)}</div>
+                        <div class="city-name">${escapeHtml(f.fromCity)}</div>
+                    </div>
+                    <div class="route-line">
+                        <span class="line"></span>
+                        <span class="plane">&#9992;&#65039;</span>
+                        <span class="line"></span>
+                    </div>
+                    <div class="route-city">
+                        <div class="city-code">${escapeHtml(f.to)}</div>
+                        <div class="city-name">${escapeHtml(f.toCity)}</div>
+                    </div>
+                </div>
+                <div class="airway-details">
+                    <div class="airway-detail">Duration<strong>${escapeHtml(f.duration)}</strong></div>
+                    <div class="airway-detail">Stops<strong>${escapeHtml(f.stops)}</strong></div>
+                    <div class="airway-price">
+                        <div class="price">${escapeHtml(f.price)}</div>
+                        <div class="per">per person</div>
+                    </div>
+                </div>
+                <button class="btn-flight" onclick="bookFlight('${escapeHtml(f.airline)}','${escapeHtml(f.from)}','${escapeHtml(f.to)}','${escapeHtml(f.price)}')">Book Flight — ${escapeHtml(f.price)}</button>
+            </div>
+        `).join('');
+    }
+
+    function openServiceUrl(url) {
+        const resolvedUrl = new URL(url, window.location.href).href;
+        if (isPiBrowser && window.Pi && typeof window.Pi.openUrlInSystemBrowser === 'function') {
+            // Pi Browser opens links reliably in external/system browser.
+            window.Pi.openUrlInSystemBrowser(resolvedUrl);
+        } else {
+            window.open(resolvedUrl, '_blank');
+        }
+    }
+
+    function renderBrowserServices() {
+        const container = document.getElementById('services-browser-grid');
+        container.innerHTML = browserServices.map(function(service) {
+            return `
+                <div class="service-browser-card">
+                    <h4>${escapeHtml(service.name)}</h4>
+                    <p>${escapeHtml(service.desc)}</p>
+                    <button class="btn-service-open" onclick="openServiceUrl('${escapeHtml(service.url)}')">Open in Browser</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // ── Tab Switching ──
+    function switchTab(tab) {
+        document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.service-tab[data-tab="${tab}"]`).classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(s => s.style.display = 'none');
+        document.getElementById('section-' + tab).style.display = 'block';
+
+        // Show/hide booking form for ride-related tabs
+        const bookingForm = document.getElementById('booking-form');
+        if (tab === 'airways') {
+            bookingForm.style.display = 'none';
+        } else {
+            bookingForm.style.display = 'block';
+        }
+    }
+
+    // ── Booking ──
+    function selectOption(id, name, price) {
+        selectedRide = { id, name, price };
+        document.querySelectorAll('.transport-card').forEach(function(card) {
+            card.classList.remove('selected');
+        });
+        document.querySelectorAll('.transport-card[data-option-id="' + id + '"]').forEach(function(card) {
+            card.classList.add('selected');
+        });
+        document.getElementById('trip-ride').textContent = name;
+        showModal('✅', 'Ride Selected!', `You selected ${name} (${price}). Enter your pickup and destination above, then tap "Find Available Rides" to confirm.`);
+    }
+
+    function bookRide() {
+        const pickup = document.getElementById('pickup').value.trim();
+        const dest = document.getElementById('destination').value.trim();
+        const passengers = parseInt(document.getElementById('passengers').value, 10) || 1;
+        const distanceInput = parseFloat(document.getElementById('trip-distance').value);
+
+        if (!selectedRide) {
+            showModal('🚗', 'Select Ride Type', 'Please select a ride option first before booking.');
+            return;
+        }
+        if (!pickup || !dest) {
+            showModal('📍', 'Enter Locations', 'Please enter both pickup and destination addresses to find available rides.');
+            return;
+        }
+
+        const distanceKm = (!isNaN(distanceInput) && distanceInput > 0) ? round2(distanceInput) : estimateDistanceKm(pickup, dest);
+        const estimatedFarePi = computeFarePi(selectedRide.id, distanceKm, passengers);
+        const mapSrc = buildMapSrc(pickup, dest);
+
+        currentTrip = {
+            pickup,
+            destination: dest,
+            passengers,
+            distanceKm,
+            estimatedFarePi,
+            rideId: selectedRide.id,
+            rideName: selectedRide.name,
+            startedAt: Date.now(),
+        };
+
+        document.getElementById('trip-map').src = mapSrc;
+        document.getElementById('trip-distance-view').textContent = distanceKm.toFixed(1) + ' km';
+        document.getElementById('trip-estimated').textContent = estimatedFarePi.toFixed(2) + ' pi';
+        document.getElementById('trip-final').textContent = 'In progress...';
+        document.getElementById('arrive-btn').disabled = false;
+        setTripStatus('On Trip', 'status-live');
+
+        showModal('✅', 'Ride Confirmed', `Trip started from "${pickup}" to "${dest}". Estimated payment: ${estimatedFarePi.toFixed(2)} pi. Tap "Arrived" when you reach destination.`);
+    }
+
+    async function markArrived() {
+        if (!currentTrip) {
+            showModal('📍', 'No Active Trip', 'Book a ride first, then you can mark it as arrived.');
+            return;
+        }
+
+        const distanceInput = parseFloat(document.getElementById('trip-distance').value);
+        const actualDistance = (!isNaN(distanceInput) && distanceInput > 0) ? round2(distanceInput) : currentTrip.distanceKm;
+        const elapsedMinutes = Math.max(1, Math.round((Date.now() - currentTrip.startedAt) / 60000));
+        const timeAdjustment = Math.min(2.5, elapsedMinutes * 0.02);
+        const finalPaymentPi = round2(computeFarePi(currentTrip.rideId, actualDistance, currentTrip.passengers) + timeAdjustment);
+        const finalPaymentUsd = (window.OmendaGcv && typeof window.OmendaGcv.formatUsd === 'function')
+            ? window.OmendaGcv.formatUsd(finalPaymentPi)
+            : '$' + (finalPaymentPi * 314159).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        document.getElementById('trip-distance-view').textContent = actualDistance.toFixed(1) + ' km';
+        document.getElementById('trip-final').textContent = finalPaymentPi.toFixed(2) + ' pi (' + finalPaymentUsd + ')';
+        const arriveBtn = document.getElementById('arrive-btn');
+        arriveBtn.disabled = true;
+        setTripStatus('Arrived', 'status-arrived');
+
+        const tripSnapshot = {
+            pickup: currentTrip.pickup,
+            destination: currentTrip.destination,
+            rideId: currentTrip.rideId,
+            rideName: currentTrip.rideName,
+            passengers: currentTrip.passengers,
+            distanceKm: actualDistance,
+            farePi: finalPaymentPi,
+        };
+
+        try {
+            const paymentResult = await processTripPiPayment(
+                finalPaymentPi,
+                'Transport trip: ' + tripSnapshot.rideName + ' from ' + tripSnapshot.pickup + ' to ' + tripSnapshot.destination,
+                {
+                    type: 'transport',
+                    ride: tripSnapshot.rideId,
+                    pickup: tripSnapshot.pickup,
+                    destination: tripSnapshot.destination,
+                    distanceKm: tripSnapshot.distanceKm,
+                    passengers: tripSnapshot.passengers,
+                    farePi: tripSnapshot.farePi,
+                }
+            );
+
+            const txMessage = paymentResult && paymentResult.txid ? (' TxID: ' + paymentResult.txid) : '';
+            showModal('💳', 'Payment Completed', 'Trip arrived. Final payment: ' + finalPaymentPi.toFixed(2) + ' pi (' + finalPaymentUsd + ').' + txMessage);
+        } catch (error) {
+            arriveBtn.disabled = false;
+            setTripStatus('On Trip', 'status-live');
+            showModal('⚠️', 'Payment Not Completed', (error && error.message ? error.message : 'Unable to complete Pi payment.') + ' You can tap Arrived again to retry.');
+            return;
+        }
+
+        currentTrip = null;
+    }
+
+    function bookFlight(airline, from, to, price) {
+        showModal('✈️', 'Flight Booking', `Booking ${airline} flight from ${from} to ${to} for ${price} per person. You will be redirected to complete Pi payment.`);
+    }
+
+    function searchFlights() {
+        showModal('✈️', 'Searching Flights...', 'Looking for the best available flights. Results will appear below.');
+    }
+
+    function applyDriver() {
+        if (!piUser) {
+            showModal('🔒', 'Connect Pi Wallet', 'Please connect your Pi wallet first to apply as a deriver cargo agent.');
+            return;
+        }
+        showModal('🎉', 'Application Submitted!', `Thank you, @${piUser.username}! Your deriver cargo agent application has been received. We'll review it within 24 hours.`);
+    }
+
+    function openDriverCargoPage() {
+        openServiceUrl('driver-cargo-agent.html');
+    }
+
+    function registerDriverAgent() {
+        if (!piUser) {
+            showModal('🔒', 'Connect Pi Wallet', 'Please connect your Pi wallet first to register as a transport deriver cargo agent.');
+            return;
+        }
+        const fullName = document.getElementById('driver-fullname').value.trim();
+        const phone = document.getElementById('driver-phone').value.trim();
+        const city = document.getElementById('driver-city').value.trim();
+        const vehicle = document.getElementById('driver-vehicle').value;
+        const plate = document.getElementById('driver-plate').value.trim();
+        const experience = document.getElementById('driver-experience').value.trim();
+
+        if (!fullName || !phone || !city || !vehicle || !plate) {
+            showModal('⚠️', 'Missing Details', 'Please fill all required driver registration fields.');
+            return;
+        }
+
+        const apps = readJsonList(DRIVER_APPLICATIONS_KEY);
+        apps.push({
+            fullName: fullName,
+            phone: phone,
+            city: city,
+            vehicle: vehicle,
+            plate: plate,
+            experience: experience || '0',
+            username: piUser.username,
+            createdAt: Date.now(),
+        });
+        saveJsonList(DRIVER_APPLICATIONS_KEY, apps);
+
+        document.getElementById('driver-fullname').value = '';
+        document.getElementById('driver-phone').value = '';
+        document.getElementById('driver-city').value = '';
+        document.getElementById('driver-vehicle').value = '';
+        document.getElementById('driver-plate').value = '';
+        document.getElementById('driver-experience').value = '';
+
+        showModal('✅', 'Deriver Cargo Agent Registered', 'Your deriver cargo agent application has been saved. Review team will contact you shortly.');
+    }
+
+    function registerAirCargo() {
+        const sender = document.getElementById('cargo-sender').value.trim();
+        const phone = document.getElementById('cargo-phone').value.trim();
+        const origin = document.getElementById('cargo-origin').value.trim();
+        const destination = document.getElementById('cargo-destination').value.trim();
+        const description = document.getElementById('cargo-description').value.trim();
+        const weight = parseFloat(document.getElementById('cargo-weight').value);
+
+        if (!sender || !phone || !origin || !destination || !description || isNaN(weight) || weight <= 0) {
+            showModal('⚠️', 'Missing Cargo Details', 'Please fill sender, places, description and valid weight before registering cargo.');
+            return;
+        }
+
+        const traceNumber = buildTrackingNumber();
+        const records = readJsonList(CARGO_RECORDS_KEY);
+        records.push({
+            traceNumber: traceNumber,
+            sender: sender,
+            phone: phone,
+            origin: origin,
+            destination: destination,
+            description: description,
+            weightKg: round2(weight),
+            createdAt: Date.now(),
+        });
+        saveJsonList(CARGO_RECORDS_KEY, records);
+
+        document.getElementById('cargo-sender').value = '';
+        document.getElementById('cargo-phone').value = '';
+        document.getElementById('cargo-origin').value = '';
+        document.getElementById('cargo-destination').value = '';
+        document.getElementById('cargo-description').value = '';
+        document.getElementById('cargo-weight').value = '';
+
+        document.getElementById('cargo-trace-number').value = traceNumber;
+        showModal('📦', 'Cargo Registered', 'Cargo registration complete. Tracking Number: ' + traceNumber);
+        renderCargoRecent();
+        traceCargo();
+    }
+
+    function traceCargo() {
+        const holder = document.getElementById('cargo-trace-result');
+        const query = document.getElementById('cargo-trace-number').value.trim().toUpperCase();
+        if (!query) {
+            holder.innerHTML = '<div class="trace-card">Enter a tracking number to trace cargo.</div>';
+            return;
+        }
+        const records = readJsonList(CARGO_RECORDS_KEY);
+        const rec = records.find(function(r) { return String(r.traceNumber || '').toUpperCase() === query; });
+        if (!rec) {
+            holder.innerHTML = '<div class="trace-card">No cargo found for tracking number <strong>' + escapeHtml(query) + '</strong>.</div>';
+            return;
+        }
+
+        const status = deriveCargoStatus(rec);
+        const created = new Date(Number(rec.createdAt || Date.now()));
+        holder.innerHTML =
+            '<div class="trace-card">' +
+                '<div class="trace-status ' + status.key + '">● ' + escapeHtml(status.label) + '</div>' +
+                '<h4>Tracking Number: ' + escapeHtml(rec.traceNumber) + '</h4>' +
+                '<div class="trace-grid">' +
+                    '<div class="trace-item">From<strong>' + escapeHtml(rec.origin) + '</strong></div>' +
+                    '<div class="trace-item">To<strong>' + escapeHtml(rec.destination) + '</strong></div>' +
+                    '<div class="trace-item">Sender<strong>' + escapeHtml(rec.sender) + '</strong></div>' +
+                    '<div class="trace-item">Cargo<strong>' + escapeHtml(rec.description) + '</strong></div>' +
+                    '<div class="trace-item">Weight<strong>' + escapeHtml(String(rec.weightKg)) + ' kg</strong></div>' +
+                    '<div class="trace-item">Registered<strong>' + escapeHtml(created.toLocaleString()) + '</strong></div>' +
+                '</div>' +
+            '</div>';
+    }
+
+    // ── Modal ──
+    function showModal(icon, title, text) {
+        document.getElementById('modal-icon').textContent = icon;
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-text').textContent = text;
+        document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.remove('active');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('modal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ── Init ──
+    renderCards(rideOptions, 'rides-grid');
+    renderCards(taxiOptions, 'taxi-grid');
+    renderCards(driverOptions, 'driver-grid');
+    renderCards(deliveryOptions, 'delivery-grid');
+    renderFlights();
+    renderBrowserServices();
+    renderCargoRecent();
+    </script>
+</body>
+</html>

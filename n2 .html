@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi Market | Omenda Pi Pays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-gold-light: rgba(245,166,35,0.12);
+            --pi-purple: #7c3aed;
+            --pi-purple-light: rgba(124,58,237,0.10);
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success: #22c55e;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            min-height: 100vh; -webkit-font-smoothing: antialiased;
+            padding-bottom: 72px;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(9,9,11,0.9); backdrop-filter: blur(20px);
+            padding: 12px 16px; border-bottom: 1px solid var(--border);
+        }
+        .header-top {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .back-btn {
+            background: none; border: none; color: var(--text-secondary);
+            font-size: 1.25rem; cursor: pointer; padding: 4px;
+        }
+        .search-input {
+            flex: 1; padding: 10px 16px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 100px; color: var(--text-primary);
+            font-size: 0.875rem; outline: none; font-family: inherit;
+        }
+        .search-input::placeholder { color: var(--text-muted); }
+        .search-input:focus { border-color: var(--pi-purple); }
+
+        /* Content */
+        .content { padding: 16px; }
+
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; margin-top: 8px;
+        }
+        .section-header h2 { font-size: 1rem; font-weight: 700; letter-spacing: -0.3px; }
+        .section-header a {
+            color: var(--pi-purple); font-size: 0.8125rem; font-weight: 600; text-decoration: none;
+        }
+
+        /* Product Grid - 2 columns */
+        .product-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden; transition: all 0.2s;
+        }
+        .card:active { transform: scale(0.98); }
+        .card-img { position: relative; overflow: hidden; }
+        .card-img img { width: 100%; height: 140px; object-fit: cover; }
+        .card-badge {
+            position: absolute; top: 8px; left: 8px;
+            background: rgba(9,9,11,0.7); backdrop-filter: blur(6px);
+            padding: 3px 10px; border-radius: 100px;
+            font-size: 0.625rem; font-weight: 700; color: var(--pi-gold);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .card-body { padding: 12px; }
+        .card-body .card-price {
+            font-size: 1rem; font-weight: 700; color: var(--pi-gold); margin-bottom: 4px;
+        }
+        .card-body .card-title {
+            font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
+            background: rgba(9,9,11,0.95); backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid var(--border); z-index: 100;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            text-decoration: none; color: var(--text-muted); font-size: 0.625rem;
+            font-weight: 600; transition: color 0.2s; padding: 8px;
+        }
+        .nav-item.active { color: var(--pi-purple); }
+        .nav-item .nav-icon { font-size: 1.25rem; }
+
+        .sell-fab {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--pi-purple); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: 300;
+            text-decoration: none; margin-top: -16px;
+            box-shadow: 0 4px 16px rgba(124,58,237,0.4);
+            transition: transform 0.2s;
+        }
+        .sell-fab:active { transform: scale(0.9); }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="header-top">
+            <button class="back-btn" onclick="history.back()">&#8592;</button>
+            <input type="text" class="search-input" placeholder="Search Pi Market...">
+            <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+                <span id="pi-username" style="color:#f5a623;font-weight:600;font-size:0.75rem;display:none"></span>
+                <a href="https://109.199.109.143/services" target="_blank" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:6px 10px;border-radius:8px;font-weight:600;font-size:0.7rem;white-space:nowrap;text-decoration:none">Services</a>
+                <button id="pi-connect-btn" onclick="piConnect()" style="background:#7c3aed;color:#fff;border:none;padding:6px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.75rem;white-space:nowrap" data-i18n="nav.connectPi">Connect Pi</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+        <!-- Fashion Section -->
+        <div class="section-header">
+            <h2 data-i18n="explore.fashionSection">Fashion & Accessories</h2>
+            <a href="new.html#fashion">See All</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">New</span>
+                    <img src="https://picsum.photos/seed/watch1/300/200" alt="Watch" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">300.00 &#960;</div>
+                    <div class="card-title">NAVIFORCE Women's Elegant Square Quartz Watch</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">New</span>
+                    <img src="https://picsum.photos/seed/sneakers/300/200" alt="Sneakers" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">180.00 &#960;</div>
+                    <div class="card-title">Chunky Platform Sneakers Size 41 - 44</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Iconic</span>
+                    <img src="https://picsum.photos/seed/rayban/300/200" alt="Sunglasses" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">250 &#960;</div>
+                    <div class="card-title">Ray-Ban Aviator Sunglasses</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Trending</span>
+                    <img src="https://picsum.photos/seed/jordan4/300/200" alt="Jordans" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">420 &#960;</div>
+                    <div class="card-title">Nike Air Jordan 4 Retro</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Electronics Section -->
+        <div class="section-header">
+            <h2 data-i18n="products.electronics">Electronics</h2>
+            <a href="new.html#electronics">See All</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Hot</span>
+                    <img src="https://picsum.photos/seed/iphone15/300/200" alt="iPhone" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">4,900 &#960;</div>
+                    <div class="card-title">iPhone 15 Pro Max 256GB</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">New</span>
+                    <img src="https://picsum.photos/seed/airpodspro/300/200" alt="AirPods" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">1,200 &#960;</div>
+                    <div class="card-title">AirPods Pro 2nd Gen USB-C</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Limited</span>
+                    <img src="https://picsum.photos/seed/ps5pro/300/200" alt="PS5" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">3,200 &#960;</div>
+                    <div class="card-title">Sony PlayStation 5 Pro</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Popular</span>
+                    <img src="https://picsum.photos/seed/ipadair/300/200" alt="iPad" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">3,600 &#960;</div>
+                    <div class="card-title">iPad Air M2 11-inch</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Digital Products -->
+        <div class="section-header">
+            <h2 data-i18n="explore.digitalProducts">Digital Products</h2>
+            <a href="new.html#digital">See All</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Hot</span>
+                    <img src="https://picsum.photos/seed/music1/300/200" alt="Music" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">0.10 &#960;</div>
+                    <div class="card-title">Support us get that nice GPM song</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Value</span>
+                    <img src="https://picsum.photos/seed/social1/300/200" alt="Social Pack" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">0.10 &#960;</div>
+                    <div class="card-title">Posting Pack (Pi Network) &mdash; 30 Days</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">New</span>
+                    <img src="https://picsum.photos/seed/uxcourse/300/200" alt="UX Course" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">15 &#960;</div>
+                    <div class="card-title">UI/UX Design Masterclass</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Hot</span>
+                    <img src="https://picsum.photos/seed/afrobeats/300/200" alt="Afrobeats" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">3 &#960;</div>
+                    <div class="card-title">African Beats Music Pack</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home & Living -->
+        <div class="section-header">
+            <h2 data-i18n="explore.homeLiving">Home & Living</h2>
+            <a href="new.html#home">See All</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Popular</span>
+                    <img src="https://picsum.photos/seed/sofa2/300/200" alt="Sofa" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">1,800 &#960;</div>
+                    <div class="card-title">L-Shape Sectional Sofa</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">New</span>
+                    <img src="https://picsum.photos/seed/smart-bulb/300/200" alt="Smart Bulbs" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">120 &#960;</div>
+                    <div class="card-title">RGB Smart Bulb 4-Pack WiFi</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Hit</span>
+                    <img src="https://picsum.photos/seed/coffee-maker/300/200" alt="Coffee Maker" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">280 &#960;</div>
+                    <div class="card-title">Automatic Espresso Machine</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Deal</span>
+                    <img src="https://picsum.photos/seed/bedlinen/300/200" alt="Bedding" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">95 &#960;</div>
+                    <div class="card-title">Egyptian Cotton Bedding Set</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beauty & Health -->
+        <div class="section-header">
+            <h2 data-i18n="explore.beautyHealth">Beauty & Health</h2>
+            <a href="new.html#beauty">See All</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Best</span>
+                    <img src="https://picsum.photos/seed/skincare/300/200" alt="Skincare" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">85 &#960;</div>
+                    <div class="card-title">Vitamin C Serum + Moisturizer</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Popular</span>
+                    <img src="https://picsum.photos/seed/perfume1/300/200" alt="Perfume" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">220 &#960;</div>
+                    <div class="card-title">Oud Arabian Perfume 100ml</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">New</span>
+                    <img src="https://picsum.photos/seed/diffuser/300/200" alt="Diffuser" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">65 &#960;</div>
+                    <div class="card-title">Ultrasonic Aromatherapy Diffuser</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Organic</span>
+                    <img src="https://picsum.photos/seed/shea/300/200" alt="Shea Butter" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">25 &#960;</div>
+                    <div class="card-title">Raw Shea Butter 500g Ghana</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sports & Outdoors -->
+        <div class="section-header">
+            <h2 data-i18n="explore.sportsOutdoors">Sports & Outdoors</h2>
+            <a href="new.html#sports">See All</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Hot</span>
+                    <img src="https://picsum.photos/seed/jersey1/300/200" alt="Jersey" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">180 &#960;</div>
+                    <div class="card-title">Official Football Jersey 24/25</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">New</span>
+                    <img src="https://picsum.photos/seed/yoga-mat/300/200" alt="Yoga Mat" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">45 &#960;</div>
+                    <div class="card-title">Non-Slip Yoga Mat 6mm</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Deal</span>
+                    <img src="https://picsum.photos/seed/camping-tent/300/200" alt="Tent" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">350 &#960;</div>
+                    <div class="card-title">4-Person Camping Tent</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Popular</span>
+                    <img src="https://picsum.photos/seed/dumbbell/300/200" alt="Dumbbells" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">120 &#960;</div>
+                    <div class="card-title">Adjustable Dumbbell Set 20kg</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Food & Groceries -->
+        <div class="section-header">
+            <h2 data-i18n="explore.foodGroceries">Food & Groceries</h2>
+            <a href="new.html#food">See All</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Fresh</span>
+                    <img src="https://picsum.photos/seed/coffee-bag/300/200" alt="Coffee" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">18 &#960;</div>
+                    <div class="card-title">Kenya AA Coffee Beans 500g</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Organic</span>
+                    <img src="https://picsum.photos/seed/honey1/300/200" alt="Honey" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">12 &#960;</div>
+                    <div class="card-title">Raw Wild Honey 1kg</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Hot</span>
+                    <img src="https://picsum.photos/seed/spice-set/300/200" alt="Spices" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">8 &#960;</div>
+                    <div class="card-title">East African Spice Mix Box</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <span class="card-badge">Deal</span>
+                    <img src="https://picsum.photos/seed/snackbox/300/200" alt="Snack Box" loading="lazy">
+                </div>
+                <div class="card-body">
+                    <div class="card-price">15 &#960;</div>
+                    <div class="card-title">Premium Snack Gift Box</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon">&#127968;</span>
+            <span data-i18n="nav.home">Home</span>
+        </a>
+        <a href="new.html" class="nav-item">
+            <span class="nav-icon">&#128269;</span>
+            <span data-i18n="nav.explore">Explore</span>
+        </a>
+        <a href="Submit.html" class="sell-fab">+</a>
+        <a href="https://109.199.109.143/services" class="nav-item" target="_blank">
+            <span class="nav-icon">&#128736;</span>
+            <span data-i18n="nav.services">Services</span>
+        </a>
+        <a href="map.html" class="nav-item">
+            <span class="nav-icon">&#127758;</span>
+            <span data-i18n="nav.map">Map</span>
+        </a>
+        <a href="social.html" class="nav-item">
+            <span class="nav-icon">&#128227;</span>
+            <span data-i18n="nav.social">Social</span>
+        </a>
+        <a href="transport.html" class="nav-item">
+            <span class="nav-icon">&#128663;</span>
+            <span data-i18n="nav.transport">Transport</span>
+        </a>
+    </nav>
+
+    <script>
+        function piConnect() {
+            if (typeof window.Pi === 'undefined') {
+                alert('Please open this app in Pi Browser to connect.');
+                return;
+            }
+            Pi.init({ version: '2.0', sandbox: false });
+            Pi.authenticate(['username','payments'], {
+                onIncompletePaymentFound: function(p) { console.log('Incomplete payment:', p); }
+            }).then(function(auth) {
+                document.getElementById('pi-username').textContent = '@' + auth.user.username;
+                document.getElementById('pi-username').style.display = 'inline';
+                document.getElementById('pi-connect-btn').textContent = 'Connected';
+                document.getElementById('pi-connect-btn').style.background = '#16a34a';
+                sessionStorage.setItem('piUser', JSON.stringify(auth.user));
+            }).catch(function(e) { console.error('Pi auth error:', e); });
+        }
+        (function() {
+            var u = sessionStorage.getItem('piUser');
+            if (u) {
+                var user = JSON.parse(u);
+                document.getElementById('pi-username').textContent = '@' + user.username;
+                document.getElementById('pi-username').style.display = 'inline';
+                document.getElementById('pi-connect-btn').textContent = 'Connected';
+                document.getElementById('pi-connect-btn').style.background = '#16a34a';
+            } else if (typeof window.Pi !== 'undefined') {
+                // Auto-login in Pi Browser
+                piConnect();
+            }
+        })();
+
+        // Pi SDK — Full API integration
+        var isPiBrowser = typeof window.Pi !== 'undefined';
+        if (isPiBrowser) Pi.init({ version: '2.0', sandbox: false });
+
+        function piShare(title, message) {
+            if (isPiBrowser && Pi.openShareDialog) Pi.openShareDialog(title, message);
+            else if (navigator.share) navigator.share({ title: title, text: message });
+        }
+        function piCopy(text) {
+            if (isPiBrowser && Pi.copyText) Pi.copyText(text);
+            else if (navigator.clipboard) navigator.clipboard.writeText(text);
+        }
+        function piOpenUrl(url) {
+            if (isPiBrowser && Pi.openUrlInSystemBrowser) Pi.openUrlInSystemBrowser(url);
+            else window.open(url, '_blank');
+        }
+        function piChat(id) {
+            if (isPiBrowser && Pi.openConversation) Pi.openConversation(id);
+        }
+        function piRequestPermission(perm) {
+            if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
+        }
+        function piNativeFeatures() {
+            if (isPiBrowser && Pi.nativeFeaturesList) return Pi.nativeFeaturesList();
+            return [];
+        }
+        async function piShowAd() {
+            if (!isPiBrowser || !Pi.Ads) return;
+            try { await Pi.Ads.requestAd('interstitial'); var r = await Pi.Ads.isAdReady('interstitial'); if (r) await Pi.Ads.showAd('interstitial'); } catch(e) {}
+        }
+
+        // Show an ad on page load (if available)
+        piShowAd();
+    </script>
+</body>
+</html>

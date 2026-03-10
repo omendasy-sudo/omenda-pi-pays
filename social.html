@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Feed | Omenda Pi Pays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-gold-light: rgba(245,166,35,0.12);
+            --pi-purple: #7c3aed;
+            --pi-purple-light: rgba(124,58,237,0.10);
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06); --danger: #dc2626;
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            min-height: 100vh; -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient */
+        .bg-ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .bg-ambient::before {
+            content: ''; position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+            top: -200px; right: -100px;
+        }
+        .bg-ambient::after {
+            content: ''; position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
+            bottom: -100px; left: -100px;
+        }
+
+        /* Nav */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 max(5%,24px); height: 72px;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+        .logo span { color: var(--pi-gold); }
+        .nav-center { display: flex; gap: 8px; }
+        .nav-center a {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
+        }
+        .nav-center a:hover, .nav-center a.active { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .wallet-chip {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--pi-gold-light); border: 1px solid rgba(245,166,35,0.2);
+            padding: 8px 16px; border-radius: 100px; font-size: 0.8125rem; font-weight: 600;
+            color: var(--pi-gold);
+        }
+        .wallet-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+        .btn-primary {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 10px 22px; border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.875rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); }
+
+        /* Page Layout */
+        .page-wrapper {
+            max-width: 1200px; margin: 0 auto; padding: 24px max(5%,24px);
+            display: grid; grid-template-columns: 1fr 360px; gap: 24px;
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 32px max(5%,24px) 0;
+            max-width: 1200px; margin: 0 auto;
+        }
+        .page-header h1 {
+            font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px;
+        }
+        .page-header h1 .gradient {
+            background: linear-gradient(135deg, var(--pi-gold) 0%, #fbbf24 100%);
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .page-header p { color: var(--text-secondary); font-size: 0.9375rem; }
+
+        /* Create Post Card */
+        .create-post {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; margin-bottom: 20px;
+        }
+        .create-post-top {
+            display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px;
+        }
+        .avatar {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--pi-purple), var(--pi-gold));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1rem; color: #fff; flex-shrink: 0;
+        }
+        .avatar.sm { width: 36px; height: 36px; font-size: 0.8rem; }
+        .create-post textarea {
+            flex: 1; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text-primary);
+            font-size: 0.9375rem; font-family: inherit; padding: 12px 16px;
+            resize: vertical; min-height: 80px; outline: none; width: 100%;
+            transition: border-color 0.2s;
+        }
+        .create-post textarea:focus { border-color: var(--pi-purple); }
+        .create-post textarea::placeholder { color: var(--text-muted); }
+
+        /* Image preview */
+        .image-preview-area {
+            display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+        }
+        .image-preview-area .preview-thumb {
+            width: 80px; height: 80px; border-radius: 8px; object-fit: cover;
+            border: 1px solid var(--border);
+        }
+        .image-preview-area .remove-img {
+            position: absolute; top: -6px; right: -6px; width: 20px; height: 20px;
+            border-radius: 50%; background: var(--danger); color: #fff; border: none;
+            font-size: 0.75rem; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; line-height: 1;
+        }
+        .image-preview-area .thumb-wrap {
+            position: relative; display: inline-block;
+        }
+
+        /* Create post actions */
+        .create-post-actions {
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid var(--border); padding-top: 14px;
+        }
+        .post-tools { display: flex; gap: 4px; }
+        .post-tool-btn {
+            background: none; border: 1px solid transparent; color: var(--text-muted);
+            padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer;
+            font-size: 0.8125rem; font-family: inherit; display: flex; align-items: center; gap: 6px;
+            transition: all 0.2s;
+        }
+        .post-tool-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); border-color: var(--border); }
+        .post-tool-btn .icon { font-size: 1.1rem; }
+
+        .category-select {
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-secondary); padding: 8px 12px; border-radius: var(--radius-sm);
+            font-size: 0.8125rem; font-family: inherit; cursor: pointer; outline: none;
+        }
+        .category-select option { background: var(--bg-secondary); color: var(--text-primary); }
+
+        .btn-post {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 10px 28px; border-radius: 100px; font-weight: 700;
+            font-size: 0.875rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-post:hover { background: #6d28d9; transform: translateY(-1px); }
+        .btn-post:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        /* Feed */
+        .feed { display: flex; flex-direction: column; gap: 16px; }
+
+        /* Post Card */
+        .post-card {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s;
+        }
+        .post-card:hover { border-color: var(--border-hover); }
+        .post-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px 0;
+        }
+        .post-author {
+            display: flex; gap: 10px; align-items: center;
+        }
+        .post-author-info h4 { font-size: 0.875rem; font-weight: 700; line-height: 1.3; }
+        .post-author-info .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.6875rem; font-weight: 700; padding: 2px 8px; border-radius: 100px;
+            background: var(--pi-gold-light); color: var(--pi-gold); margin-left: 6px;
+        }
+        .post-author-info .time { color: var(--text-muted); font-size: 0.75rem; }
+        .post-menu-btn {
+            background: none; border: none; color: var(--text-muted); cursor: pointer;
+            font-size: 1.2rem; padding: 4px 8px; border-radius: 6px; transition: all 0.2s;
+        }
+        .post-menu-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+
+        .post-body {
+            padding: 12px 20px 16px;
+        }
+        .post-body p {
+            color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.65;
+            white-space: pre-wrap; word-break: break-word;
+        }
+        .post-body .post-tag {
+            display: inline-block; color: var(--pi-purple); font-weight: 600;
+            cursor: pointer;
+        }
+        .post-body .post-tag:hover { text-decoration: underline; }
+
+        /* Post images */
+        .post-images {
+            display: grid; gap: 3px; margin: 0;
+        }
+        .post-images.one { grid-template-columns: 1fr; }
+        .post-images.two { grid-template-columns: 1fr 1fr; }
+        .post-images.three { grid-template-columns: 1fr 1fr; }
+        .post-images img {
+            width: 100%; height: 280px; object-fit: cover; cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .post-images img:hover { opacity: 0.9; }
+        .post-images.three img:first-child { grid-row: 1 / 3; height: 100%; }
+
+        /* Post category tag */
+        .post-category {
+            margin: 0 20px 12px; display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 700;
+            background: var(--pi-purple-light); color: #a78bfa;
+        }
+
+        /* Engagement */
+        .post-engagement {
+            padding: 0 20px 8px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.8125rem; color: var(--text-muted);
+        }
+        .post-engagement .likes-count { cursor: pointer; }
+        .post-engagement .likes-count:hover { text-decoration: underline; color: var(--text-secondary); }
+
+        .post-actions {
+            display: flex; border-top: 1px solid var(--border);
+        }
+        .post-action-btn {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px; background: none; border: none; border-right: 1px solid var(--border);
+            color: var(--text-muted); font-size: 0.8125rem; font-weight: 600;
+            cursor: pointer; transition: all 0.15s; font-family: inherit;
+        }
+        .post-action-btn:last-child { border-right: none; }
+        .post-action-btn:hover { background: rgba(255,255,255,0.04); color: var(--text-primary); }
+        .post-action-btn.liked { color: var(--danger); }
+        .post-action-btn .icon { font-size: 1.1rem; }
+
+        /* Comments section */
+        .comments-section {
+            border-top: 1px solid var(--border);
+            padding: 12px 20px 16px;
+            display: none;
+        }
+        .comments-section.open { display: block; }
+        .comment {
+            display: flex; gap: 10px; padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .comment:last-of-type { border-bottom: none; }
+        .comment-content { flex: 1; }
+        .comment-content .comment-author { font-size: 0.8125rem; font-weight: 700; }
+        .comment-content .comment-text { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 2px; line-height: 1.5; }
+        .comment-content .comment-time { font-size: 0.6875rem; color: var(--text-muted); margin-top: 4px; }
+
+        .comment-input-row {
+            display: flex; gap: 10px; margin-top: 10px; align-items: center;
+        }
+        .comment-input-row input {
+            flex: 1; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 100px; padding: 10px 16px; color: var(--text-primary);
+            font-size: 0.8125rem; font-family: inherit; outline: none;
+        }
+        .comment-input-row input:focus { border-color: var(--pi-purple); }
+        .comment-input-row button {
+            background: var(--pi-purple); color: #fff; border: none;
+            width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+            font-size: 1rem; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .comment-input-row button:hover { background: #6d28d9; }
+
+        /* Sidebar */
+        .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+        .sidebar-card {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px;
+        }
+        .sidebar-card h3 {
+            font-size: 0.9375rem; font-weight: 700; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Trending */
+        .trending-item {
+            padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+            cursor: pointer; transition: all 0.15s;
+        }
+        .trending-item:last-child { border-bottom: none; }
+        .trending-item:hover .trending-tag { color: var(--pi-gold); }
+        .trending-item .trending-rank { font-size: 0.6875rem; color: var(--text-muted); margin-bottom: 2px; }
+        .trending-item .trending-tag { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); transition: color 0.2s; }
+        .trending-item .trending-posts { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Top pioneers */
+        .pioneer-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .pioneer-row:last-child { border-bottom: none; }
+        .pioneer-row .pioneer-info { flex: 1; }
+        .pioneer-row .pioneer-info h5 { font-size: 0.8125rem; font-weight: 700; }
+        .pioneer-row .pioneer-info span { font-size: 0.6875rem; color: var(--text-muted); }
+        .follow-btn {
+            background: none; border: 1px solid var(--pi-purple);
+            color: var(--pi-purple); padding: 5px 14px; border-radius: 100px;
+            font-size: 0.6875rem; font-weight: 700; cursor: pointer; font-family: inherit;
+            transition: all 0.2s;
+        }
+        .follow-btn:hover { background: var(--pi-purple); color: #fff; }
+        .follow-btn.following { background: rgba(255,255,255,0.06); border-color: var(--border); color: var(--text-muted); }
+
+        /* Filter tabs */
+        .feed-tabs {
+            display: flex; gap: 4px; margin-bottom: 20px;
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 4px; overflow-x: auto;
+        }
+        .feed-tab {
+            padding: 10px 20px; border-radius: var(--radius-sm); font-size: 0.8125rem;
+            font-weight: 600; border: none; background: none; color: var(--text-muted);
+            cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap;
+        }
+        .feed-tab:hover { color: var(--text-secondary); }
+        .feed-tab.active { background: var(--pi-purple); color: #fff; }
+
+        /* Live indicator */
+        .live-bar {
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 20px; background: rgba(34,197,94,0.06);
+            border: 1px solid rgba(34,197,94,0.15); border-radius: var(--radius);
+            margin-bottom: 16px; font-size: 0.8125rem; color: var(--text-secondary);
+        }
+        .live-pulse {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--success);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+        /* Footer */
+        footer {
+            padding: 40px max(5%,24px); border-top: 1px solid var(--border); margin-top: 40px;
+        }
+        .footer-grid { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 32px; text-align: left; margin-bottom: 40px; }
+        .footer-col h4 { font-size: 0.8125rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .footer-col a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--text-primary); }
+        .footer-bottom { font-size: 0.8125rem; color: var(--text-muted); padding-top: 24px; border-top: 1px solid var(--border); }
+
+        /* Image upload hidden */
+        #image-upload { display: none; }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+            z-index: 9999; display: none; align-items: center; justify-content: center;
+            cursor: zoom-out;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 8px; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .page-wrapper { grid-template-columns: 1fr; }
+            .sidebar { order: -1; }
+            .nav-center { display: none; }
+            .page-header { padding: 20px max(5%,24px) 0; }
+            .post-images img { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-ambient"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo"><img src="logo.png/logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div>
+        <div class="nav-center">
+            <a href="index.html" data-i18n="nav.marketplace">Marketplace</a>
+            <a href="new.html" data-i18n="nav.explore">Explore</a>
+            <a href="map.html" data-i18n="nav.map">Map</a>
+            <a href="social.html" class="active" data-i18n="nav.social">Social</a>
+            <a href="form.html" data-i18n="nav.register">Register</a>
+            <a href="Submit.html" data-i18n="nav.sell">Sell</a>
+            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="transport.html" data-i18n="nav.transport">Transport</a>
+        </div>
+        <div class="nav-right">
+            <div class="wallet-chip" id="wallet-balance" style="display:none">
+                <span class="dot"></span>
+                <span id="pi-username"></span>
+            </div>
+            <a href="https://109.199.109.143/services" target="_blank" class="btn-primary" style="background:transparent;border:1px solid var(--border);color:var(--text-primary);text-decoration:none">All Services</a>
+            <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>&#128227; <span data-i18n="social.title">Business</span> <span class="gradient" data-i18n="social.titleHighlight">Broadcast</span></h1>
+        <p data-i18n="social.subtitle">Share updates, promote products & connect with pioneers worldwide</p>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="page-wrapper">
+
+        <!-- Main Feed Column -->
+        <div class="main-col">
+
+            <!-- Live bar -->
+            <div class="live-bar">
+                <span class="live-pulse"></span>
+                <strong>Live Feed</strong> &mdash; <span data-i18n="social.liveDescription">Posts from verified businesses and pioneers</span>
+            </div>
+
+            <!-- Create Post -->
+            <div class="create-post" id="create-post-card">
+                <div class="create-post-top">
+                    <div class="avatar" id="user-avatar">?</div>
+                    <textarea id="post-text" placeholder="What's happening in Pi commerce?" data-i18n-placeholder="social.postPlaceholder" maxlength="2000"></textarea>
+                </div>
+                <div class="image-preview-area" id="image-previews"></div>
+                <div class="create-post-actions">
+                    <div class="post-tools">
+                        <label class="post-tool-btn" for="image-upload">
+                            <span class="icon">&#128247;</span> <span data-i18n="social.photo">Photo</span>
+                        </label>
+                        <input type="file" id="image-upload" accept="image/*" multiple>
+                        <select class="category-select" id="post-category">
+                            <option value="general" data-i18n="social.catGeneral">General</option>
+                            <option value="product" data-i18n="social.catProduct">Product Launch</option>
+                            <option value="promo" data-i18n="social.catPromo">Promotion</option>
+                            <option value="news" data-i18n="social.catNews">News</option>
+                            <option value="event" data-i18n="social.catEvent">Event</option>
+                            <option value="hiring" data-i18n="social.catHiring">Hiring</option>
+                        </select>
+                    </div>
+                    <button class="btn-post" id="btn-publish" onclick="publishPost()" disabled data-i18n="social.broadcast">Broadcast</button>
+                </div>
+            </div>
+
+            <!-- Feed Tabs -->
+            <div class="feed-tabs">
+                <button class="feed-tab active" data-feed="all" data-i18n="products.all">All</button>
+                <button class="feed-tab" data-feed="product">&#128230; <span data-i18n="social.catProduct">Product Launch</span></button>
+                <button class="feed-tab" data-feed="promo">&#127881; <span data-i18n="social.catPromo">Promotion</span></button>
+                <button class="feed-tab" data-feed="news">&#128240; <span data-i18n="social.catNews">News</span></button>
+                <button class="feed-tab" data-feed="event">&#127880; <span data-i18n="social.catEvent">Event</span></button>
+                <button class="feed-tab" data-feed="hiring">&#128188; <span data-i18n="social.catHiring">Hiring</span></button>
+            </div>
+
+            <!-- Posts Feed -->
+            <div class="feed" id="feed"></div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Trending Topics -->
+            <div class="sidebar-card">
+                <h3>&#128293; <span data-i18n="social.trending">Trending Topics</span></h3>
+                <div id="trending-list">
+                    <div class="trending-item" onclick="filterByTag('#PiMainnet')">
+                        <div class="trending-rank">1 &middot; Trending</div>
+                        <div class="trending-tag">#PiMainnet</div>
+                        <div class="trending-posts">2,840 posts</div>
+                    </div>
+                    <div class="trending-item" onclick="filterByTag('#PiCommerce')">
+                        <div class="trending-rank">2 &middot; Business</div>
+                        <div class="trending-tag">#PiCommerce</div>
+                        <div class="trending-posts">1,420 posts</div>
+                    </div>
+                    <div class="trending-item" onclick="filterByTag('#AcceptPi')">
+                        <div class="trending-rank">3 &middot; Trending</div>
+                        <div class="trending-tag">#AcceptPi</div>
+                        <div class="trending-posts">980 posts</div>
+                    </div>
+                    <div class="trending-item" onclick="filterByTag('#PiPayments')">
+                        <div class="trending-rank">4 &middot; Finance</div>
+                        <div class="trending-tag">#PiPayments</div>
+                        <div class="trending-posts">760 posts</div>
+                    </div>
+                    <div class="trending-item" onclick="filterByTag('#OmendaPiPays')">
+                        <div class="trending-rank">5 &middot; Platform</div>
+                        <div class="trending-tag">#OmendaPiPays</div>
+                        <div class="trending-posts">540 posts</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Pioneers -->
+            <div class="sidebar-card">
+                <h3>&#11088; <span data-i18n="social.topPioneers">Top Pioneers</span></h3>
+                <div id="top-pioneers"></div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="sidebar-card">
+                <h3>&#128200; <span data-i18n="social.communityStats">Community Stats</span></h3>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div style="text-align:center;padding:12px;background:var(--bg-card);border-radius:var(--radius-sm)">
+                        <div style="font-size:1.25rem;font-weight:800;color:var(--pi-gold)">12,480</div>
+                        <div style="font-size:0.6875rem;color:var(--text-muted);margin-top:2px" data-i18n="map.pioneers">Pioneers</div>
+                    </div>
+                    <div style="text-align:center;padding:12px;background:var(--bg-card);border-radius:var(--radius-sm)">
+                        <div style="font-size:1.25rem;font-weight:800;color:var(--pi-purple)">3,240</div>
+                        <div style="font-size:0.6875rem;color:var(--text-muted);margin-top:2px" data-i18n="map.businesses">Businesses</div>
+                    </div>
+                    <div style="text-align:center;padding:12px;background:var(--bg-card);border-radius:var(--radius-sm)">
+                        <div style="font-size:1.25rem;font-weight:800;color:var(--success)">8,650</div>
+                        <div style="font-size:0.6875rem;color:var(--text-muted);margin-top:2px" data-i18n="social.postsToday">Posts Today</div>
+                    </div>
+                    <div style="text-align:center;padding:12px;background:var(--bg-card);border-radius:var(--radius-sm)">
+                        <div style="font-size:1.25rem;font-weight:800;color:var(--text-primary)">86</div>
+                        <div style="font-size:0.6875rem;color:var(--text-muted);margin-top:2px" data-i18n="social.countries">Countries</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4 data-i18n="footer.marketplace">Marketplace</h4>
+                <a href="new.html" data-i18n="footer.exploreProducts">Explore Products</a>
+                <a href="new.html#fashion" data-i18n="products.fashion">Fashion</a>
+                <a href="new.html#electronics" data-i18n="products.electronics">Electronics</a>
+                <a href="new.html#digital" data-i18n="products.digital">Digital</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.sellers">Sellers</h4>
+                <a href="form.html" data-i18n="cta.registerBusiness">Register Business</a>
+                <a href="form.html" data-i18n="footer.quickRegistration">Quick Registration</a>
+                <a href="Submit.html" data-i18n="footer.postProduct">Post Product</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav.services">Services</h4>
+                <a href="https://109.199.109.143/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="https://109.199.109.143/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="https://109.199.109.143/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="https://109.199.109.143/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="transport.html" data-i18n="nav.transport">Transport</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.community">Community</h4>
+                <a href="social.html" data-i18n="nav.social">Social Feed</a>
+                <a href="map.html" data-i18n="footer.globalMap">Global Map</a>
+                <a href="n2 .html" data-i18n="footer.mobileView">Mobile View</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.legal">Legal</h4>
+                <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
+                <a href="terms-of-service.html" data-i18n="footer.termsOfService">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
+        </div>
+    </footer>
+
+    <script>
+    // ── Pi SDK Auth ──
+    let piUser = null;
+    const isPiBrowser = typeof window.Pi !== 'undefined';
+
+    async function piConnect() {
+        if (!isPiBrowser) { alert('Please open in Pi Browser'); return; }
+        try {
+            const auth = await window.Pi.authenticate(['username','payments'], function(p){ console.log('Incomplete payment',p); });
+            piUser = { uid: auth.user.uid, username: auth.user.username };
+            sessionStorage.setItem('pi_uid', piUser.uid);
+            sessionStorage.setItem('pi_username', piUser.username);
+            onAuth();
+        } catch(e) { console.error('Auth failed', e); }
+    }
+
+    function onAuth() {
+        document.getElementById('pi-username').textContent = '@' + piUser.username;
+        document.getElementById('wallet-balance').style.display = 'flex';
+        document.getElementById('pi-connect-btn').style.display = 'none';
+        document.getElementById('user-avatar').textContent = piUser.username.charAt(0).toUpperCase();
+    }
+
+    (function restoreSession(){
+        const uid = sessionStorage.getItem('pi_uid');
+        const user = sessionStorage.getItem('pi_username');
+        if(uid && user){
+            piUser = { uid, username: user };
+            onAuth();
+        } else if(isPiBrowser){ piConnect(); }
+    })();
+
+    if(isPiBrowser){ window.Pi.init({ version:'2.0', sandbox: true }); }
+
+    // ── Sample Data ──
+    const samplePosts = [
+        {
+            id: 1, author: "Omenda Pi Pays", handle: "@omendapipays", verified: true,
+            avatar: "O", time: "2h", category: "news",
+            text: "🚀 Exciting news! We've just launched our Global Pioneer Map with 86 locations across 4 continents. Find Pi businesses near you!\n\n#PiMainnet #OmendaPiPays #PiCommerce",
+            images: [],
+            likes: 342, comments: [
+                { author: "PiTrader_KE", text: "Amazing! Found 3 shops near me accepting Pi 🎉", time: "1h" },
+                { author: "CryptoNairobi", text: "This is exactly what the Pi community needs!", time: "45m" }
+            ], shares: 89, liked: false
+        },
+        {
+            id: 2, author: "Tokyo Pi Exchange", handle: "@tokyopiex", verified: true,
+            avatar: "T", time: "4h", category: "product",
+            text: "📱 New arrivals! Latest smartphones and tablets now available for Pi payments. Check our collection — direct from Akihabara to your doorstep.\n\nFree shipping on orders over 50 Pi! 🇯🇵\n\n#PiCommerce #Electronics #AcceptPi",
+            images: ["https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=600&h=400&fit=crop"],
+            likes: 256, comments: [
+                { author: "TechLover_JP", text: "Just ordered the new tablet! Pi payments are so smooth 💫", time: "3h" }
+            ], shares: 67, liked: false
+        },
+        {
+            id: 3, author: "Dubai Pi Luxury", handle: "@dubaipi", verified: true,
+            avatar: "D", time: "5h", category: "promo",
+            text: "🏨 Weekend Special! Book any 5-star hotel in Dubai Marina with Pi and get 20% off your stay.\n\nUse code: PIWEEKEND at checkout.\nValid until Sunday midnight. Don't miss it!\n\n#PiPayments #DubaiTravel #Hotels",
+            images: ["https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=400&fit=crop"],
+            likes: 189, comments: [], shares: 43, liked: false
+        },
+        {
+            id: 4, author: "Berlin Pi Community", handle: "@berlinpi", verified: false,
+            avatar: "B", time: "6h", category: "event",
+            text: "📢 Pi Pioneer Meetup — Berlin 🇩🇪\n\n📅 Date: March 15, 2026\n📍 Location: Factory Berlin, Görlitzer Park\n🕕 Time: 6:00 PM CET\n\nJoin 200+ pioneers for networking, demos, and Pi commerce workshops. Free entry — just bring your Pi wallet!\n\n#PiMainnet #BerlinCrypto #PiCommunity",
+            images: [],
+            likes: 412, comments: [
+                { author: "PioneerDE", text: "I'll be there! Can't wait 🇩🇪", time: "5h" },
+                { author: "CryptoEurope", text: "Best Pi events in Europe, always!", time: "4h" },
+                { author: "PiDev_22", text: "Will there be a hackathon track?", time: "3h" }
+            ], shares: 156, liked: false
+        },
+        {
+            id: 5, author: "Lagos Pi Merchants", handle: "@lagospi", verified: true,
+            avatar: "L", time: "8h", category: "news",
+            text: "🇳🇬 West Africa update: We've onboarded 150 new merchants in Lagos this month! From restaurants to clothing stores, Pi is becoming the preferred payment method.\n\nIf you're a business in Nigeria, register on Omenda Pi Pays today!\n\n#AcceptPi #Nigeria #PiCommerce",
+            images: [],
+            likes: 528, comments: [
+                { author: "NaijaTrader", text: "Proud to be one of those merchants! 🙌", time: "7h" }
+            ], shares: 201, liked: false
+        },
+        {
+            id: 6, author: "Pi Fashion Store", handle: "@pifashion", verified: true,
+            avatar: "P", time: "10h", category: "product",
+            text: "👗 Spring Collection 2026 is HERE!\n\nHandcrafted leather bags, organic cotton tees, and artisan jewelry — all from African designers, all payable in Pi.\n\nShop now on Omenda Pi Pays marketplace!\n\n#PiFashion #AfricanDesign #SupportLocal",
+            images: ["https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop"],
+            likes: 315, comments: [], shares: 94, liked: false
+        },
+        {
+            id: 7, author: "São Paulo Pi Market", handle: "@saopaulopi", verified: true,
+            avatar: "S", time: "12h", category: "hiring",
+            text: "🇧🇷 We're hiring! Join the fastest-growing Pi marketplace in Latin America.\n\nOpen positions:\n• Frontend Developer (React/Next.js)\n• Community Manager (Portuguese/Spanish)\n• Customer Support Lead\n\nAll salaries paid in Pi! DM us or apply through our website.\n\n#PiJobs #Hiring #LatinAmerica",
+            images: [],
+            likes: 198, comments: [
+                { author: "DevBrasil", text: "Just applied for the frontend role! 🚀", time: "11h" },
+                { author: "PiCommunityBR", text: "Love that you pay in Pi! Setting the standard.", time: "10h" }
+            ], shares: 112, liked: false
+        },
+        {
+            id: 8, author: "Mumbai Pi Market", handle: "@mumbaipi", verified: true,
+            avatar: "M", time: "14h", category: "promo",
+            text: "🇮🇳 Holi Special Sale! 🎨\n\nAll software licenses, digital courses, and e-books at 30% off when you pay with Pi.\n\nCelebrate the festival of colors with digital savings!\nOffer ends March 10.\n\n#PiIndia #HoliSale #DigitalProducts",
+            images: ["https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?w=600&h=400&fit=crop"],
+            likes: 267, comments: [], shares: 78, liked: false
+        },
+    ];
+
+    const samplePioneers = [
+        { name: "Omenda Pi Pays", handle: "@omendapipays", avatar: "O", followers: "12.4K" },
+        { name: "Tokyo Pi Exchange", handle: "@tokyopiex", avatar: "T", followers: "8.2K" },
+        { name: "Lagos Pi Merchants", handle: "@lagospi", avatar: "L", followers: "6.8K" },
+        { name: "Dubai Pi Luxury", handle: "@dubaipi", avatar: "D", followers: "5.4K" },
+        { name: "Berlin Pi Community", handle: "@berlinpi", avatar: "B", followers: "4.1K" },
+    ];
+
+    // ── State ──
+    let posts = [...samplePosts];
+    let activeFilter = 'all';
+    let uploadedImages = [];
+
+    // ── Category helpers ──
+    const categoryInfo = {
+        general: { label: "General", icon: "💬" },
+        product: { label: "Product Launch", icon: "📦" },
+        promo: { label: "Promotion", icon: "🎉" },
+        news: { label: "News", icon: "📰" },
+        event: { label: "Event", icon: "🎈" },
+        hiring: { label: "Hiring", icon: "💼" },
+    };
+
+    // ── Render Posts ──
+    function renderFeed() {
+        const feed = document.getElementById('feed');
+        const filtered = activeFilter === 'all' ? posts : posts.filter(p => p.category === activeFilter);
+
+        if (!filtered.length) {
+            feed.innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text-muted)"><div style="font-size:2rem;margin-bottom:12px">📭</div>No posts in this category yet</div>';
+            return;
+        }
+
+        feed.innerHTML = filtered.map(post => {
+            const cat = categoryInfo[post.category] || categoryInfo.general;
+            const imageGrid = post.images.length ? `
+                <div class="post-images ${post.images.length === 1 ? 'one' : post.images.length === 2 ? 'two' : 'three'}">
+                    ${post.images.map(img => `<img src="${escapeAttr(img)}" alt="Post image" onclick="openLightbox('${escapeAttr(img)}')" loading="lazy">`).join('')}
+                </div>` : '';
+
+            const commentsHTML = post.comments.map(c => `
+                <div class="comment">
+                    <div class="avatar sm">${escapeHtml(c.author.charAt(0).toUpperCase())}</div>
+                    <div class="comment-content">
+                        <span class="comment-author">${escapeHtml(c.author)}</span>
+                        <div class="comment-text">${escapeHtml(c.text)}</div>
+                        <div class="comment-time">${escapeHtml(c.time)} ago</div>
+                    </div>
+                </div>`).join('');
+
+            return `
+            <div class="post-card" id="post-${post.id}">
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="avatar">${escapeHtml(post.avatar)}</div>
+                        <div class="post-author-info">
+                            <h4>${escapeHtml(post.author)}${post.verified ? '<span class="badge">✓ Verified</span>' : ''}</h4>
+                            <span class="time">${escapeHtml(post.handle)} · ${escapeHtml(post.time)} ago</span>
+                        </div>
+                    </div>
+                    <button class="post-menu-btn">⋯</button>
+                </div>
+                <div class="post-body"><p>${formatPostText(post.text)}</p></div>
+                ${post.category !== 'general' ? `<div class="post-category">${cat.icon} ${escapeHtml(cat.label)}</div>` : ''}
+                ${imageGrid}
+                <div class="post-engagement">
+                    <span class="likes-count">${post.likes + (post.liked ? 1 : 0)} likes</span>
+                    <span>${post.comments.length} comments · ${post.shares} shares</span>
+                </div>
+                <div class="post-actions">
+                    <button class="post-action-btn ${post.liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                        <span class="icon">${post.liked ? '❤️' : '🤍'}</span> Like
+                    </button>
+                    <button class="post-action-btn" onclick="toggleComments(${post.id})">
+                        <span class="icon">💬</span> Comment
+                    </button>
+                    <button class="post-action-btn" onclick="sharePost(${post.id})">
+                        <span class="icon">🔗</span> Share
+                    </button>
+                </div>
+                <div class="comments-section" id="comments-${post.id}">
+                    ${commentsHTML}
+                    <div class="comment-input-row">
+                        <div class="avatar sm" style="font-size:0.7rem">${piUser ? escapeHtml(piUser.username.charAt(0).toUpperCase()) : '?'}</div>
+                        <input type="text" id="comment-input-${post.id}" placeholder="Write a comment..." maxlength="500" onkeydown="if(event.key==='Enter')addComment(${post.id})">
+                        <button onclick="addComment(${post.id})">➤</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // ── Text formatting — convert #hashtags to colored spans ──
+    function formatPostText(text) {
+        return escapeHtml(text).replace(/#(\w+)/g, '<span class="post-tag">#$1</span>');
+    }
+
+    // ── Security: escape HTML ──
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+    function escapeAttr(str) {
+        return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── Like ──
+    function toggleLike(id) {
+        const post = posts.find(p => p.id === id);
+        if (post) { post.liked = !post.liked; renderFeed(); }
+    }
+
+    // ── Comments ──
+    function toggleComments(id) {
+        const section = document.getElementById('comments-' + id);
+        if (section) section.classList.toggle('open');
+    }
+
+    function addComment(id) {
+        const input = document.getElementById('comment-input-' + id);
+        const text = input.value.trim();
+        if (!text) return;
+        const post = posts.find(p => p.id === id);
+        if (post) {
+            post.comments.push({
+                author: piUser ? piUser.username : 'Pioneer',
+                text: text,
+                time: 'just now'
+            });
+            input.value = '';
+            renderFeed();
+            // Re-open comments section
+            const section = document.getElementById('comments-' + id);
+            if (section) section.classList.add('open');
+        }
+    }
+
+    // ── Share ──
+    function sharePost(id) {
+        const post = posts.find(p => p.id === id);
+        if (!post) return;
+        post.shares++;
+        if (navigator.share) {
+            navigator.share({
+                title: post.author + ' on Omenda Pi Pays',
+                text: post.text.substring(0, 200),
+                url: window.location.href
+            }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(window.location.href + '#post-' + id).then(() => {
+                alert('Link copied!');
+            }).catch(() => {});
+        }
+        renderFeed();
+    }
+
+    // ── Publish new post ──
+    function publishPost() {
+        const text = document.getElementById('post-text').value.trim();
+        if (!text) return;
+
+        const category = document.getElementById('post-category').value;
+        const newPost = {
+            id: Date.now(),
+            author: piUser ? piUser.username : 'Pioneer',
+            handle: piUser ? '@' + piUser.username : '@pioneer',
+            verified: false,
+            avatar: piUser ? piUser.username.charAt(0).toUpperCase() : 'P',
+            time: 'just now',
+            category: category,
+            text: text,
+            images: [...uploadedImages],
+            likes: 0, comments: [], shares: 0, liked: false
+        };
+
+        posts.unshift(newPost);
+        document.getElementById('post-text').value = '';
+        document.getElementById('image-previews').innerHTML = '';
+        uploadedImages = [];
+        updatePublishBtn();
+        renderFeed();
+    }
+
+    // ── Image upload ──
+    document.getElementById('image-upload').addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        if (uploadedImages.length + files.length > 4) {
+            alert('Maximum 4 images per post');
+            return;
+        }
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                uploadedImages.push(ev.target.result);
+                renderImagePreviews();
+                updatePublishBtn();
+            };
+            reader.readAsDataURL(file);
+        });
+        e.target.value = '';
+    });
+
+    function renderImagePreviews() {
+        const area = document.getElementById('image-previews');
+        area.innerHTML = uploadedImages.map((src, i) => `
+            <div class="thumb-wrap">
+                <img class="preview-thumb" src="${escapeAttr(src)}" alt="Preview">
+                <button class="remove-img" onclick="removeImage(${i})">✕</button>
+            </div>
+        `).join('');
+    }
+
+    function removeImage(idx) {
+        uploadedImages.splice(idx, 1);
+        renderImagePreviews();
+        updatePublishBtn();
+    }
+
+    // ── Enable/disable publish button ──
+    document.getElementById('post-text').addEventListener('input', updatePublishBtn);
+    function updatePublishBtn() {
+        const text = document.getElementById('post-text').value.trim();
+        document.getElementById('btn-publish').disabled = !(text || uploadedImages.length);
+    }
+
+    // ── Feed tab filters ──
+    document.querySelectorAll('.feed-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.feed-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            activeFilter = tab.dataset.feed;
+            renderFeed();
+        });
+    });
+
+    // ── Filter by hashtag ──
+    function filterByTag(tag) {
+        document.getElementById('post-text').value = '';
+        activeFilter = 'all';
+        document.querySelectorAll('.feed-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('.feed-tab[data-feed="all"]').classList.add('active');
+        // Scroll to feed and briefly highlight posts with this tag
+        document.querySelector('.feed').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ── Lightbox ──
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').classList.add('active');
+    }
+
+    // ── Render top pioneers ──
+    function renderPioneers() {
+        const container = document.getElementById('top-pioneers');
+        container.innerHTML = samplePioneers.map(p => `
+            <div class="pioneer-row">
+                <div class="avatar sm">${escapeHtml(p.avatar)}</div>
+                <div class="pioneer-info">
+                    <h5>${escapeHtml(p.name)}</h5>
+                    <span>${escapeHtml(p.followers)} followers</span>
+                </div>
+                <button class="follow-btn" onclick="this.classList.toggle('following');this.textContent=this.classList.contains('following')?'Following':'Follow'">Follow</button>
+            </div>
+        `).join('');
+    }
+
+    // ── Init ──
+    renderFeed();
+    renderPioneers();
+    </script>
+</body>
+</html>

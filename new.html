@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Marketplace | Omenda Pi Pays</title>
+    <img src="logo.png/" alt="">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-gold-light: rgba(245,166,35,0.12);
+            --pi-purple: #7c3aed;
+            --pi-purple-light: rgba(124,58,237,0.10);
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success: #22c55e;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            min-height: 100vh; -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Ambient */
+        .bg-ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .bg-ambient::before {
+            content: ''; position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+            top: -200px; right: -100px;
+        }
+        .bg-ambient::after {
+            content: ''; position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
+            bottom: -100px; left: -100px;
+        }
+
+        /* Nav */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 max(5%,24px); height: 72px;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+        .logo span { color: var(--pi-gold); }
+        .nav-center { display: flex; gap: 8px; }
+        .nav-center a {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
+        }
+        .nav-center a:hover, .nav-center a.active { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .btn-primary {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 10px 22px; border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.875rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); }
+        .btn-outline {
+            background: transparent; color: var(--text-secondary); border: 1px solid var(--border);
+            padding: 10px 22px; border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.875rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-outline:hover { border-color: var(--border-hover); color: var(--text-primary); }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: linear-gradient(90deg, var(--pi-purple), #9333ea);
+            padding: 10px 24px; text-align: center; font-size: 0.8125rem; font-weight: 600;
+            display: flex; justify-content: center; align-items: center; gap: 12px;
+            overflow: hidden; position: relative;
+        }
+        .promo-banner .marquee-inner {
+            display: inline-flex; gap: 48px; animation: marquee 30s linear infinite; white-space: nowrap;
+        }
+        .promo-banner .marquee-inner span { display: inline-flex; align-items: center; gap: 8px; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Hero */
+        .hero {
+            text-align: center; padding: 64px max(5%,24px) 48px; max-width: 720px; margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800;
+            letter-spacing: -1.2px; line-height: 1.15; margin-bottom: 16px;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--pi-gold) 0%, #fbbf24 100%);
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p { color: var(--text-secondary); font-size: 1.0625rem; line-height: 1.6; margin-bottom: 28px; }
+        .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+        /* Search */
+        .search-section { padding: 0 max(5%,24px) 48px; }
+        .search-bar {
+            max-width: 640px; margin: 0 auto; position: relative;
+        }
+        .search-bar input {
+            width: 100%; padding: 16px 120px 16px 48px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; color: var(--text-primary); font-size: 0.9375rem;
+            outline: none; font-family: inherit; transition: border-color 0.2s;
+        }
+        .search-bar input::placeholder { color: var(--text-muted); }
+        .search-bar input:focus { border-color: var(--pi-purple); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.1rem; }
+        .search-bar .btn-primary { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); padding: 10px 20px; }
+
+        /* Categories */
+        .categories-section { padding: 0 max(5%,24px) 56px; }
+        .categories-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px;
+        }
+        .category-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px 16px; text-align: center;
+            cursor: pointer; transition: all 0.25s;
+        }
+        .category-card:hover { border-color: var(--pi-purple); background: var(--pi-purple-light); transform: translateY(-2px); }
+        .category-card .cat-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+        .category-card .cat-name { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+        .category-card:hover .cat-name { color: var(--text-primary); }
+
+        /* Section */
+        .section { padding: 0 max(5%,24px) 56px; }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;
+        }
+        .section-header h2 { font-size: 1.375rem; font-weight: 700; letter-spacing: -0.5px; }
+        .section-header a { color: var(--pi-purple); font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
+        .section-header a:hover { opacity: 0.8; }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;
+        }
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden;
+            transition: all 0.3s ease; cursor: pointer;
+        }
+        .card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+        .card-img { position: relative; overflow: hidden; }
+        .card-img img { width: 100%; height: 200px; object-fit: cover; transition: transform 0.4s ease; }
+        .card:hover .card-img img { transform: scale(1.05); }
+
+        /* ── Image Slider ── */
+        .card-slider { position: relative; width: 100%; height: 200px; overflow: hidden; }
+        .card-slider .slides { display: flex; width: 500%; height: 100%; transition: transform 0.35s ease; }
+        .card-slider .slides img { width: 20%; height: 100%; object-fit: cover; flex-shrink: 0; }
+        .card-slider .slide-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+            background: rgba(0,0,0,0.45); backdrop-filter: blur(4px); color: #fff; border: none;
+            width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.25s; pointer-events: none;
+        }
+        .card:hover .slide-arrow { opacity: 1; pointer-events: auto; }
+        .slide-arrow.left { left: 6px; }
+        .slide-arrow.right { right: 6px; }
+        .slide-arrow:hover { background: rgba(0,0,0,0.7); }
+        .slide-dots {
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 5;
+            display: flex; gap: 5px;
+        }
+        .slide-dots span {
+            width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .slide-dots span.active { background: #fff; transform: scale(1.3); }
+        .card-badge {
+            position: absolute; top: 12px; left: 12px;
+            background: rgba(9,9,11,0.7); backdrop-filter: blur(8px);
+            padding: 4px 12px; border-radius: 100px; font-size: 0.6875rem; font-weight: 600;
+            color: var(--pi-gold); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .card-body { padding: 16px; }
+        .card-body h3 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.2px; }
+        .card-body .card-desc { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 14px; }
+        .card-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 14px; border-top: 1px solid var(--border);
+        }
+        .card-price { font-size: 1.125rem; font-weight: 700; color: var(--pi-gold); }
+        .card-price small { font-size: 0.6875rem; color: var(--text-muted); font-weight: 400; display: block; }
+        .btn-buy {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 8px 16px; border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.8125rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-buy:hover { background: #6d28d9; }
+
+        /* ── Marketplace Overview Carousel ── */
+        .mp-overview { padding: 0 max(5%,24px) 56px; }
+        .mp-overview .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .mp-overview .section-header h2 { font-size: 1.375rem; font-weight: 700; letter-spacing: -0.5px; }
+        .mp-carousel-wrap { position: relative; }
+        .mp-carousel-track {
+            display: flex; gap: 0; overflow: hidden; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .mp-slide {
+            min-width: 100%; flex-shrink: 0;
+            display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, auto); gap: 16px;
+            padding: 0 4px;
+        }
+        .mp-slide .card { margin: 0; }
+        .mp-nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(8px); color: #fff; border: 1px solid var(--border);
+            width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 20px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+        html.light .mp-nav-btn { background: rgba(255,255,255,0.9); color: #18181b; border-color: rgba(0,0,0,0.1); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+        .mp-nav-btn:hover { background: var(--pi-purple); border-color: var(--pi-purple); }
+        .mp-nav-btn.mp-prev { left: -22px; }
+        .mp-nav-btn.mp-next { right: -22px; }
+        .mp-cat-pills {
+            display: flex; gap: 8px; justify-content: center; margin-top: 20px; flex-wrap: wrap;
+        }
+        .mp-cat-pills button {
+            padding: 6px 16px; border-radius: 100px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text-secondary); font-size: 0.8125rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .mp-cat-pills button.active { background: var(--pi-purple); color: #fff; border-color: var(--pi-purple); }
+        .mp-cat-pills button:hover:not(.active) { border-color: var(--border-hover); color: var(--text-primary); }
+        @media (max-width: 768px) {
+            .mp-slide { grid-template-columns: repeat(2, 1fr); }
+            .mp-nav-btn { width: 36px; height: 36px; font-size: 16px; }
+            .mp-nav-btn.mp-prev { left: -8px; }
+            .mp-nav-btn.mp-next { right: -8px; }
+        }
+        @media (max-width: 480px) {
+            .mp-slide { grid-template-columns: 1fr 1fr; gap: 10px; }
+        }
+
+        /* Trust Bar */
+        .trust-bar {
+            display: flex; justify-content: center; gap: 48px; padding: 40px 24px;
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            margin-bottom: 56px;
+        }
+        .trust-item { display: flex; align-items: center; gap: 10px; }
+        .trust-item .trust-icon {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--bg-card); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+        }
+        .trust-item .trust-text { font-size: 0.8125rem; color: var(--text-secondary); }
+        .trust-item .trust-text strong { display: block; color: var(--text-primary); font-size: 0.875rem; }
+
+        /* Footer */
+        footer {
+            padding: 48px max(5%,24px); border-top: 1px solid var(--border);
+        }
+        .footer-inner { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 32px; margin-bottom: 32px; }
+        .footer-col h4 { font-size: 0.8125rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .footer-col a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--text-primary); }
+        .footer-bottom { font-size: 0.8125rem; color: var(--text-muted); padding-top: 24px; border-top: 1px solid var(--border); text-align: center; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 0 16px; }
+            .nav-center { display: none; }
+            .hero { padding: 40px 16px 32px; }
+            .hero-actions { flex-direction: column; align-items: center; }
+            .categories-grid { grid-template-columns: repeat(3, 1fr); }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .card-img img { height: 150px; }
+            .card-slider { height: 150px; }
+            .card-body { padding: 12px; }
+            .card-footer { flex-direction: column; gap: 8px; align-items: flex-start; }
+            .trust-bar { flex-direction: column; align-items: center; gap: 20px; }
+            .footer-inner { flex-direction: column; text-align: center; }
+            .section { padding: 0 16px 40px; }
+        }
+        @media (max-width: 480px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .categories-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-ambient"></div>
+
+    <!-- Promo Bar -->
+    <div class="promo-banner">
+        <div class="marquee-inner">
+            <span>&#128293; MEGA DEALS: Up to 50% off today!</span>
+            <span>&#128666; Free delivery on all regional orders</span>
+            <span>&#128274; Secure Pi payments on every transaction</span>
+            <span>&#127775; New sellers get featured for 7 days</span>
+            <span>&#128293; MEGA DEALS: Up to 50% off today!</span>
+            <span>&#128666; Free delivery on all regional orders</span>
+            <span>&#128274; Secure Pi payments on every transaction</span>
+            <span>&#127775; New sellers get featured for 7 days</span>
+        </div>
+    </div>
+
+    <!-- Nav -->
+    <nav>
+        <a href="index.html" style="text-decoration:none;color:inherit"><div class="logo"><img src="logo.png/logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div></a>
+        <div class="nav-center">
+            <img src="logo.png/logo.png" alt="logo ">
+            <a href="index.html" data-i18n="nav.home">Home</a>
+            <a href="new.html" class="active" data-i18n="nav.explore">Explore</a>
+            <a href="map.html" data-i18n="nav.map">Map</a>
+            <a href="social.html" data-i18n="nav.social">Social</a>
+            <a href="form.html" data-i18n="nav.register">Register</a>
+            <a href="Submit.html" data-i18n="nav.sell">Sell</a>
+            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="transport.html" data-i18n="nav.transport">Transport</a>
+        </div>
+        <div class="nav-right">
+            <span id="pi-user-badge" style="display:none;background:rgba(245,166,35,0.12);color:#f5a623;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:6px"></span><span id="pi-username"></span></span>
+            <button class="btn-primary" onclick="openServiceBrowser('https://109.199.109.143/services')" style="background:transparent;border:1px solid var(--border);color:var(--text-primary)">All Services</button>
+            <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1><span data-i18n="explore.discoverShop">Discover & Shop with</span> <span class="gradient">Pi Coin</span></h1>
+        <p data-i18n="explore.shopSubtitle">Browse thousands of products from verified sellers worldwide. Pay securely with your Pi wallet.</p>
+        <div class="hero-actions">
+            <a href="form.html" class="btn-primary" style="padding:14px 28px;text-decoration:none" data-i18n="cta.registerBusiness">Register Your Business</a>
+            <a href="Submit.html" class="btn-outline" style="padding:14px 28px;text-decoration:none" data-i18n="explore.postProduct">Post a Product</a>
+        </div>
+    </section>
+
+    <!-- Search -->
+    <div class="search-section">
+        <div class="search-bar">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search products, sellers, categories..." data-i18n-placeholder="explore.searchSellers">
+            <button class="btn-primary">Search</button>
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <section class="categories-section">
+        <div class="section-header">
+            <h2 data-i18n="explore.browseCategories">Browse Categories</h2>
+        </div>
+        <div class="categories-grid">
+            <div class="category-card" onclick="scrollToSection('fashion')">
+                <span class="cat-icon">&#128090;</span>
+                <span class="cat-name">Fashion</span>
+            </div>
+            <div class="category-card" onclick="scrollToSection('electronics')">
+                <span class="cat-icon">&#128187;</span>
+                <span class="cat-name">Electronics</span>
+            </div>
+            <div class="category-card" onclick="scrollToSection('digital')">
+                <span class="cat-icon">&#128190;</span>
+                <span class="cat-name">Digital</span>
+            </div>
+            <div class="category-card">
+                <span class="cat-icon">&#127968;</span>
+                <span class="cat-name">Home</span>
+            </div>
+            <div class="category-card">
+                <span class="cat-icon">&#9917;</span>
+                <span class="cat-name">Sports</span>
+            </div>
+            <div class="category-card">
+                <span class="cat-icon">&#128218;</span>
+                <span class="cat-name">Books</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Bar -->
+    <div class="trust-bar">
+        <div class="trust-item">
+            <div class="trust-icon">&#128274;</div>
+            <div class="trust-text"><strong data-i18n="explore.securePayments">Secure Payments</strong>Pi Network verified</div>
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon">&#9989;</div>
+            <div class="trust-text"><strong data-i18n="explore.kycVerified">KYC Verified</strong>Trusted sellers only</div>
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon">&#128666;</div>
+            <div class="trust-text"><strong data-i18n="explore.globalShipping">Global Shipping</strong>Worldwide delivery</div>
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon">&#128172;</div>
+            <div class="trust-text"><strong data-i18n="explore.support">24/7 Support</strong>Always here to help</div>
+        </div>
+    </div>
+
+    <!-- ══ Marketplace Overview Carousel ══ -->
+    <section class="mp-overview" id="mp-overview">
+        <div class="section-header">
+            <h2>&#128722; Marketplace Overview</h2>
+            <span style="font-size:0.875rem;color:var(--text-muted)" id="mp-slide-counter">1 / 7</span>
+        </div>
+        <div class="mp-carousel-wrap">
+            <button class="mp-nav-btn mp-prev" id="mp-prev" aria-label="Previous">&#8249;</button>
+            <button class="mp-nav-btn mp-next" id="mp-next" aria-label="Next">&#8250;</button>
+            <div class="mp-carousel-track" id="mp-track">
+                <!-- Slide 1: Fashion -->
+                <div class="mp-slide" data-cat="Fashion">
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/watch1/600/400" alt="Watch" loading="lazy"><span class="card-badge">Fashion</span></div><div class="card-body"><h3>NAVIFORCE Elegant Watch</h3><p class="card-desc">Women's square quartz, stainless steel</p><div class="card-footer"><div class="card-price">300 &#960;<small>&asymp; $51.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/sneakers/600/400" alt="Sneakers" loading="lazy"><span class="card-badge">Trending</span></div><div class="card-body"><h3>Chunky Platform Sneakers</h3><p class="card-desc">Size 41-44, premium sole</p><div class="card-footer"><div class="card-price">180 &#960;<small>&asymp; $30.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/leatherbag/600/400" alt="Bag" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Italian Leather Handbag</h3><p class="card-desc">Handcrafted, genuine leather</p><div class="card-footer"><div class="card-price">450 &#960;<small>&asymp; $76.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/rayban/600/400" alt="Sunglasses" loading="lazy"><span class="card-badge">Iconic</span></div><div class="card-body"><h3>Ray-Ban Aviator Sunglasses</h3><p class="card-desc">Classic gold frame, polarized</p><div class="card-footer"><div class="card-price">250 &#960;<small>&asymp; $42.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/jordan4/600/400" alt="Jordan" loading="lazy"><span class="card-badge">Trending</span></div><div class="card-body"><h3>Nike Air Jordan 4 Retro</h3><p class="card-desc">Size 40-46, Military Black</p><div class="card-footer"><div class="card-price">420 &#960;<small>&asymp; $71.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/overcoat/600/400" alt="Overcoat" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Cashmere Wool Overcoat</h3><p class="card-desc">Hand-stitched, Italian cut</p><div class="card-footer"><div class="card-price">650 &#960;<small>&asymp; $110.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                </div>
+                <!-- Slide 2: Electronics -->
+                <div class="mp-slide" data-cat="Electronics">
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/laptop22/600/400" alt="Laptop" loading="lazy"><span class="card-badge">Featured</span></div><div class="card-body"><h3>Workstation Laptop M3</h3><p class="card-desc">16GB RAM, 512GB SSD</p><div class="card-footer"><div class="card-price">1,250 &#960;<small>&asymp; $212.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/smartwatch2/600/400" alt="Smartwatch" loading="lazy"><span class="card-badge">Popular</span></div><div class="card-body"><h3>Smart Fitness Pro</h3><p class="card-desc">Heart rate, GPS, waterproof</p><div class="card-footer"><div class="card-price">180 &#960;<small>&asymp; $30.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/galaxy24/600/400" alt="Galaxy" loading="lazy"><span class="card-badge">Hot</span></div><div class="card-body"><h3>Samsung Galaxy S24 Ultra</h3><p class="card-desc">512GB, AI Camera, Titanium</p><div class="card-footer"><div class="card-price">5,100 &#960;<small>&asymp; $867.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ps5pro/600/400" alt="PS5" loading="lazy"><span class="card-badge">Limited</span></div><div class="card-body"><h3>Sony PlayStation 5 Pro</h3><p class="card-desc">1TB SSD, 4K 120fps gaming</p><div class="card-footer"><div class="card-price">3,200 &#960;<small>&asymp; $544.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/drone4/600/400" alt="Drone" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>DJI Mini 4 Pro Drone</h3><p class="card-desc">4K HDR, 34min flight time</p><div class="card-footer"><div class="card-price">4,800 &#960;<small>&asymp; $816.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ipadair/600/400" alt="iPad" loading="lazy"><span class="card-badge">Popular</span></div><div class="card-body"><h3>iPad Air M2</h3><p class="card-desc">11-inch, 256GB, Starlight</p><div class="card-footer"><div class="card-price">3,600 &#960;<small>&asymp; $612.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                </div>
+                <!-- Slide 3: Digital -->
+                <div class="mp-slide" data-cat="Digital">
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/music1/600/400" alt="Music" loading="lazy"><span class="card-badge">Hot</span></div><div class="card-body"><h3>GPM Music Pack</h3><p class="card-desc">Support artists, exclusive tracks</p><div class="card-footer"><div class="card-price">0.10 &#960;<small>&asymp; $0.02</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ebook1/600/400" alt="Ebook" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>Pi Trading Guide eBook</h3><p class="card-desc">Master Pi commerce, 200+ pages</p><div class="card-footer"><div class="card-price">2.5 &#960;<small>&asymp; $0.43</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/uxcourse/600/400" alt="Course" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>UI/UX Design Masterclass</h3><p class="card-desc">Figma + Framer, 80+ lessons</p><div class="card-footer"><div class="card-price">15 &#960;<small>&asymp; $2.55</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/afrobeats/600/400" alt="Beats" loading="lazy"><span class="card-badge">Hot</span></div><div class="card-body"><h3>African Beats Music Pack</h3><p class="card-desc">50 royalty-free Afrobeat loops</p><div class="card-footer"><div class="card-price">3 &#960;<small>&asymp; $0.51</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/pibundle/600/400" alt="Bundle" loading="lazy"><span class="card-badge">Bundle</span></div><div class="card-body"><h3>Pi Commerce eBook Bundle</h3><p class="card-desc">3 books: Trading, Mining, DApps</p><div class="card-footer"><div class="card-price">5 &#960;<small>&asymp; $0.85</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/social1/600/400" alt="Social Pack" loading="lazy"><span class="card-badge">Value</span></div><div class="card-body"><h3>Social Media Pack &mdash; 30 Days</h3><p class="card-desc">Posting templates for Pi Network</p><div class="card-footer"><div class="card-price">0.10 &#960;<small>&asymp; $0.02</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                </div>
+                <!-- Slide 4: Home & Living -->
+                <div class="mp-slide" data-cat="Home">
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/desklamp/600/400" alt="Lamp" loading="lazy"><span class="card-badge">Smart</span></div><div class="card-body"><h3>Smart LED Desk Lamp</h3><p class="card-desc">Wireless charging, 5 light modes</p><div class="card-footer"><div class="card-price">120 &#960;<small>&asymp; $20.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/espresso/600/400" alt="Coffee" loading="lazy"><span class="card-badge">Popular</span></div><div class="card-body"><h3>Espresso Coffee Machine</h3><p class="card-desc">15-bar pump, milk frother</p><div class="card-footer"><div class="card-price">680 &#960;<small>&asymp; $115.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/robovac/600/400" alt="Vacuum" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>Robot Vacuum Pro</h3><p class="card-desc">LIDAR nav, auto-empty dock</p><div class="card-footer"><div class="card-price">950 &#960;<small>&asymp; $161.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/mattress/600/400" alt="Mattress" loading="lazy"><span class="card-badge">Best Seller</span></div><div class="card-body"><h3>Memory Foam Mattress</h3><p class="card-desc">Queen size, cooling gel layer</p><div class="card-footer"><div class="card-price">1,500 &#960;<small>&asymp; $255.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/airpurifier/600/400" alt="Purifier" loading="lazy"><span class="card-badge">Health</span></div><div class="card-body"><h3>HEPA Air Purifier</h3><p class="card-desc">Covers 50m&#178;, PM2.5 sensor</p><div class="card-footer"><div class="card-price">380 &#960;<small>&asymp; $64.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/smartplug/600/400" alt="Plugs" loading="lazy"><span class="card-badge">Value</span></div><div class="card-body"><h3>Wi-Fi Smart Plug 4-Pack</h3><p class="card-desc">Voice control, energy monitor</p><div class="card-footer"><div class="card-price">55 &#960;<small>&asymp; $9.35</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                </div>
+                <!-- Slide 5: Beauty -->
+                <div class="mp-slide" data-cat="Beauty">
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/skincare/600/400" alt="Skincare" loading="lazy"><span class="card-badge">Natural</span></div><div class="card-body"><h3>Organic Skincare Set</h3><p class="card-desc">Cleanser, toner, moisturizer, serum</p><div class="card-footer"><div class="card-price">85 &#960;<small>&asymp; $14.45</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/massagegun/600/400" alt="Massage" loading="lazy"><span class="card-badge">Trending</span></div><div class="card-body"><h3>Electric Massage Gun</h3><p class="card-desc">6 heads, 30 speeds, deep tissue</p><div class="card-footer"><div class="card-price">160 &#960;<small>&asymp; $27.20</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/serum/600/400" alt="Serum" loading="lazy"><span class="card-badge">Hot</span></div><div class="card-body"><h3>Vitamin C Glow Serum</h3><p class="card-desc">30ml, hyaluronic acid blend</p><div class="card-footer"><div class="card-price">35 &#960;<small>&asymp; $5.95</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/toothbrush/600/400" alt="Toothbrush" loading="lazy"><span class="card-badge">Smart</span></div><div class="card-body"><h3>Sonic Electric Toothbrush</h3><p class="card-desc">5 modes, pressure sensor, USB-C</p><div class="card-footer"><div class="card-price">48 &#960;<small>&asymp; $8.16</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/essential/600/400" alt="Oils" loading="lazy"><span class="card-badge">Wellness</span></div><div class="card-body"><h3>Essential Oil Diffuser Set</h3><p class="card-desc">Ultrasonic mist + 6 pure oils</p><div class="card-footer"><div class="card-price">72 &#960;<small>&asymp; $12.24</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/hairdryer/600/400" alt="Dryer" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Ionic Hair Dryer Pro</h3><p class="card-desc">1800W, 3 attachments, frizz-free</p><div class="card-footer"><div class="card-price">110 &#960;<small>&asymp; $18.70</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                </div>
+                <!-- Slide 6: Sports -->
+                <div class="mp-slide" data-cat="Sports">
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/trekbag/600/400" alt="Backpack" loading="lazy"><span class="card-badge">Adventure</span></div><div class="card-body"><h3>Mountain Trekking Backpack</h3><p class="card-desc">65L, waterproof, ergonomic frame</p><div class="card-footer"><div class="card-price">220 &#960;<small>&asymp; $37.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/dumbbells/600/400" alt="Dumbbells" loading="lazy"><span class="card-badge">Fitness</span></div><div class="card-body"><h3>Adjustable Dumbbell Set</h3><p class="card-desc">2-24kg per hand, quick-lock</p><div class="card-footer"><div class="card-price">350 &#960;<small>&asymp; $59.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/roadbike/600/400" alt="Bicycle" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Carbon Road Bicycle</h3><p class="card-desc">Shimano 105, 8.2kg ultra-light</p><div class="card-footer"><div class="card-price">4,200 &#960;<small>&asymp; $714.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/yogamat/600/400" alt="Yoga" loading="lazy"><span class="card-badge">Eco</span></div><div class="card-body"><h3>Premium Yoga Mat</h3><p class="card-desc">6mm, natural rubber, non-slip</p><div class="card-footer"><div class="card-price">42 &#960;<small>&asymp; $7.14</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/tent2p/600/400" alt="Tent" loading="lazy"><span class="card-badge">Camping</span></div><div class="card-body"><h3>2-Person Camping Tent</h3><p class="card-desc">4-season, aluminum poles, 2.1kg</p><div class="card-footer"><div class="card-price">280 &#960;<small>&asymp; $47.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/football/600/400" alt="Football" loading="lazy"><span class="card-badge">Official</span></div><div class="card-body"><h3>FIFA Pro Match Football</h3><p class="card-desc">Thermal-bonded, size 5</p><div class="card-footer"><div class="card-price">55 &#960;<small>&asymp; $9.35</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                </div>
+                <!-- Slide 7: Food -->
+                <div class="mp-slide" data-cat="Food">
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/coffeebeans/600/400" alt="Coffee" loading="lazy"><span class="card-badge">Organic</span></div><div class="card-body"><h3>Organic Coffee Beans 1kg</h3><p class="card-desc">Single-origin Ethiopian Yirgacheffe</p><div class="card-footer"><div class="card-price">28 &#960;<small>&asymp; $4.76</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/honeygift/600/400" alt="Honey" loading="lazy"><span class="card-badge">Gift</span></div><div class="card-body"><h3>Premium Honey Gift Box</h3><p class="card-desc">3x 500g, raw wildflower + manuka</p><div class="card-footer"><div class="card-price">65 &#960;<small>&asymp; $11.05</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/spicebox/600/400" alt="Spices" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>Spice Collection Kit</h3><p class="card-desc">24 organic East African spices</p><div class="card-footer"><div class="card-price">45 &#960;<small>&asymp; $7.65</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/teabox/600/400" alt="Tea" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Kenyan Tea Sampler</h3><p class="card-desc">12 varieties, loose leaf, wooden box</p><div class="card-footer"><div class="card-price">38 &#960;<small>&asymp; $6.46</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/driedfruit/600/400" alt="Fruit" loading="lazy"><span class="card-badge">Healthy</span></div><div class="card-body"><h3>Mixed Dried Fruit Pack</h3><p class="card-desc">500g, mango, pineapple, coconut</p><div class="card-footer"><div class="card-price">18 &#960;<small>&asymp; $3.06</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/macadamia/600/400" alt="Nuts" loading="lazy"><span class="card-badge">Local</span></div><div class="card-body"><h3>Roasted Macadamia Nuts</h3><p class="card-desc">400g, lightly salted, Kenyan grown</p><div class="card-footer"><div class="card-price">22 &#960;<small>&asymp; $3.74</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="mp-cat-pills" id="mp-pills">
+            <button class="active" data-idx="0">&#128090; Fashion</button>
+            <button data-idx="1">&#128187; Electronics</button>
+            <button data-idx="2">&#128190; Digital</button>
+            <button data-idx="3">&#127968; Home</button>
+            <button data-idx="4">&#128132; Beauty</button>
+            <button data-idx="5">&#9917; Sports</button>
+            <button data-idx="6">&#127828; Food</button>
+        </div>
+    </section>
+
+    <!-- Fashion Section -->
+    <section class="section" id="fashion">
+        <div class="section-header">
+            <h2 data-i18n="explore.fashionSection">Fashion & Accessories</h2>
+            <a href="index.html">View All &rarr;</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/watch1/600/400" alt="Watch" loading="lazy">
+                    <span class="card-badge">New</span>
+                </div>
+                <div class="card-body">
+                    <h3>NAVIFORCE Elegant Watch</h3>
+                    <p class="card-desc">Women's square quartz, stainless steel</p>
+                    <div class="card-footer">
+                        <div class="card-price">300 &#960;<small>&asymp; $51.00</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/sneakers/600/400" alt="Sneakers" loading="lazy">
+                    <span class="card-badge">Trending</span>
+                </div>
+                <div class="card-body">
+                    <h3>Chunky Platform Sneakers</h3>
+                    <p class="card-desc">Size 41-44, premium sole</p>
+                    <div class="card-footer">
+                        <div class="card-price">180 &#960;<small>&asymp; $30.60</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/leatherbag/600/400" alt="Bag" loading="lazy">
+                    <span class="card-badge">Premium</span>
+                </div>
+                <div class="card-body">
+                    <h3>Italian Leather Handbag</h3>
+                    <p class="card-desc">Handcrafted, genuine leather</p>
+                    <div class="card-footer">
+                        <div class="card-price">450 &#960;<small>&asymp; $76.50</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/rayban/600/400" alt="Sunglasses" loading="lazy">
+                    <span class="card-badge">Iconic</span>
+                </div>
+                <div class="card-body">
+                    <h3>Ray-Ban Aviator Sunglasses</h3>
+                    <p class="card-desc">Classic gold frame, polarized lenses</p>
+                    <div class="card-footer">
+                        <div class="card-price">250 &#960;<small>&asymp; $42.50</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/jordan4/600/400" alt="Jordan Shoes" loading="lazy">
+                    <span class="card-badge">Trending</span>
+                </div>
+                <div class="card-body">
+                    <h3>Nike Air Jordan 4 Retro</h3>
+                    <p class="card-desc">Size 40-46, Military Black</p>
+                    <div class="card-footer">
+                        <div class="card-price">420 &#960;<small>&asymp; $71.40</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/overcoat/600/400" alt="Overcoat" loading="lazy">
+                    <span class="card-badge">Premium</span>
+                </div>
+                <div class="card-body">
+                    <h3>Cashmere Wool Overcoat</h3>
+                    <p class="card-desc">Hand-stitched, Italian cut</p>
+                    <div class="card-footer">
+                        <div class="card-price">650 &#960;<small>&asymp; $110.50</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Electronics Section -->
+    <section class="section" id="electronics">
+        <div class="section-header">
+            <h2 data-i18n="explore.electronicsSection">Electronics & Gadgets</h2>
+            <a href="index.html">View All &rarr;</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/laptop22/600/400" alt="Laptop" loading="lazy">
+                    <span class="card-badge">Featured</span>
+                </div>
+                <div class="card-body">
+                    <h3>Workstation Laptop M3</h3>
+                    <p class="card-desc">16GB RAM, 512GB SSD</p>
+                    <div class="card-footer">
+                        <div class="card-price">1,250 &#960;<small>&asymp; $212.50</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/smartwatch2/600/400" alt="Smartwatch" loading="lazy">
+                    <span class="card-badge">Popular</span>
+                </div>
+                <div class="card-body">
+                    <h3>Smart Fitness Pro</h3>
+                    <p class="card-desc">Heart rate, GPS, waterproof</p>
+                    <div class="card-footer">
+                        <div class="card-price">180 &#960;<small>&asymp; $30.60</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/headphones2/600/400" alt="Headphones" loading="lazy">
+                    <span class="card-badge">New</span>
+                </div>
+                <div class="card-body">
+                    <h3>Audio Bass Ultra</h3>
+                    <p class="card-desc">ANC, 40hr battery, Hi-Res</p>
+                    <div class="card-footer">
+                        <div class="card-price">75.5 &#960;<small>&asymp; $12.84</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/galaxy24/600/400" alt="Galaxy" loading="lazy">
+                    <span class="card-badge">Hot</span>
+                </div>
+                <div class="card-body">
+                    <h3>Samsung Galaxy S24 Ultra</h3>
+                    <p class="card-desc">512GB, AI Camera, Titanium</p>
+                    <div class="card-footer">
+                        <div class="card-price">5,100 &#960;<small>&asymp; $867.00</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/ps5pro/600/400" alt="PS5" loading="lazy">
+                    <span class="card-badge">Limited</span>
+                </div>
+                <div class="card-body">
+                    <h3>Sony PlayStation 5 Pro</h3>
+                    <p class="card-desc">1TB SSD, 4K 120fps gaming</p>
+                    <div class="card-footer">
+                        <div class="card-price">3,200 &#960;<small>&asymp; $544.00</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/drone4/600/400" alt="Drone" loading="lazy">
+                    <span class="card-badge">New</span>
+                </div>
+                <div class="card-body">
+                    <h3>DJI Mini 4 Pro Drone</h3>
+                    <p class="card-desc">4K HDR, 34min flight time</p>
+                    <div class="card-footer">
+                        <div class="card-price">4,800 &#960;<small>&asymp; $816.00</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/ipadair/600/400" alt="iPad" loading="lazy">
+                    <span class="card-badge">Popular</span>
+                </div>
+                <div class="card-body">
+                    <h3>iPad Air M2</h3>
+                    <p class="card-desc">11-inch, 256GB, Starlight</p>
+                    <div class="card-footer">
+                        <div class="card-price">3,600 &#960;<small>&asymp; $612.00</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Digital Products Section -->
+    <section class="section" id="digital">
+        <div class="section-header">
+            <h2 data-i18n="explore.digitalProducts">Digital Products</h2>
+            <a href="index.html">View All &rarr;</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/music1/600/400" alt="Music" loading="lazy">
+                    <span class="card-badge">Hot</span>
+                </div>
+                <div class="card-body">
+                    <h3>GPM Music Pack</h3>
+                    <p class="card-desc">Support artists, get exclusive tracks</p>
+                    <div class="card-footer">
+                        <div class="card-price">0.10 &#960;<small>&asymp; $0.02</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/social1/600/400" alt="Social Pack" loading="lazy">
+                    <span class="card-badge">Best Value</span>
+                </div>
+                <div class="card-body">
+                    <h3>Social Media Pack &mdash; 30 Days</h3>
+                    <p class="card-desc">Posting templates for Pi Network</p>
+                    <div class="card-footer">
+                        <div class="card-price">0.10 &#960;<small>&asymp; $0.02</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/ebook1/600/400" alt="Ebook" loading="lazy">
+                    <span class="card-badge">New</span>
+                </div>
+                <div class="card-body">
+                    <h3>Pi Trading Guide eBook</h3>
+                    <p class="card-desc">Master Pi commerce, 200+ pages</p>
+                    <div class="card-footer">
+                        <div class="card-price">2.5 &#960;<small>&asymp; $0.43</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/uxcourse/600/400" alt="UX Course" loading="lazy">
+                    <span class="card-badge">New</span>
+                </div>
+                <div class="card-body">
+                    <h3>UI/UX Design Masterclass</h3>
+                    <p class="card-desc">Figma + Framer, 80+ lessons</p>
+                    <div class="card-footer">
+                        <div class="card-price">15 &#960;<small>&asymp; $2.55</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/afrobeats/600/400" alt="Afrobeats" loading="lazy">
+                    <span class="card-badge">Hot</span>
+                </div>
+                <div class="card-body">
+                    <h3>African Beats Music Pack</h3>
+                    <p class="card-desc">50 royalty-free Afrobeat loops</p>
+                    <div class="card-footer">
+                        <div class="card-price">3 &#960;<small>&asymp; $0.51</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/pibundle/600/400" alt="Pi Bundle" loading="lazy">
+                    <span class="card-badge">Bundle</span>
+                </div>
+                <div class="card-body">
+                    <h3>Pi Commerce eBook Bundle</h3>
+                    <p class="card-desc">3 books: Trading, Mining, DApps</p>
+                    <div class="card-footer">
+                        <div class="card-price">5 &#960;<small>&asymp; $0.85</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Home & Living Section -->
+    <section class="section" id="home">
+        <div class="section-header">
+            <h2 data-i18n="explore.homeLiving">Home & Living</h2>
+            <a href="index.html">View All &rarr;</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/desklamp/600/400" alt="Desk Lamp" loading="lazy">
+                    <span class="card-badge">Smart</span>
+                </div>
+                <div class="card-body">
+                    <h3>Smart LED Desk Lamp</h3>
+                    <p class="card-desc">Wireless charging base, 5 light modes</p>
+                    <div class="card-footer">
+                        <div class="card-price">120 &#960;<small>&asymp; $20.40</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/espresso/600/400" alt="Coffee Machine" loading="lazy">
+                    <span class="card-badge">Popular</span>
+                </div>
+                <div class="card-body">
+                    <h3>Espresso Coffee Machine</h3>
+                    <p class="card-desc">15-bar pump, integrated milk frother</p>
+                    <div class="card-footer">
+                        <div class="card-price">680 &#960;<small>&asymp; $115.60</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/robovac/600/400" alt="Robot Vacuum" loading="lazy">
+                    <span class="card-badge">New</span>
+                </div>
+                <div class="card-body">
+                    <h3>Robot Vacuum Pro</h3>
+                    <p class="card-desc">LIDAR navigation, auto-empty dock</p>
+                    <div class="card-footer">
+                        <div class="card-price">950 &#960;<small>&asymp; $161.50</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/mattress/600/400" alt="Mattress" loading="lazy">
+                    <span class="card-badge">Best Seller</span>
+                </div>
+                <div class="card-body">
+                    <h3>Memory Foam Mattress</h3>
+                    <p class="card-desc">Queen size, cooling gel layer</p>
+                    <div class="card-footer">
+                        <div class="card-price">1,500 &#960;<small>&asymp; $255.00</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/airpurifier/600/400" alt="Air Purifier" loading="lazy">
+                    <span class="card-badge">Health</span>
+                </div>
+                <div class="card-body">
+                    <h3>HEPA Air Purifier</h3>
+                    <p class="card-desc">Covers 50m², PM2.5 sensor display</p>
+                    <div class="card-footer">
+                        <div class="card-price">380 &#960;<small>&asymp; $64.60</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/smartplug/600/400" alt="Smart Plugs" loading="lazy">
+                    <span class="card-badge">Value</span>
+                </div>
+                <div class="card-body">
+                    <h3>Wi-Fi Smart Plug 4-Pack</h3>
+                    <p class="card-desc">Voice control, energy monitoring</p>
+                    <div class="card-footer">
+                        <div class="card-price">55 &#960;<small>&asymp; $9.35</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beauty & Health Section -->
+    <section class="section" id="beauty">
+        <div class="section-header">
+            <h2 data-i18n="explore.beautyHealth">Beauty & Health</h2>
+            <a href="index.html">View All &rarr;</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/skincare/600/400" alt="Skincare" loading="lazy">
+                    <span class="card-badge">Natural</span>
+                </div>
+                <div class="card-body">
+                    <h3>Organic Skincare Set</h3>
+                    <p class="card-desc">Cleanser, toner, moisturizer, serum</p>
+                    <div class="card-footer">
+                        <div class="card-price">85 &#960;<small>&asymp; $14.45</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/massagegun/600/400" alt="Massage Gun" loading="lazy">
+                    <span class="card-badge">Trending</span>
+                </div>
+                <div class="card-body">
+                    <h3>Electric Massage Gun</h3>
+                    <p class="card-desc">6 heads, 30 speeds, deep tissue</p>
+                    <div class="card-footer">
+                        <div class="card-price">160 &#960;<small>&asymp; $27.20</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/serum/600/400" alt="Vitamin C Serum" loading="lazy">
+                    <span class="card-badge">Hot</span>
+                </div>
+                <div class="card-body">
+                    <h3>Vitamin C Glow Serum</h3>
+                    <p class="card-desc">30ml, hyaluronic acid blend</p>
+                    <div class="card-footer">
+                        <div class="card-price">35 &#960;<small>&asymp; $5.95</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/toothbrush/600/400" alt="Electric Toothbrush" loading="lazy">
+                    <span class="card-badge">Smart</span>
+                </div>
+                <div class="card-body">
+                    <h3>Sonic Electric Toothbrush</h3>
+                    <p class="card-desc">5 modes, pressure sensor, USB-C</p>
+                    <div class="card-footer">
+                        <div class="card-price">48 &#960;<small>&asymp; $8.16</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/essential/600/400" alt="Essential Oils" loading="lazy">
+                    <span class="card-badge">Wellness</span>
+                </div>
+                <div class="card-body">
+                    <h3>Essential Oil Diffuser Set</h3>
+                    <p class="card-desc">Ultrasonic mist + 6 pure oils</p>
+                    <div class="card-footer">
+                        <div class="card-price">72 &#960;<small>&asymp; $12.24</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/hairdryer/600/400" alt="Hair Dryer" loading="lazy">
+                    <span class="card-badge">Premium</span>
+                </div>
+                <div class="card-body">
+                    <h3>Ionic Hair Dryer Pro</h3>
+                    <p class="card-desc">1800W, 3 attachments, frizz-free</p>
+                    <div class="card-footer">
+                        <div class="card-price">110 &#960;<small>&asymp; $18.70</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sports & Outdoors Section -->
+    <section class="section" id="sports">
+        <div class="section-header">
+            <h2 data-i18n="explore.sportsOutdoors">Sports & Outdoors</h2>
+            <a href="index.html">View All &rarr;</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/trekbag/600/400" alt="Backpack" loading="lazy">
+                    <span class="card-badge">Adventure</span>
+                </div>
+                <div class="card-body">
+                    <h3>Mountain Trekking Backpack</h3>
+                    <p class="card-desc">65L, waterproof, ergonomic frame</p>
+                    <div class="card-footer">
+                        <div class="card-price">220 &#960;<small>&asymp; $37.40</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/dumbbells/600/400" alt="Dumbbells" loading="lazy">
+                    <span class="card-badge">Fitness</span>
+                </div>
+                <div class="card-body">
+                    <h3>Adjustable Dumbbell Set</h3>
+                    <p class="card-desc">2-24kg per hand, quick-lock</p>
+                    <div class="card-footer">
+                        <div class="card-price">350 &#960;<small>&asymp; $59.50</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/roadbike/600/400" alt="Road Bicycle" loading="lazy">
+                    <span class="card-badge">Premium</span>
+                </div>
+                <div class="card-body">
+                    <h3>Carbon Road Bicycle</h3>
+                    <p class="card-desc">Shimano 105, 8.2kg ultra-light</p>
+                    <div class="card-footer">
+                        <div class="card-price">4,200 &#960;<small>&asymp; $714.00</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/yogamat/600/400" alt="Yoga Mat" loading="lazy">
+                    <span class="card-badge">Eco</span>
+                </div>
+                <div class="card-body">
+                    <h3>Premium Yoga Mat</h3>
+                    <p class="card-desc">6mm, natural rubber, non-slip</p>
+                    <div class="card-footer">
+                        <div class="card-price">42 &#960;<small>&asymp; $7.14</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/tent2p/600/400" alt="Camping Tent" loading="lazy">
+                    <span class="card-badge">Camping</span>
+                </div>
+                <div class="card-body">
+                    <h3>2-Person Camping Tent</h3>
+                    <p class="card-desc">4-season, aluminum poles, 2.1kg</p>
+                    <div class="card-footer">
+                        <div class="card-price">280 &#960;<small>&asymp; $47.60</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/football/600/400" alt="Football" loading="lazy">
+                    <span class="card-badge">Official</span>
+                </div>
+                <div class="card-body">
+                    <h3>FIFA Pro Match Football</h3>
+                    <p class="card-desc">Thermal-bonded, size 5</p>
+                    <div class="card-footer">
+                        <div class="card-price">55 &#960;<small>&asymp; $9.35</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Food & Groceries Section -->
+    <section class="section" id="food">
+        <div class="section-header">
+            <h2 data-i18n="explore.foodGroceries">Food & Groceries</h2>
+            <a href="index.html">View All &rarr;</a>
+        </div>
+        <div class="product-grid">
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/coffeebeans/600/400" alt="Coffee Beans" loading="lazy">
+                    <span class="card-badge">Organic</span>
+                </div>
+                <div class="card-body">
+                    <h3>Organic Coffee Beans 1kg</h3>
+                    <p class="card-desc">Single-origin Ethiopian Yirgacheffe</p>
+                    <div class="card-footer">
+                        <div class="card-price">28 &#960;<small>&asymp; $4.76</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/honeygift/600/400" alt="Honey" loading="lazy">
+                    <span class="card-badge">Gift</span>
+                </div>
+                <div class="card-body">
+                    <h3>Premium Honey Gift Box</h3>
+                    <p class="card-desc">3x 500g, raw wildflower + manuka</p>
+                    <div class="card-footer">
+                        <div class="card-price">65 &#960;<small>&asymp; $11.05</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/spicebox/600/400" alt="Spice Kit" loading="lazy">
+                    <span class="card-badge">New</span>
+                </div>
+                <div class="card-body">
+                    <h3>Spice Collection Kit</h3>
+                    <p class="card-desc">24 organic East African spices</p>
+                    <div class="card-footer">
+                        <div class="card-price">45 &#960;<small>&asymp; $7.65</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/teabox/600/400" alt="Tea Collection" loading="lazy">
+                    <span class="card-badge">Premium</span>
+                </div>
+                <div class="card-body">
+                    <h3>Kenyan Tea Sampler</h3>
+                    <p class="card-desc">12 varieties, loose leaf, wooden box</p>
+                    <div class="card-footer">
+                        <div class="card-price">38 &#960;<small>&asymp; $6.46</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/driedfruit/600/400" alt="Dried Fruits" loading="lazy">
+                    <span class="card-badge">Healthy</span>
+                </div>
+                <div class="card-body">
+                    <h3>Mixed Dried Fruit Pack</h3>
+                    <p class="card-desc">500g, mango, pineapple, coconut</p>
+                    <div class="card-footer">
+                        <div class="card-price">18 &#960;<small>&asymp; $3.06</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <img src="https://picsum.photos/seed/macadamia/600/400" alt="Macadamia" loading="lazy">
+                    <span class="card-badge">Local</span>
+                </div>
+                <div class="card-body">
+                    <h3>Roasted Macadamia Nuts</h3>
+                    <p class="card-desc">400g, lightly salted, Kenyan grown</p>
+                    <div class="card-footer">
+                        <div class="card-price">22 &#960;<small>&asymp; $3.74</small></div>
+                        <button class="btn-buy">&#960; Pay Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+        <div class="section-header">
+            <h2>Open All Services in Browser</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">All Services</h3><p class="card-desc" style="margin-bottom:12px">Open complete services portal.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Hotels</h3><p class="card-desc" style="margin-bottom:12px">Book and pay hotels with Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/hotels')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Homes</h3><p class="card-desc" style="margin-bottom:12px">Browse homes and rentals.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/homes')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Bills</h3><p class="card-desc" style="margin-bottom:12px">Pay utility bills in Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/bills')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Transport</h3><p class="card-desc" style="margin-bottom:12px">Open ride and transport services.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('transport.html')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Map</h3><p class="card-desc" style="margin-bottom:12px">View Pi locations on map.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('map.html')">Open</button></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-col">
+                <h4 data-i18n="footer.marketplace">Marketplace</h4>
+                <a href="index.html" data-i18n="nav.home">Home</a>
+                <a href="new.html" data-i18n="nav.explore">Explore</a>
+                <a href="new.html#fashion" data-i18n="products.fashion">Fashion</a>
+                <a href="new.html#electronics" data-i18n="products.electronics">Electronics</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.sellers">Sellers</h4>
+                <a href="form.html" data-i18n="cta.registerBusiness">Register Business</a>
+                <a href="form.html" data-i18n="footer.quickRegistration">Quick Registration</a>
+                <a href="Submit.html" data-i18n="footer.postProduct">Post Product</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav.services">Services</h4>
+                <a href="https://109.199.109.143/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="https://109.199.109.143/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="https://109.199.109.143/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="https://109.199.109.143/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="transport.html" data-i18n="nav.transport">Transport</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.resources">Resources</h4>
+                <a href="n2 .html" data-i18n="footer.mobileView">Mobile View</a>
+                <a href="form.html" data-i18n="footer.kycVerification">KYC Verification</a>
+                <a href="submit success full.html" data-i18n="footer.submissionStatus">Submission Status</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.legal">Legal</h4>
+                <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
+                <a href="terms-of-service.html" data-i18n="footer.termsOfService">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
+            &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:var(--text-muted);text-decoration:none" data-i18n="general.privacy">Privacy</a>
+            &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:var(--text-muted);text-decoration:none" data-i18n="general.terms">Terms</a>
+        </div>
+    </footer>
+
+    <script>
+        // Pi SDK Auth
+        let piUser = null;
+        const isPiBrowser = typeof window.Pi !== 'undefined';
+        if (isPiBrowser) Pi.init({ version: "2.0", sandbox: false });
+
+        async function piConnect() {
+            if (!isPiBrowser) { alert('Please open this app in Pi Browser'); return; }
+            try {
+                const auth = await Pi.authenticate(['username', 'payments'], function(p) { console.log('Incomplete:', p); });
+                piUser = auth.user;
+                document.getElementById('pi-user-badge').style.display = 'inline-flex';
+                document.getElementById('pi-username').textContent = '@' + piUser.username;
+                document.getElementById('pi-connect-btn').textContent = 'Connected \u2713';
+                document.getElementById('pi-connect-btn').disabled = true;
+                document.getElementById('pi-connect-btn').style.opacity = '0.6';
+            } catch (err) { console.error('Pi auth error:', err); }
+        }
+
+        // Auto-login in Pi Browser
+        if (isPiBrowser) piConnect();
+
+        function piPay(amount, productName) {
+            if (!isPiBrowser) { alert('Open in Pi Browser to pay'); return; }
+            if (!piUser) { alert('Connect your Pi wallet first'); return; }
+            Pi.createPayment({ amount: amount, memo: 'Purchase: ' + productName, metadata: { product: productName } }, {
+                onReadyForServerApproval: function(id) { console.log('Approved:', id); },
+                onReadyForServerCompletion: function(id, txid) { alert('\u2705 Payment successful! TX: ' + txid); },
+                onCancel: function() { alert('Payment cancelled'); },
+                onError: function(e) { alert('Payment error: ' + (e.message || 'Error')); }
+            });
+        }
+
+        // Pi SDK — Share
+        function piShare(title, message) {
+            if (isPiBrowser && Pi.openShareDialog) {
+                Pi.openShareDialog(title, message);
+            } else {
+                navigator.share ? navigator.share({ title: title, text: message }) : alert('Sharing not available');
+            }
+        }
+
+        // Pi SDK — Copy to clipboard
+        function piCopy(text) {
+            if (isPiBrowser && Pi.copyText) { Pi.copyText(text); }
+            else { navigator.clipboard && navigator.clipboard.writeText(text); }
+            alert('Copied: ' + text);
+        }
+
+        // Pi SDK — Open URL in system browser
+        function piOpenUrl(url) {
+            if (isPiBrowser && Pi.openUrlInSystemBrowser) { Pi.openUrlInSystemBrowser(url); }
+            else { window.open(url, '_blank'); }
+        }
+
+        function openServiceBrowser(url) {
+            var resolved = new URL(url, window.location.href).href;
+            piOpenUrl(resolved);
+        }
+
+        // Pi SDK — Ads
+        async function piShowAd() {
+            if (!isPiBrowser || !Pi.Ads) return;
+            try {
+                await Pi.Ads.requestAd('interstitial');
+                var ready = await Pi.Ads.isAdReady('interstitial');
+                if (ready) await Pi.Ads.showAd('interstitial');
+            } catch(e) { console.log('Ad not available:', e); }
+        }
+
+        // Pi SDK — Open conversation
+        function piChat(conversationId) {
+            if (isPiBrowser && Pi.openConversation) Pi.openConversation(conversationId);
+        }
+
+        // Pi SDK — Native features & permissions
+        function piNativeFeatures() {
+            if (isPiBrowser && Pi.nativeFeaturesList) return Pi.nativeFeaturesList();
+            return [];
+        }
+        function piRequestPermission(perm) {
+            if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
+        }
+
+        /* ── Marketplace Overview Carousel JS ── */
+        (function() {
+            var idx = 0, total = 7, timer;
+            function go(i) {
+                idx = (i + total) % total;
+                document.getElementById('mp-track').style.transform = 'translateX(-' + (idx * 100) + '%)';
+                document.getElementById('mp-slide-counter').textContent = (idx + 1) + ' / ' + total;
+                document.querySelectorAll('#mp-pills button').forEach(function(b, n) {
+                    b.classList.toggle('active', n === idx);
+                });
+            }
+            document.getElementById('mp-prev').addEventListener('click', function() { go(idx - 1); resetAuto(); });
+            document.getElementById('mp-next').addEventListener('click', function() { go(idx + 1); resetAuto(); });
+            document.querySelectorAll('#mp-pills button').forEach(function(b) {
+                b.addEventListener('click', function() { go(+this.dataset.idx); resetAuto(); });
+            });
+            function resetAuto() { clearInterval(timer); timer = setInterval(function() { go(idx + 1); }, 6000); }
+            resetAuto();
+            // Touch swipe
+            var track = document.getElementById('mp-track'), sx;
+            track.addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; }, { passive: true });
+            track.addEventListener('touchend', function(e) {
+                var dx = e.changedTouches[0].clientX - sx;
+                if (Math.abs(dx) > 40) { go(dx > 0 ? idx - 1 : idx + 1); resetAuto(); }
+            });
+        })();
+
+        // Add click handlers to all Pay Now buttons + inject share buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-buy').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var card = btn.closest('.card');
+                    var name = card.querySelector('h3').textContent;
+                    var priceText = card.querySelector('.card-price').textContent;
+                    var price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+                    piPay(price, name);
+                });
+                // Add share button next to each Pay Now button
+                var shareBtn = document.createElement('button');
+                shareBtn.innerHTML = '📤';
+                shareBtn.title = 'Share';
+                shareBtn.style.cssText = 'background:none;border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:8px;padding:8px 10px;cursor:pointer;font-size:0.85rem;margin-left:6px';
+                shareBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var card = this.closest('.card');
+                    var name = card.querySelector('h3').textContent;
+                    var priceText = card.querySelector('.card-price').textContent;
+                    var price = priceText.split('π')[0].trim();
+                    piShare(name, 'Check out ' + name + ' for ' + price + ' π on Omenda Pi Pays!');
+                });
+                btn.parentNode.style.display = 'flex';
+                btn.parentNode.style.gap = '6px';
+                btn.parentNode.style.alignItems = 'center';
+                btn.style.flex = '1';
+                btn.parentNode.appendChild(shareBtn);
+            });
+        });
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ── Product Image Slider (5 images per card) ──
+        (function() {
+            var suffixes = ['', '_v2', '_v3', '_v4', '_v5'];
+
+            document.querySelectorAll('.card-img').forEach(function(container) {
+                var img = container.querySelector('img');
+                if (!img) return;
+                var src = img.getAttribute('src');
+                var alt = img.getAttribute('alt') || '';
+                var badge = container.querySelector('.card-badge');
+
+                // Extract seed from URL: https://picsum.photos/seed/{seed}/600/400
+                var m = src.match(/\/seed\/([^\/]+)\//);
+                var baseSeed = m ? m[1] : '';
+
+                // Build slider
+                var slider = document.createElement('div');
+                slider.className = 'card-slider';
+
+                var slides = document.createElement('div');
+                slides.className = 'slides';
+
+                for (var i = 0; i < 5; i++) {
+                    var newImg = document.createElement('img');
+                    if (baseSeed) {
+                        newImg.src = 'https://picsum.photos/seed/' + baseSeed + suffixes[i] + '/600/400';
+                    } else {
+                        newImg.src = src;
+                    }
+                    newImg.alt = alt + (i > 0 ? ' ' + (i+1) : '');
+                    newImg.loading = 'lazy';
+                    slides.appendChild(newImg);
+                }
+                slider.appendChild(slides);
+
+                // Arrows
+                var leftArr = document.createElement('button');
+                leftArr.className = 'slide-arrow left';
+                leftArr.innerHTML = '&#8249;';
+                leftArr.setAttribute('aria-label', 'Previous image');
+                var rightArr = document.createElement('button');
+                rightArr.className = 'slide-arrow right';
+                rightArr.innerHTML = '&#8250;';
+                rightArr.setAttribute('aria-label', 'Next image');
+                slider.appendChild(leftArr);
+                slider.appendChild(rightArr);
+
+                // Dots
+                var dots = document.createElement('div');
+                dots.className = 'slide-dots';
+                for (var d = 0; d < 5; d++) {
+                    var dot = document.createElement('span');
+                    if (d === 0) dot.className = 'active';
+                    dot.setAttribute('data-idx', d);
+                    dots.appendChild(dot);
+                }
+                slider.appendChild(dots);
+
+                // Re-add badge
+                if (badge) slider.appendChild(badge);
+
+                // Replace card-img content
+                container.innerHTML = '';
+                container.appendChild(slider);
+
+                // Slider logic
+                var current = 0;
+                function goTo(idx) {
+                    if (idx < 0) idx = 4;
+                    if (idx > 4) idx = 0;
+                    current = idx;
+                    slides.style.transform = 'translateX(-' + (idx * 20) + '%)';
+                    dots.querySelectorAll('span').forEach(function(s, i) {
+                        s.className = i === idx ? 'active' : '';
+                    });
+                }
+                leftArr.addEventListener('click', function(e) { e.stopPropagation(); goTo(current - 1); });
+                rightArr.addEventListener('click', function(e) { e.stopPropagation(); goTo(current + 1); });
+                dots.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'SPAN') {
+                        e.stopPropagation();
+                        goTo(parseInt(e.target.getAttribute('data-idx')));
+                    }
+                });
+
+                // Touch swipe
+                var startX = 0;
+                slider.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+                slider.addEventListener('touchend', function(e) {
+                    var diff = startX - e.changedTouches[0].clientX;
+                    if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

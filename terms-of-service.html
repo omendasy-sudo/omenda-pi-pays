@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | Omenda Pi Pays Global</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-purple: #7c3aed;
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            min-height: 100vh; -webkit-font-smoothing: antialiased;
+        }
+        .bg-ambient {
+            position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .bg-ambient::before {
+            content: ''; position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+            top: -200px; right: -100px;
+        }
+
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px; height: 64px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .topbar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .topbar-logo img { width: 32px; height: 32px; border-radius: 8px; }
+        .topbar-logo span { font-weight: 700; font-size: 1.05rem; color: var(--text-primary); }
+        .topbar-nav { display: flex; gap: 6px; margin-left: auto; }
+        .topbar-nav a {
+            color: var(--text-secondary); text-decoration: none; padding: 8px 14px;
+            border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .topbar-nav a:hover { background: var(--bg-card); color: var(--text-primary); }
+
+        .container { max-width: 820px; margin: 0 auto; padding: 48px 24px 100px; }
+
+        .page-header { margin-bottom: 40px; }
+        .page-header h1 {
+            font-size: 2rem; font-weight: 800; margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--pi-purple), var(--pi-gold));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .page-header .meta { font-size: 0.85rem; color: var(--text-muted); }
+
+        .legal-content { line-height: 1.85; }
+
+        .legal-content h2 {
+            font-size: 1.15rem; font-weight: 700; margin: 32px 0 12px;
+            color: var(--pi-gold); display: flex; align-items: center; gap: 8px;
+        }
+        .legal-content h2 .num {
+            background: var(--pi-purple); color: #fff; font-size: 0.7rem;
+            width: 24px; height: 24px; border-radius: 6px;
+            display: inline-flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .legal-content p {
+            color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 14px;
+        }
+
+        .legal-content ul, .legal-content ol {
+            margin: 8px 0 16px 20px; color: var(--text-secondary); font-size: 0.9rem;
+        }
+        .legal-content li { margin-bottom: 6px; }
+        .legal-content li strong { color: var(--text-primary); }
+        .legal-content a { color: var(--pi-purple); text-decoration: underline; }
+
+        .info-box {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px 24px;
+            margin: 24px 0; font-size: 0.85rem; color: var(--text-secondary);
+        }
+        .info-box strong { color: var(--pi-gold); }
+
+        .warning-box {
+            background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2);
+            border-radius: var(--radius); padding: 20px 24px;
+            margin: 24px 0; font-size: 0.85rem; color: var(--text-secondary);
+        }
+        .warning-box strong { color: #f87171; }
+
+        .footer-links {
+            margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border);
+            display: flex; gap: 24px; flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-muted); text-decoration: none; font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--text-primary); }
+
+        @media (max-width: 640px) {
+            .container { padding: 32px 16px 80px; }
+            .page-header h1 { font-size: 1.5rem; }
+            .topbar-nav { display: none; }
+        }
+    </style>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+</head>
+<body>
+    <div class="bg-ambient"></div>
+
+    <header class="topbar">
+        <a href="index.html" class="topbar-logo">
+            <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
+            <span>Omenda Pi Pays</span>
+        </a>
+        <nav class="topbar-nav">
+            <a href="index.html">Marketplace</a>
+            <a href="new.html">Explore</a>
+            <a href="social.html">Social</a>
+            <a href="privacy-policy.html">Privacy</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Terms of Service</h1>
+            <p class="meta">Last updated: March 8, 2026 &nbsp;|&nbsp; Omenda Pi Pays Global</p>
+        </div>
+
+        <div class="legal-content">
+
+            <div class="info-box">
+                <strong>&#128220; Agreement.</strong> By accessing or using Omenda Pi Pays Global ("the App", "our Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our application.
+            </div>
+
+            <h2><span class="num">1</span> Overview</h2>
+            <p>Omenda Pi Pays Global is a decentralized marketplace application built on the Pi Network platform. Our Service enables users to browse, list, and purchase goods and services using Pi cryptocurrency, as well as access hotel bookings, property listings, and bill payment services.</p>
+
+            <h2><span class="num">2</span> Eligibility</h2>
+            <p>To use Omenda Pi Pays, you must:</p>
+            <ul>
+                <li>Be at least <strong>16 years of age</strong> or the minimum age required in your jurisdiction.</li>
+                <li>Have a valid <strong>Pi Network account</strong> with a verified identity (KYC) for payment features.</li>
+                <li>Access the application through the <strong>Pi Browser</strong> for full SDK functionality.</li>
+                <li>Comply with all applicable local, national, and international laws and regulations.</li>
+            </ul>
+
+            <h2><span class="num">3</span> User Accounts & Authentication</h2>
+            <p>When you connect to Omenda Pi Pays through Pi.authenticate:</p>
+            <ul>
+                <li>You authorize us to access your <strong>Pi Network username</strong> and <strong>User ID (UID)</strong> for identification.</li>
+                <li>You are responsible for maintaining the security of your Pi Network account.</li>
+                <li>You must not impersonate any other person or use a false identity.</li>
+                <li>We reserve the right to suspend or terminate accounts that violate these terms.</li>
+            </ul>
+
+            <h2><span class="num">4</span> Marketplace Rules</h2>
+            <p>When using the marketplace, you agree to the following:</p>
+
+            <p><strong>As a Buyer:</strong></p>
+            <ul>
+                <li>You understand that all transactions are conducted in <strong>Pi cryptocurrency</strong>.</li>
+                <li>You are responsible for verifying product details before making a purchase.</li>
+                <li>Payments made via Pi.createPayment are processed on the Pi blockchain and may be <strong>irreversible</strong> once confirmed.</li>
+                <li>Quoted Pi prices and fiat equivalents are approximate and may fluctuate.</li>
+            </ul>
+
+            <p><strong>As a Seller:</strong></p>
+            <ul>
+                <li>You must provide <strong>accurate and truthful</strong> descriptions of your products and services.</li>
+                <li>You are responsible for fulfilling orders in a timely manner.</li>
+                <li>You must not list prohibited, illegal, counterfeit, or dangerous items.</li>
+                <li>You must comply with all applicable consumer protection laws in your jurisdiction.</li>
+            </ul>
+
+            <h2><span class="num">5</span> Payments & Transactions</h2>
+            <p>All payments on Omenda Pi Pays are facilitated through the Pi Network SDK:</p>
+            <ul>
+                <li>Payments are created using <strong>Pi.createPayment</strong> and processed through Pi Network's blockchain infrastructure.</li>
+                <li>We act as an <strong>intermediary platform</strong> — we facilitate the connection between buyers and sellers but are not a party to the transaction.</li>
+                <li>Transaction fees, if any, will be clearly displayed before payment confirmation.</li>
+                <li>Incomplete payments detected via <strong>onIncompletePaymentFound</strong> may be resolved or cancelled as appropriate.</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>&#9888; Important:</strong> Pi cryptocurrency transactions recorded on the blockchain are final. While we will make reasonable efforts to resolve disputes, we cannot reverse blockchain transactions. Please verify all transaction details before confirming payment.
+            </div>
+
+            <h2><span class="num">6</span> Services (Hotels, Properties, Bills)</h2>
+            <p>Our platform offers additional services including hotel bookings, property listings, and bill payments:</p>
+            <ul>
+                <li><strong>Hotel Bookings</strong> — Reservations are subject to availability and the policies of each property listed.</li>
+                <li><strong>Property Listings</strong> — We display properties for informational purposes. We do not guarantee the accuracy, condition, or availability of listed properties.</li>
+                <li><strong>Bill Payments</strong> — Bill payment services are processed through third-party providers. Processing times and fees depend on the provider.</li>
+            </ul>
+            <p>We act as a platform connecting users with service providers and are not directly responsible for service delivery.</p>
+
+            <h2><span class="num">7</span> Prohibited Activities</h2>
+            <p>You may not use Omenda Pi Pays to:</p>
+            <ul>
+                <li>Engage in fraud, money laundering, or any illegal financial activity.</li>
+                <li>List or sell prohibited items including weapons, drugs, stolen goods, or counterfeit products.</li>
+                <li>Harass, threaten, or abuse other users.</li>
+                <li>Attempt to exploit, hack, or reverse-engineer the application or Pi SDK.</li>
+                <li>Create multiple accounts to circumvent restrictions or manipulate the platform.</li>
+                <li>Use bots, scripts, or automated tools to interact with the service without authorization.</li>
+                <li>Violate Pi Network's terms of service or community guidelines.</li>
+            </ul>
+
+            <h2><span class="num">8</span> Intellectual Property</h2>
+            <p>All content, design, code, trademarks, and branding of Omenda Pi Pays Global are the property of the application developer(s). You may not:</p>
+            <ul>
+                <li>Copy, modify, distribute, or reproduce any part of the application without written permission.</li>
+                <li>Use our name, logo, or branding in a way that suggests endorsement without authorization.</li>
+                <li>Scrape, crawl, or extract data from the application through automated means.</li>
+            </ul>
+            <p>User-generated content (product listings, reviews) remains the property of the user, but you grant us a non-exclusive license to display it within the platform.</p>
+
+            <h2><span class="num">9</span> Disclaimer of Warranties</h2>
+            <p>Omenda Pi Pays is provided <strong>"as is"</strong> and <strong>"as available"</strong> without warranties of any kind, whether express or implied, including but not limited to:</p>
+            <ul>
+                <li>Merchantability or fitness for a particular purpose.</li>
+                <li>Uninterrupted, error-free, or secure operation.</li>
+                <li>Accuracy or reliability of any content or information on the platform.</li>
+            </ul>
+            <p>We do not warrant that the Pi Network, Pi blockchain, or Pi SDK will be available at all times or function without interruption.</p>
+
+            <h2><span class="num">10</span> Limitation of Liability</h2>
+            <p>To the maximum extent permitted by applicable law, Omenda Pi Pays Global and its developers shall not be liable for:</p>
+            <ul>
+                <li>Any indirect, incidental, special, consequential, or punitive damages.</li>
+                <li>Loss of Pi cryptocurrency, profits, data, or business opportunities.</li>
+                <li>Actions or omissions of third-party sellers, service providers, or the Pi Network platform.</li>
+                <li>Service interruptions caused by Pi Network, blockchain congestion, or force majeure events.</li>
+            </ul>
+
+            <h2><span class="num">11</span> Dispute Resolution</h2>
+            <p>In the event of a dispute between users (buyer and seller):</p>
+            <ol>
+                <li>We encourage users to first attempt to resolve disputes directly through Pi Messenger (Pi.openConversation).</li>
+                <li>If unresolved, either party may contact us through the app for mediation assistance.</li>
+                <li>We reserve the right to make final decisions on disputes processed through our platform.</li>
+                <li>For disputes regarding the Pi Network or Pi cryptocurrency, Pi Network's own terms and dispute mechanisms apply.</li>
+            </ol>
+
+            <h2><span class="num">12</span> Termination</h2>
+            <p>We may suspend or terminate your access to Omenda Pi Pays at any time, with or without notice, for:</p>
+            <ul>
+                <li>Violation of these Terms of Service.</li>
+                <li>Fraudulent, abusive, or illegal activity.</li>
+                <li>At our sole discretion to maintain platform integrity.</li>
+            </ul>
+            <p>Upon termination, your right to use the Service ceases immediately. Provisions relating to intellectual property, limitation of liability, and dispute resolution survive termination.</p>
+
+            <h2><span class="num">13</span> Modifications to Terms</h2>
+            <p>We reserve the right to update or modify these Terms of Service at any time. Changes will take effect upon posting the updated terms with a new "Last updated" date. Your continued use of the Service after changes constitutes acceptance of the revised terms.</p>
+
+            <h2><span class="num">14</span> Governing Law</h2>
+            <p>These Terms of Service shall be governed by and construed in accordance with applicable laws. Any disputes arising from or related to these terms or the Service shall be subject to the jurisdiction of the relevant courts.</p>
+
+            <h2><span class="num">15</span> Contact</h2>
+            <p>For questions, concerns, or legal inquiries regarding these Terms of Service, please contact us:</p>
+            <div class="info-box">
+                <strong>Omenda Pi Pays Global</strong><br>
+                App: <a href="index.html">Omenda Pi Pays Marketplace</a><br>
+                Platform: Pi Network Third-Party Application<br>
+                Contact: Via Pi Messenger through the app<br>
+                Privacy Policy: <a href="privacy-policy.html">View Privacy Policy</a>
+            </div>
+
+            <div class="footer-links">
+                <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
+                <a href="index.html" data-i18n="nav.marketplace">Marketplace</a>
+                <a href="new.html" data-i18n="footer.exploreProducts">Explore Products</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

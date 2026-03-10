@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omenda Pi Pays | Decentralized Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-gold-light: rgba(245,166,35,0.12);
+            --pi-purple: #7c3aed;
+            --pi-purple-light: rgba(124,58,237,0.10);
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success: #22c55e;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient background */
+        .bg-ambient {
+            position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .bg-ambient::before {
+            content: ''; position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+            top: -200px; right: -100px;
+        }
+        .bg-ambient::after {
+            content: ''; position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
+            bottom: -100px; left: -100px;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 max(5%, 24px); height: 72px;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+        .logo span { color: var(--pi-gold); }
+
+        .nav-center { display: flex; gap: 8px; }
+        .nav-center a {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
+        }
+        .nav-center a:hover, .nav-center a.active {
+            color: var(--text-primary); background: rgba(255,255,255,0.06);
+        }
+
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .wallet-chip {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--pi-gold-light); border: 1px solid rgba(245,166,35,0.2);
+            padding: 8px 16px; border-radius: 100px; font-size: 0.8125rem; font-weight: 600;
+            color: var(--pi-gold);
+        }
+        .wallet-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+        .btn-primary {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 10px 22px; border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.875rem; cursor: pointer; transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); }
+
+        /* Hero */
+        .hero {
+            text-align: center; padding: 80px max(5%,24px) 40px;
+            max-width: 800px; margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--pi-gold-light); border: 1px solid rgba(245,166,35,0.15);
+            padding: 6px 16px; border-radius: 100px; font-size: 0.8125rem;
+            color: var(--pi-gold); font-weight: 600; margin-bottom: 24px;
+        }
+        .hero-badge .pulse {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--pi-gold);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+        .hero h1 {
+            font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 800;
+            letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--pi-gold) 0%, #fbbf24 100%);
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p { color: var(--text-secondary); font-size: 1.125rem; line-height: 1.6; max-width: 560px; margin: 0 auto 32px; }
+
+        /* Search */
+        .search-wrapper {
+            max-width: 560px; margin: 0 auto; position: relative;
+        }
+        .search-wrapper input {
+            width: 100%; padding: 16px 140px 16px 48px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; color: var(--text-primary); font-size: 0.9375rem;
+            outline: none; font-family: inherit; transition: border-color 0.2s;
+        }
+        .search-wrapper input::placeholder { color: var(--text-muted); }
+        .search-wrapper input:focus { border-color: var(--pi-purple); }
+        .search-icon {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 1.1rem;
+        }
+        .search-wrapper .btn-primary {
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            padding: 10px 20px; border-radius: var(--radius-sm);
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex; justify-content: center; gap: 48px; padding: 40px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        .stat { text-align: center; }
+        .stat .number { font-size: 1.75rem; font-weight: 800; letter-spacing: -1px; }
+        .stat .number.gold { color: var(--pi-gold); }
+        .stat .number.purple { color: var(--pi-purple); }
+        .stat .label { font-size: 0.8125rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* Section Header */
+        .section { padding: 48px max(5%,24px); }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
+        }
+        .section-header h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .section-header .filter-pills { display: flex; gap: 8px; }
+        .pill {
+            padding: 8px 16px; border-radius: 100px; font-size: 0.8125rem; font-weight: 500;
+            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-secondary);
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .pill:hover, .pill.active { background: var(--pi-purple-light); border-color: var(--pi-purple); color: var(--pi-purple); }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden;
+            transition: all 0.3s ease; cursor: pointer;
+        }
+        .card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: var(--shadow); }
+        .card-img { position: relative; overflow: hidden; }
+        .card-img img {
+            width: 100%; height: 220px; object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .card:hover .card-img img { transform: scale(1.05); }
+
+        /* ── Image Slider ── */
+        .card-slider { position: relative; width: 100%; height: 220px; overflow: hidden; }
+        .card-slider .slides { display: flex; width: 500%; height: 100%; transition: transform 0.35s ease; }
+        .card-slider .slides img { width: 20%; height: 100%; object-fit: cover; flex-shrink: 0; }
+        .card-slider .slide-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+            background: rgba(0,0,0,0.45); backdrop-filter: blur(4px); color: #fff; border: none;
+            width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.25s; pointer-events: none;
+        }
+        .card:hover .slide-arrow { opacity: 1; pointer-events: auto; }
+        .slide-arrow.left { left: 6px; }
+        .slide-arrow.right { right: 6px; }
+        .slide-arrow:hover { background: rgba(0,0,0,0.7); }
+        .slide-dots {
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 5;
+            display: flex; gap: 5px;
+        }
+        .slide-dots span {
+            width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .slide-dots span.active { background: #fff; transform: scale(1.3); }
+        .card-badge {
+            position: absolute; top: 12px; left: 12px;
+            background: rgba(9,9,11,0.7); backdrop-filter: blur(8px);
+            padding: 4px 12px; border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+            color: var(--pi-gold);
+        }
+        .card-body { padding: 20px; }
+        .card-body h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.3px; }
+        .card-body .card-desc { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 16px; }
+        .card-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 16px; border-top: 1px solid var(--border);
+        }
+        .card-price { font-size: 1.25rem; font-weight: 700; color: var(--pi-gold); }
+        .card-price small { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; display: block; }
+        .btn-buy {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.8125rem; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px; font-family: inherit;
+        }
+        .btn-buy:hover { background: #6d28d9; }
+
+        /* CTA Banner */
+        .cta-banner {
+            margin: 0 max(5%,24px) 48px; padding: 48px;
+            background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(245,166,35,0.08));
+            border: 1px solid var(--border); border-radius: var(--radius);
+            text-align: center;
+        }
+        .cta-banner h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .cta-banner p { color: var(--text-secondary); margin-bottom: 24px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .cta-banner .btn-primary { padding: 14px 32px; font-size: 1rem; }
+
+        /* Toast */
+        .toast-container {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+        }
+        .toast {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-left: 3px solid var(--success); border-radius: var(--radius-sm);
+            padding: 16px 20px; min-width: 300px;
+            display: flex; align-items: center; gap: 12px;
+            transform: translateX(120%); opacity: 0; transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast .toast-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(34,197,94,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+        .toast .toast-text strong { display: block; font-size: 0.875rem; margin-bottom: 2px; }
+        .toast .toast-text span { font-size: 0.8125rem; color: var(--text-muted); }
+
+        /* Footer */
+        footer {
+            padding: 48px max(5%,24px); border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .footer-grid { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 32px; text-align: left; margin-bottom: 40px; }
+        .footer-col h4 { font-size: 0.8125rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .footer-col a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--text-primary); }
+        .footer-bottom { font-size: 0.8125rem; color: var(--text-muted); padding-top: 24px; border-top: 1px solid var(--border); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 0 16px; }
+            .nav-center { display: none; }
+            .hero { padding: 48px 16px 32px; }
+            .stats-row { gap: 24px; flex-wrap: wrap; }
+            .section-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .card-img img { height: 160px; }
+            .card-slider { height: 160px; }
+            .card-body { padding: 12px; }
+            .card-footer { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .cta-banner { padding: 32px 20px; margin: 0 16px 32px; }
+            .footer-grid { flex-direction: column; text-align: center; }
+        }
+        @media (max-width: 480px) {
+            .product-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-ambient"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo"><img src="logo.png/logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div>
+        <div class="nav-center">
+            <img src="./logo.png.html" alt="">
+            <a href="index.html" class="active" data-i18n="nav.marketplace">Marketplace</a>
+            <a href="new.html" data-i18n="nav.explore">Explore</a>
+            <a href="map.html" data-i18n="nav.map">Map</a>
+            <a href="social.html" data-i18n="nav.social">Social</a>
+            <a href="form.html" data-i18n="nav.register">Register</a>
+            <a href="Submit.html" data-i18n="nav.sell">Sell</a>
+            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="transport.html" data-i18n="nav.transport">Transport</a>
+            <a href="pi-converter.html">Pi Converter</a>
+        </div>
+        <div class="nav-right">
+            <div class="wallet-chip" id="wallet-balance" style="display:none">
+                <span class="dot"></span>
+                <span id="pi-username"></span>
+            </div>
+            <button class="btn-primary" onclick="openServiceBrowser('https://109.199.109.143/services')" style="background:transparent;border:1px solid var(--border);color:var(--text-primary)">All Services</button>
+            <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge"><span class="pulse"></span> <span data-i18n="hero.badge">Pi Mainnet is Live</span></div>
+        <h1><span data-i18n="hero.title">Trade Globally with</span><br><span class="gradient">Pi Coin</span></h1>
+        <p data-i18n="hero.subtitle">A secure, decentralized marketplace for pioneers. Buy and sell premium products using Pi cryptocurrency.</p>
+        <div class="search-wrapper">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search products, categories..." data-i18n-placeholder="hero.searchPlaceholder">
+            <button class="btn-primary" data-i18n="hero.search">Search</button>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat">
+            <div class="number gold">12,480+</div>
+            <div class="label" data-i18n="stats.activePioneers">Active Pioneers</div>
+        </div>
+        <div class="stat">
+            <div class="number purple">3,200+</div>
+            <div class="label" data-i18n="stats.productsListed">Products Listed</div>
+        </div>
+        <div class="stat">
+            <div class="number gold" id="pi-rate-display">$0.17</div>
+            <div class="label" data-i18n="stats.livePiRate" id="pi-rate-label">Live Pi Rate</div>
+        </div>
+        <div class="stat">
+            <div class="number purple">98.5%</div>
+            <div class="label" data-i18n="stats.successRate">Success Rate</div>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <section class="section">
+        <div class="section-header">
+            <h2 data-i18n="products.featured">Featured Products</h2>
+            <div class="filter-pills">
+                <button class="pill active" onclick="filterProducts('all')" data-i18n="products.all">All</button>
+                <button class="pill" onclick="filterProducts('electronics')" data-i18n="products.electronics">Electronics</button>
+                <button class="pill" onclick="filterProducts('fashion')" data-i18n="products.fashion">Fashion</button>
+                <button class="pill" onclick="filterProducts('digital')" data-i18n="products.digital">Digital</button>
+                <button class="pill" onclick="filterProducts('home')" data-i18n="products.homeCategory">Home</button>
+                <button class="pill" onclick="filterProducts('beauty')" data-i18n="products.beauty">Beauty</button>
+                <button class="pill" onclick="filterProducts('sports')" data-i18n="products.sports">Sports</button>
+                <button class="pill" onclick="filterProducts('food')" data-i18n="products.food">Food</button>
+            </div>
+        </div>
+        <div class="product-grid" id="product-grid"></div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-banner">
+        <h2 data-i18n="cta.title">Start Selling with Pi Today</h2>
+        <p data-i18n="cta.subtitle">Join thousands of pioneers already trading on Omenda Pi Pays. Register your business and list your products.</p>
+        <a href="form.html" class="btn-primary" data-i18n="cta.registerBusiness" style="text-decoration:none">Register Your Business</a>
+    </div>
+
+    <section class="section" style="padding-top:0">
+        <div class="section-header">
+            <h2>Open All Services in Browser</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">All Services</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Open complete services portal.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Hotels</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Book and pay hotels with Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/hotels')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Homes</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Browse homes and rentals.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/homes')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Bills</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Pay utility bills in Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/bills')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Transport</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Open ride and transport services.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('transport.html')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Map</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">View Pi locations on map.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('map.html')">Open</button></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4 data-i18n="footer.marketplace">Marketplace</h4>
+                <a href="new.html" data-i18n="footer.exploreProducts">Explore Products</a>
+                <a href="new.html#fashion" data-i18n="products.fashion">Fashion</a>
+                <a href="new.html#electronics" data-i18n="products.electronics">Electronics</a>
+                <a href="new.html#digital" data-i18n="products.digital">Digital</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.sellers">Sellers</h4>
+                <a href="form.html" data-i18n="cta.registerBusiness">Register Business</a>
+                <a href="form.html" data-i18n="footer.quickRegistration">Quick Registration</a>
+                <a href="Submit.html" data-i18n="footer.postProduct">Post Product</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav.services">Services</h4>
+                <a href="https://109.199.109.143/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="https://109.199.109.143/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="https://109.199.109.143/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="https://109.199.109.143/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="transport.html" data-i18n="nav.transport">Transport</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="n2 .html">Mobile View</a>
+                <a href="form.html">KYC Verification</a>
+                <a href="submit success full.html">Submission Status</a>
+                <a href="admin-login.html">Admin Login</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.legal">Legal</h4>
+                <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
+                <a href="terms-of-service.html" data-i18n="footer.termsOfService">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
+            &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:var(--text-muted);text-decoration:none" data-i18n="general.privacy">Privacy</a>
+            &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:var(--text-muted);text-decoration:none" data-i18n="general.terms">Terms</a>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div class="toast-container">
+        <div class="toast" id="toast">
+            <div class="toast-icon">&#10003;</div>
+            <div class="toast-text">
+                <strong>Transaction Successful</strong>
+                <span>Payment sent to Pi Mainnet</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pi SDK Initialization & Authentication
+        let piUser = null;
+        const isPiBrowser = typeof window.Pi !== 'undefined';
+
+        if (isPiBrowser) {
+            Pi.init({ version: "2.0", sandbox: false });
+            // Auto-login: authenticate automatically in Pi Browser
+            piConnect();
+        }
+
+        async function piConnect() {
+            if (!isPiBrowser) {
+                alert('Please open this app in Pi Browser to connect your wallet.');
+                return;
+            }
+            try {
+                const auth = await Pi.authenticate(['username', 'payments'], function(payment) {
+                    console.log('Incomplete payment:', payment);
+                });
+                piUser = auth.user;
+                document.getElementById('wallet-balance').style.display = 'flex';
+                document.getElementById('pi-username').textContent = '@' + piUser.username;
+                document.getElementById('pi-connect-btn').textContent = 'Connected ✓';
+                document.getElementById('pi-connect-btn').disabled = true;
+                document.getElementById('pi-connect-btn').style.opacity = '0.6';
+            } catch (err) {
+                alert('Pi authentication failed: ' + (err.message || 'Unknown error'));
+            }
+        }
+
+        function processPayment(price, productName) {
+            if (!isPiBrowser) {
+                alert('Please open in Pi Browser to make payments.');
+                return;
+            }
+            if (!piUser) {
+                alert('Please connect your Pi wallet first.');
+                return;
+            }
+            Pi.createPayment({
+                amount: price,
+                memo: 'Purchase: ' + productName,
+                metadata: { productName: productName, type: 'marketplace' }
+            }, {
+                onReadyForServerApproval: function(paymentId) {
+                    console.log('Payment approved:', paymentId);
+                },
+                onReadyForServerCompletion: function(paymentId, txid) {
+                    console.log('Payment complete:', txid);
+                    const toast = document.getElementById('toast');
+                    toast.classList.add('show');
+                    setTimeout(function() { toast.classList.remove('show'); }, 3500);
+                },
+                onCancel: function() {
+                    alert('Payment cancelled.');
+                },
+                onError: function(error) {
+                    alert('Payment error: ' + (error.message || 'Unknown error'));
+                }
+            });
+        }
+
+        // Pi SDK — Share
+        function piShare(title, message) {
+            if (isPiBrowser && Pi.openShareDialog) {
+                Pi.openShareDialog(title, message);
+            } else {
+                navigator.share ? navigator.share({ title: title, text: message }) : alert('Sharing not available');
+            }
+        }
+
+        // Pi SDK — Copy to clipboard
+        function piCopy(text) {
+            if (isPiBrowser && Pi.copyText) {
+                Pi.copyText(text);
+            } else {
+                navigator.clipboard && navigator.clipboard.writeText(text);
+            }
+            var toast = document.getElementById('toast');
+            toast.textContent = 'Copied!';
+            toast.classList.add('show');
+            setTimeout(function() { toast.classList.remove('show'); toast.textContent = '\u2705 Payment successful! Transaction recorded.'; }, 1500);
+        }
+
+        // Pi SDK — Open URL in system browser
+        function piOpenUrl(url) {
+            if (isPiBrowser && Pi.openUrlInSystemBrowser) {
+                Pi.openUrlInSystemBrowser(url);
+            } else {
+                window.open(url, '_blank');
+            }
+        }
+
+        function openServiceBrowser(url) {
+            var resolved = new URL(url, window.location.href).href;
+            piOpenUrl(resolved);
+        }
+
+        // Pi SDK — Ads
+        async function piShowAd() {
+            if (!isPiBrowser || !Pi.Ads) return;
+            try {
+                await Pi.Ads.requestAd('interstitial');
+                var ready = await Pi.Ads.isAdReady('interstitial');
+                if (ready) await Pi.Ads.showAd('interstitial');
+            } catch(e) { console.log('Ad not available:', e); }
+        }
+
+        // Pi SDK — Native features
+        function piNativeFeatures() {
+            if (isPiBrowser && Pi.nativeFeaturesList) return Pi.nativeFeaturesList();
+            return [];
+        }
+
+        // Pi SDK — Request permission
+        function piRequestPermission(perm) {
+            if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
+        }
+
+        // Pi SDK — Open conversation
+        function piChat(conversationId) {
+            if (isPiBrowser && Pi.openConversation) Pi.openConversation(conversationId);
+        }
+
+        const products = [
+            // Electronics
+            { id: 1, name: "iPhone 15 Pro Max", desc: "256GB, Titanium Natural", price: 4500, category: "electronics", badge: "Popular", img: "https://picsum.photos/seed/phone/600/400" },
+            { id: 2, name: "MacBook Air M2", desc: "13-inch, 8GB RAM, Space Gray", price: 6200, category: "electronics", badge: "Featured", img: "https://picsum.photos/seed/laptop/600/400" },
+            { id: 4, name: "Wireless ANC Headphones", desc: "40hr battery, Hi-Res audio", price: 850, category: "electronics", badge: "New", img: "https://picsum.photos/seed/headphones/600/400" },
+            { id: 7, name: "Samsung Galaxy S24 Ultra", desc: "512GB, AI Camera, Titanium", price: 5100, category: "electronics", badge: "Hot", img: "https://picsum.photos/seed/galaxy24/600/400" },
+            { id: 8, name: "Sony PlayStation 5 Pro", desc: "1TB SSD, 4K 120fps gaming", price: 3200, category: "electronics", badge: "Limited", img: "https://picsum.photos/seed/ps5pro/600/400" },
+            { id: 9, name: "DJI Mini 4 Pro Drone", desc: "4K HDR, 34min flight, obstacle avoidance", price: 4800, category: "electronics", badge: "New", img: "https://picsum.photos/seed/drone4/600/400" },
+            { id: 10, name: "iPad Air M2", desc: "11-inch, 256GB, Starlight", price: 3600, category: "electronics", badge: "Popular", img: "https://picsum.photos/seed/ipadair/600/400" },
+            // Fashion
+            { id: 3, name: "Luxury Chronograph Watch", desc: "Swiss automatic movement", price: 1200, category: "fashion", badge: "Premium", img: "https://picsum.photos/seed/watch/600/400" },
+            { id: 5, name: "Designer Leather Bag", desc: "Handcrafted Italian leather", price: 380, category: "fashion", badge: "Trending", img: "https://picsum.photos/seed/bag/600/400" },
+            { id: 11, name: "Ray-Ban Aviator Sunglasses", desc: "Classic gold frame, polarized", price: 250, category: "fashion", badge: "Iconic", img: "https://picsum.photos/seed/rayban/600/400" },
+            { id: 12, name: "Nike Air Jordan 4 Retro", desc: "Size 40-46, Military Black", price: 420, category: "fashion", badge: "Trending", img: "https://picsum.photos/seed/jordan4/600/400" },
+            { id: 13, name: "Cashmere Wool Overcoat", desc: "Hand-stitched, Italian cut", price: 650, category: "fashion", badge: "Premium", img: "https://picsum.photos/seed/overcoat/600/400" },
+            // Digital
+            { id: 6, name: "Digital Marketing Course", desc: "12-week certified program", price: 25, category: "digital", badge: "Best Seller", img: "https://picsum.photos/seed/course/600/400" },
+            { id: 14, name: "UI/UX Design Masterclass", desc: "Figma + Framer, 80+ lessons", price: 15, category: "digital", badge: "New", img: "https://picsum.photos/seed/uxcourse/600/400" },
+            { id: 15, name: "African Beats Music Pack", desc: "50 royalty-free Afrobeat loops", price: 3, category: "digital", badge: "Hot", img: "https://picsum.photos/seed/afrobeats/600/400" },
+            { id: 16, name: "Pi Commerce eBook Bundle", desc: "3 books: Trading, Mining, DApps", price: 5, category: "digital", badge: "Bundle", img: "https://picsum.photos/seed/pibundle/600/400" },
+            // Home & Living
+            { id: 17, name: "Smart LED Desk Lamp", desc: "Wireless charging, 5 light modes", price: 120, category: "home", badge: "Smart", img: "https://picsum.photos/seed/desklamp/600/400" },
+            { id: 18, name: "Espresso Coffee Machine", desc: "15-bar pump, milk frother", price: 680, category: "home", badge: "Popular", img: "https://picsum.photos/seed/espresso/600/400" },
+            { id: 19, name: "Memory Foam Mattress", desc: "Queen size, cooling gel layer", price: 1500, category: "home", badge: "Best Seller", img: "https://picsum.photos/seed/mattress/600/400" },
+            { id: 20, name: "Robot Vacuum Pro", desc: "LIDAR navigation, auto-empty", price: 950, category: "home", badge: "New", img: "https://picsum.photos/seed/robovac/600/400" },
+            // Beauty & Health
+            { id: 21, name: "Organic Skincare Set", desc: "Cleanser, toner, moisturizer, serum", price: 85, category: "beauty", badge: "Natural", img: "https://picsum.photos/seed/skincare/600/400" },
+            { id: 22, name: "Electric Massage Gun", desc: "6 heads, 30 speeds, deep tissue", price: 160, category: "beauty", badge: "Trending", img: "https://picsum.photos/seed/massagegun/600/400" },
+            { id: 23, name: "Vitamin C Glow Serum", desc: "30ml, hyaluronic acid blend", price: 35, category: "beauty", badge: "Hot", img: "https://picsum.photos/seed/serum/600/400" },
+            // Sports & Outdoor
+            { id: 24, name: "Mountain Trekking Backpack", desc: "65L, waterproof, ergonomic frame", price: 220, category: "sports", badge: "Adventure", img: "https://picsum.photos/seed/trekbag/600/400" },
+            { id: 25, name: "Adjustable Dumbbell Set", desc: "2-24kg per hand, quick-lock", price: 350, category: "sports", badge: "Fitness", img: "https://picsum.photos/seed/dumbbells/600/400" },
+            { id: 26, name: "Carbon Road Bicycle", desc: "Shimano 105, 8.2kg ultra-light", price: 4200, category: "sports", badge: "Premium", img: "https://picsum.photos/seed/roadbike/600/400" },
+            // Food & Groceries
+            { id: 27, name: "Organic Coffee Beans 1kg", desc: "Single-origin Ethiopian Yirgacheffe", price: 28, category: "food", badge: "Organic", img: "https://picsum.photos/seed/coffeebeans/600/400" },
+            { id: 28, name: "Premium Honey Gift Box", desc: "3x 500g, raw wildflower + manuka", price: 65, category: "food", badge: "Gift", img: "https://picsum.photos/seed/honeygift/600/400" },
+            { id: 29, name: "Spice Collection Kit", desc: "24 organic East African spices", price: 45, category: "food", badge: "New", img: "https://picsum.photos/seed/spicebox/600/400" }
+        ];
+
+        let balance = 1250.00;
+
+        function renderProducts(filter) {
+            const grid = document.getElementById('product-grid');
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+            grid.innerHTML = filtered.map(p => {
+                var m = p.img.match(/\/seed\/([^\/]+)\//);
+                var seed = m ? m[1] : '';
+                var suffixes = ['', '_v2', '_v3', '_v4', '_v5'];
+                var imgs = suffixes.map(function(s, i) {
+                    return '<img src="https://picsum.photos/seed/' + seed + s + '/600/400" alt="' + p.name + (i > 0 ? ' ' + (i+1) : '') + '" loading="lazy">';
+                }).join('');
+                var dots = suffixes.map(function(_, i) {
+                    return '<span data-idx="' + i + '"' + (i === 0 ? ' class="active"' : '') + '></span>';
+                }).join('');
+                return `
+                <div class="card" data-category="${p.category}">
+                    <div class="card-img">
+                        <div class="card-slider">
+                            <div class="slides">${imgs}</div>
+                            <button class="slide-arrow left" aria-label="Previous">&#8249;</button>
+                            <button class="slide-arrow right" aria-label="Next">&#8250;</button>
+                            <div class="slide-dots">${dots}</div>
+                            <span class="card-badge">${p.badge}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3>${p.name}</h3>
+                        <p class="card-desc">${p.desc}</p>
+                        <div class="card-footer">
+                            <div class="card-price">${p.price.toLocaleString()} π<small>≈ ${window.OmendaGcv ? OmendaGcv.formatUsd(p.price) : '$' + (p.price * 0.17).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</small></div>
+                            <div style="display:flex;gap:6px;align-items:center">
+                                <button class="btn-buy" onclick="processPayment(${p.price}, '${p.name}')" style="flex:1">π Pay Now</button>
+                                <button onclick="piShare('${p.name}', 'Check out ${p.name} for ${p.price} π on Omenda Pi Pays!')" style="background:none;border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:8px;padding:8px 10px;cursor:pointer;font-size:0.85rem" title="Share">📤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            initSliders(grid);
+        }
+
+        function filterProducts(filter) {
+            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+            renderProducts(filter);
+        }
+
+        renderProducts('all');
+
+        // ── Slider init for dynamically rendered cards ──
+        function initSliders(container) {
+            container.querySelectorAll('.card-slider').forEach(function(slider) {
+                var slides = slider.querySelector('.slides');
+                var leftArr = slider.querySelector('.slide-arrow.left');
+                var rightArr = slider.querySelector('.slide-arrow.right');
+                var dots = slider.querySelector('.slide-dots');
+                var current = 0;
+                function goTo(idx) {
+                    if (idx < 0) idx = 4;
+                    if (idx > 4) idx = 0;
+                    current = idx;
+                    slides.style.transform = 'translateX(-' + (idx * 20) + '%)';
+                    dots.querySelectorAll('span').forEach(function(s, i) {
+                        s.className = i === idx ? 'active' : '';
+                    });
+                }
+                leftArr.addEventListener('click', function(e) { e.stopPropagation(); goTo(current - 1); });
+                rightArr.addEventListener('click', function(e) { e.stopPropagation(); goTo(current + 1); });
+                dots.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'SPAN') {
+                        e.stopPropagation();
+                        goTo(parseInt(e.target.getAttribute('data-idx')));
+                    }
+                });
+                var startX = 0;
+                slider.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+                slider.addEventListener('touchend', function(e) {
+                    var diff = startX - e.changedTouches[0].clientX;
+                    if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
+                });
+            });
+        }
+
+        // Re-render when GCV mode changes
+        window.addEventListener('gcvchange', function() {
+            var active = document.querySelector('.pill.active');
+            var filter = 'all';
+            if (active && active.getAttribute('onclick')) {
+                var m = active.getAttribute('onclick').match(/filterProducts\('(\w+)'\)/);
+                if (m) filter = m[1];
+            }
+            renderProducts(filter);
+        });
+    </script>
+</body>
+</html>

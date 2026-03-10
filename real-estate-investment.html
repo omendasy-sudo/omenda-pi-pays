@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Building Investment | Omenda Pi Pays</title>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --bg: #09090b;
+            --card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.1);
+            --text: #fafafa;
+            --muted: #a1a1aa;
+            --accent: #f5a623;
+            --accent2: #06b6d4;
+            --ok: #22c55e;
+            --radius: 14px;
+        }
+        html.light {
+            --bg: #ffffff;
+            --card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.08);
+            --text: #18181b;
+            --muted: #52525b;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(900px 420px at 85% -10%, rgba(6,182,212,0.14), transparent 60%), var(--bg);
+            color: var(--text);
+        }
+        .wrap { max-width: 1120px; margin: 0 auto; padding: 24px; }
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .title { font-size: clamp(1.7rem, 3.8vw, 2.8rem); font-weight: 900; letter-spacing: -0.6px; }
+        .subtitle { color: var(--muted); max-width: 760px; line-height: 1.55; margin-bottom: 16px; }
+        .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .btn {
+            text-decoration: none;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .btn.primary { background: linear-gradient(135deg, var(--accent2), #0891b2); border-color: transparent; color: #fff; }
+        .btn.gold { background: linear-gradient(135deg, var(--accent), #f59e0b); border-color: transparent; color: #111; }
+
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .kpi {
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 12px;
+        }
+        .kpi .v { font-size: 1.35rem; font-weight: 800; color: var(--accent2); }
+        .kpi .l { font-size: 0.8rem; color: var(--muted); }
+
+        .section {
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        .section h3 { margin: 0 0 12px; font-size: 1.08rem; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+        .plan {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            background: transparent;
+        }
+        .plan h4 { margin: 0 0 6px; font-size: 0.95rem; }
+        .plan p { margin: 0 0 10px; color: var(--muted); font-size: 0.84rem; }
+        .meta { font-size: 0.8rem; color: var(--muted); margin-bottom: 8px; }
+        .roi { color: var(--ok); font-weight: 800; }
+
+        .sample {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: transparent;
+        }
+        .sample .img {
+            height: 130px;
+            background: linear-gradient(135deg, rgba(6,182,212,0.25), rgba(245,166,35,0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .sample .body { padding: 10px; }
+        .sample .body h4 { margin: 0 0 4px; font-size: 0.9rem; }
+        .sample .body p { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.45; }
+
+        .calc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+        }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label { font-size: 0.78rem; color: var(--muted); }
+        .field input, .field select {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text);
+            padding: 10px 12px;
+            font: inherit;
+        }
+        .result {
+            margin-top: 10px;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+        .result strong { color: var(--accent2); }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top">
+            <div class="title">Real Estate Building Investment</div>
+            <a class="btn" href="overview.html">Overview</a>
+        </div>
+        <div class="subtitle">
+            Invest in verified building projects, apartments, and rental properties with Pi-enabled flows. Review sample works, projected returns, and start your investment journey.
+        </div>
+
+        <div class="actions">
+            <a class="btn" href="index.html">Home</a>
+            <a class="btn" href="new.html">Explore</a>
+            <a class="btn" href="map.html">Map</a>
+            <a class="btn" href="transport.html">Transport</a>
+            <a class="btn" href="https://109.199.109.143/services/homes" target="_blank" rel="noopener noreferrer">Homes Service</a>
+            <a class="btn primary" href="form.html">Register Business</a>
+            <a class="btn gold" href="Submit.html">Post Property Project</a>
+        </div>
+
+        <div class="kpis">
+            <div class="kpi"><div class="v">24</div><div class="l">Active Building Projects</div></div>
+            <div class="kpi"><div class="v">8.4%</div><div class="l">Average Rental Yield</div></div>
+            <div class="kpi"><div class="v">92%</div><div class="l">Occupancy Rate</div></div>
+            <div class="kpi"><div class="v">Pi + USD</div><div class="l">Flexible Investment Terms</div></div>
+        </div>
+
+        <div class="section">
+            <h3>Investment Packages</h3>
+            <div class="grid" id="plans"></div>
+        </div>
+
+        <div class="section">
+            <h3>Works Sample (Completed / Ongoing)</h3>
+            <div class="grid">
+                <div class="sample"><div class="img">🏢</div><div class="body"><h4>Skyline Residency Block A</h4><p>42-unit apartment building with 88% occupancy and stable monthly rental cashflow.</p></div></div>
+                <div class="sample"><div class="img">🏗️</div><div class="body"><h4>Green Valley Mixed-Use Site</h4><p>Retail ground floor + residential upper floors, scheduled completion in 7 months.</p></div></div>
+                <div class="sample"><div class="img">🏘️</div><div class="body"><h4>Urban Villas Cluster</h4><p>12 family villas sold through milestone payments and long-term lease options.</p></div></div>
+                <div class="sample"><div class="img">🏬</div><div class="body"><h4>Metro Commercial Suites</h4><p>Co-working and office spaces with investor payout model based on occupancy.</p></div></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Investment Return Sample Calculator</h3>
+            <div class="calc">
+                <div class="field">
+                    <label>Investment Amount (Pi)</label>
+                    <input id="inv-pi" type="number" min="1" step="1" value="1500">
+                </div>
+                <div class="field">
+                    <label>Expected Annual ROI (%)</label>
+                    <select id="inv-roi">
+                        <option value="6">6%</option>
+                        <option value="8" selected>8%</option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Years</label>
+                    <select id="inv-years">
+                        <option value="1">1 year</option>
+                        <option value="2">2 years</option>
+                        <option value="3" selected>3 years</option>
+                        <option value="5">5 years</option>
+                    </select>
+                </div>
+            </div>
+            <div class="actions" style="margin-top:12px">
+                <button class="btn primary" onclick="calcReturn()">Calculate Sample Return</button>
+                <a class="btn" href="admin-panel.html">Contact Investment Admin</a>
+            </div>
+            <div class="result" id="calc-result">Set values then click calculate to view estimated outcome.</div>
+        </div>
+    </div>
+
+    <script>
+        const plans = [
+            { name: 'Starter Unit Share', min: 500, roi: 6.5, period: '12 months', payout: 'Quarterly' },
+            { name: 'Growth Apartment Pool', min: 1500, roi: 8.2, period: '24 months', payout: 'Monthly' },
+            { name: 'Commercial Building Fund', min: 5000, roi: 10.4, period: '36 months', payout: 'Monthly + Exit Bonus' },
+            { name: 'Land + Build Partnership', min: 12000, roi: 12.0, period: '36-48 months', payout: 'Milestone Based' }
+        ];
+
+        function esc(v) {
+            const d = document.createElement('div');
+            d.textContent = String(v);
+            return d.innerHTML;
+        }
+
+        function renderPlans() {
+            const holder = document.getElementById('plans');
+            holder.innerHTML = plans.map(function(p) {
+                return '<div class="plan">' +
+                    '<h4>' + esc(p.name) + '</h4>' +
+                    '<p>Minimum entry and projected return for this package.</p>' +
+                    '<div class="meta">Minimum: <strong>' + esc(p.min) + ' Pi</strong></div>' +
+                    '<div class="meta">Payout: <strong>' + esc(p.payout) + '</strong></div>' +
+                    '<div class="meta">Term: <strong>' + esc(p.period) + '</strong></div>' +
+                    '<div class="roi">Estimated ROI: ' + esc(p.roi) + '% / year</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function calcReturn() {
+            const amountPi = Number(document.getElementById('inv-pi').value || 0);
+            const roiPct = Number(document.getElementById('inv-roi').value || 0);
+            const years = Number(document.getElementById('inv-years').value || 1);
+            const resultEl = document.getElementById('calc-result');
+
+            if (amountPi <= 0) {
+                resultEl.textContent = 'Enter a valid investment amount in Pi.';
+                return;
+            }
+
+            const totalPi = amountPi * Math.pow(1 + (roiPct / 100), years);
+            const gainPi = totalPi - amountPi;
+            const usdText = (window.OmendaGcv && window.OmendaGcv.toUsd)
+                ? Number(window.OmendaGcv.toUsd(totalPi)).toLocaleString(undefined, { maximumFractionDigits: 2 })
+                : Number(totalPi * 314159).toLocaleString(undefined, { maximumFractionDigits: 2 });
+
+            resultEl.innerHTML =
+                'Initial: <strong>' + amountPi.toFixed(2) + ' Pi</strong> | ' +
+                'Estimated Total: <strong>' + totalPi.toFixed(2) + ' Pi</strong> | ' +
+                'Gain: <strong>' + gainPi.toFixed(2) + ' Pi</strong> | ' +
+                'Approx Value: <strong>$' + usdText + '</strong>';
+        }
+
+        renderPlans();
+    </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Overview | Omenda Pi Pays</title>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <style>
+        :root {
+            --bg: #09090b;
+            --card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.1);
+            --text: #fafafa;
+            --muted: #a1a1aa;
+            --accent: #06b6d4;
+            --accent2: #7c3aed;
+            --radius: 14px;
+        }
+        html.light {
+            --bg: #ffffff;
+            --card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.08);
+            --text: #18181b;
+            --muted: #52525b;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(900px 400px at 85% -10%, rgba(6,182,212,0.12), transparent 60%), var(--bg);
+            color: var(--text);
+        }
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 24px; }
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .title { font-size: clamp(1.8rem, 3.6vw, 2.6rem); font-weight: 900; letter-spacing: -0.5px; }
+        .sub { color: var(--muted); margin-bottom: 22px; }
+        .btn {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 10px 14px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .kpi {
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 12px;
+        }
+        .kpi .v { font-size: 1.35rem; font-weight: 800; color: var(--accent); }
+        .kpi .l { font-size: 0.8rem; color: var(--muted); }
+        .section {
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        .section h3 { margin: 0 0 10px; font-size: 1rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+        }
+        .link-card {
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            padding: 10px;
+            background: transparent;
+        }
+        .link-card a {
+            color: var(--text);
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        .link-card p { margin: 0; color: var(--muted); font-size: 0.84rem; line-height: 1.45; }
+        .notes { color: var(--muted); font-size: 0.86rem; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top">
+            <div class="title">Project Overview</div>
+            <a class="btn" href="index.html">Back Home</a>
+        </div>
+        <div class="sub">Recommended quick overview for Omenda Pi Pays pages, services, transport, admin, and business flows.</div>
+
+        <div class="kpis">
+            <div class="kpi"><div class="v">14+</div><div class="l">Public Pages</div></div>
+            <div class="kpi"><div class="v">1</div><div class="l">Main Registration Form</div></div>
+            <div class="kpi"><div class="v">Pi</div><div class="l">Payments Integrated</div></div>
+            <div class="kpi"><div class="v">2</div><div class="l">Admin Views</div></div>
+        </div>
+
+        <div class="section">
+            <h3>Core Navigation</h3>
+            <div class="grid">
+                <div class="link-card"><a href="index.html">Marketplace Home</a><p>Main landing page with products and quick actions.</p></div>
+                <div class="link-card"><a href="new.html">Explore</a><p>Product discovery and category browsing experience.</p></div>
+                <div class="link-card"><a href="map.html">Map</a><p>Global map of Pi users, businesses, and services.</p></div>
+                <div class="link-card"><a href="social.html">Social</a><p>Community feed and social engagement area.</p></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Business & Seller Flows</h3>
+            <div class="grid">
+                <div class="link-card"><a href="form.html">Business Registration</a><p>Primary KYC and business onboarding form.</p></div>
+                <div class="link-card"><a href="Submit.html">Post Product</a><p>Seller submission and listing creation page.</p></div>
+                <div class="link-card"><a href="submit success full.html">Submission Status</a><p>Confirmation and submission result view.</p></div>
+                <div class="link-card"><a href="pi-converter.html">Pi Converter</a><p>Convert Pi and USD using configured GCV rate.</p></div>
+                <div class="link-card"><a href="real-estate-investment.html">Real Estate Investment</a><p>Building investment plans, ROI samples, and project works showcase.</p></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Transport & Cargo</h3>
+            <div class="grid">
+                <div class="link-card"><a href="transport.html">Transport Services</a><p>Rides, taxi, deriver cargo agent, flights, and cargo tracking.</p></div>
+                <div class="link-card"><a href="driver-cargo-agent.html">Deriver Cargo Agent Page</a><p>Dedicated registration and application overview for agents.</p></div>
+                <div class="link-card"><a href="https://109.199.109.143/services" target="_blank">All Services Portal</a><p>External services browser for homes, hotels, bills, and more.</p></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Admin & Safety</h3>
+            <div class="grid">
+                <div class="link-card"><a href="admin-login.html">Admin Login</a><p>Admin authentication page.</p></div>
+                <div class="link-card"><a href="admin-panel.html">Admin Panel</a><p>User contact, KYC, records, and moderation actions.</p></div>
+                <div class="link-card"><a href="scam-report.html">Scam Report</a><p>Report suspicious activity for review.</p></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Project Recommendations</h3>
+            <div class="notes">
+                Keep one source of truth for translations with <code>lang.js</code> data keys.
+                Use <code>theme.js</code> for shared layout polish and cross-page consistency.
+                Route legacy pages to canonical pages where possible to avoid duplicate flows.
+                Connect localStorage-only forms to backend APIs when ready for multi-device access.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

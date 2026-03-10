@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Map | Omenda Pi Pays</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <script src="gcv.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-gold-light: rgba(245,166,35,0.12);
+            --pi-purple: #7c3aed;
+            --pi-purple-light: rgba(124,58,237,0.10);
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success: #22c55e;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            min-height: 100vh; -webkit-font-smoothing: antialiased;
+            display: flex; flex-direction: column;
+        }
+
+        /* Ambient */
+        .bg-ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .bg-ambient::before {
+            content: ''; position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+            top: -200px; right: -100px;
+        }
+        .bg-ambient::after {
+            content: ''; position: absolute; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
+            bottom: -100px; left: -100px;
+        }
+
+        /* Nav */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 max(5%,24px); height: 72px;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+        .logo span { color: var(--pi-gold); }
+        .nav-center { display: flex; gap: 8px; }
+        .nav-center a {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
+        }
+        .nav-center a:hover, .nav-center a.active { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .wallet-chip {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--pi-gold-light); border: 1px solid rgba(245,166,35,0.2);
+            padding: 8px 16px; border-radius: 100px; font-size: 0.8125rem; font-weight: 600;
+            color: var(--pi-gold);
+        }
+        .wallet-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+        .btn-primary {
+            background: var(--pi-purple); color: #fff; border: none;
+            padding: 10px 22px; border-radius: var(--radius-sm); font-weight: 600;
+            font-size: 0.875rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); }
+
+        .quick-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 10px max(5%,24px) 0;
+        }
+        .quick-link {
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Map Header */
+        .map-header {
+            padding: 32px max(5%,24px) 20px;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 16px;
+        }
+        .map-header-left h1 {
+            font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px;
+        }
+        .map-header-left h1 .gradient {
+            background: linear-gradient(135deg, var(--pi-gold) 0%, #fbbf24 100%);
+            background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .map-header-left p { color: var(--text-secondary); font-size: 0.9375rem; }
+
+        /* Live stats bar */
+        .live-stats {
+            display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+        }
+        .live-stat {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            padding: 8px 16px; border-radius: 100px; font-size: 0.8125rem;
+        }
+        .live-stat .dot { width: 8px; height: 8px; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        .live-stat .dot.green { background: var(--success); }
+        .live-stat .dot.gold { background: var(--pi-gold); }
+        .live-stat .dot.purple { background: var(--pi-purple); }
+        .live-stat strong { color: var(--text-primary); font-weight: 700; }
+        .live-stat span { color: var(--text-secondary); }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+        /* Filter bar */
+        .filter-bar {
+            padding: 0 max(5%,24px) 16px;
+            display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+        }
+        .filter-btn {
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-secondary); padding: 8px 18px; border-radius: 100px;
+            font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+            font-family: inherit; display: flex; align-items: center; gap: 6px;
+        }
+        .filter-btn:hover { border-color: var(--border-hover); color: var(--text-primary); }
+        .filter-btn.active { background: var(--pi-purple); border-color: var(--pi-purple); color: #fff; }
+        .filter-btn .count {
+            background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 100px;
+            font-size: 0.6875rem;
+        }
+
+        /* Map container */
+        .map-wrapper {
+            flex: 1; display: flex; gap: 0; position: relative;
+            margin: 0 max(5%,24px) 24px;
+            border-radius: var(--radius); overflow: hidden;
+            border: 1px solid var(--border);
+            min-height: 500px;
+        }
+        #map { flex: 1; min-height: 500px; background: #0a0a0f; z-index: 1; }
+
+        /* Sidebar */
+        .map-sidebar {
+            width: 380px; background: var(--bg-secondary);
+            border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; z-index: 2;
+            overflow: hidden;
+        }
+        .sidebar-header {
+            padding: 20px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .sidebar-header h3 { font-size: 0.9375rem; font-weight: 700; }
+        .sidebar-header .result-count { color: var(--text-muted); font-size: 0.8125rem; }
+        .sidebar-search {
+            margin: 16px 20px 0; position: relative;
+        }
+        .sidebar-search input {
+            width: 100%; padding: 10px 12px 10px 36px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text-primary);
+            font-size: 0.8125rem; font-family: inherit; outline: none;
+            transition: border-color 0.2s;
+        }
+        .sidebar-search input:focus { border-color: var(--pi-purple); }
+        .sidebar-search .search-icon {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 0.875rem;
+        }
+        .sidebar-list {
+            flex: 1; overflow-y: auto; padding: 12px;
+        }
+        .sidebar-list::-webkit-scrollbar { width: 4px; }
+        .sidebar-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        /* Location card */
+        .loc-card {
+            padding: 14px; border-radius: var(--radius-sm);
+            border: 1px solid transparent; cursor: pointer;
+            transition: all 0.2s; margin-bottom: 4px;
+        }
+        .loc-card:hover, .loc-card.active {
+            background: var(--bg-card); border-color: var(--border);
+        }
+        .loc-card.active { border-color: var(--pi-purple); }
+        .loc-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+        .loc-card h4 { font-size: 0.875rem; font-weight: 700; line-height: 1.3; }
+        .loc-card .type-badge {
+            font-size: 0.6875rem; font-weight: 700; padding: 3px 10px; border-radius: 100px;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .type-badge.user { background: rgba(34,197,94,0.12); color: #4ade80; }
+        .type-badge.business { background: var(--pi-gold-light); color: var(--pi-gold); }
+        .type-badge.service { background: var(--pi-purple-light); color: #a78bfa; }
+        .loc-card .loc-desc { color: var(--text-secondary); font-size: 0.8125rem; line-height: 1.5; margin-bottom: 8px; }
+        .loc-card .loc-meta { display: flex; gap: 12px; font-size: 0.75rem; color: var(--text-muted); flex-wrap: wrap; }
+        .loc-card .loc-meta span { display: flex; align-items: center; gap: 4px; }
+
+        /* Leaflet overrides */
+        .leaflet-container { background: #0a0a0f; }
+        .leaflet-control-zoom { border: 1px solid var(--border) !important; border-radius: var(--radius-sm) !important; overflow: hidden; }
+        .leaflet-control-zoom a { background: var(--bg-secondary) !important; color: var(--text-primary) !important; border: none !important; border-bottom: 1px solid var(--border) !important; }
+        .leaflet-control-zoom a:hover { background: rgba(255,255,255,0.08) !important; }
+        .leaflet-popup-content-wrapper { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow); }
+        .leaflet-popup-tip { background: var(--bg-secondary); border: 1px solid var(--border); }
+        .leaflet-popup-close-button { color: var(--text-muted) !important; }
+
+        /* Custom popup */
+        .popup-content { padding: 4px; min-width: 220px; }
+        .popup-content h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 4px; }
+        .popup-content .popup-type { font-size: 0.6875rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; display: inline-block; margin-bottom: 8px; }
+        .popup-content p { color: var(--text-secondary); font-size: 0.8125rem; line-height: 1.4; margin-bottom: 8px; }
+        .popup-content .popup-stats { display: flex; gap: 16px; font-size: 0.75rem; color: var(--text-muted); }
+        .popup-content .popup-link {
+            display: inline-block; margin-top: 8px; font-size: 0.8125rem; font-weight: 600;
+            color: var(--pi-purple); text-decoration: none;
+        }
+
+        /* Region summary cards */
+        .region-summary {
+            padding: 24px max(5%,24px);
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+            gap: 16px;
+        }
+        .region-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 24px; transition: all 0.2s;
+        }
+        .region-card:hover { border-color: var(--border-hover); }
+        .region-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+        .region-card .region-sub { color: var(--text-secondary); font-size: 0.8125rem; margin-bottom: 16px; }
+        .region-card .region-stats { display: flex; gap: 20px; }
+        .region-card .r-stat { display: flex; flex-direction: column; }
+        .region-card .r-stat strong { font-size: 1.25rem; font-weight: 800; }
+        .region-card .r-stat strong.gold { color: var(--pi-gold); }
+        .region-card .r-stat strong.purple { color: var(--pi-purple); }
+        .region-card .r-stat strong.green { color: var(--success); }
+        .region-card .r-stat span { color: var(--text-muted); font-size: 0.75rem; margin-top: 2px; }
+
+        /* Footer */
+        footer {
+            padding: 40px max(5%,24px); border-top: 1px solid var(--border); margin-top: 24px;
+        }
+        .footer-grid { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 32px; text-align: left; margin-bottom: 40px; }
+        .footer-col h4 { font-size: 0.8125rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+        .footer-col a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; margin-bottom: 10px; transition: color 0.2s; }
+        .footer-col a:hover { color: var(--text-primary); }
+        .footer-bottom { font-size: 0.8125rem; color: var(--text-muted); padding-top: 24px; border-top: 1px solid var(--border); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .map-wrapper { flex-direction: column-reverse; margin: 0 12px 16px; }
+            .map-sidebar { width: 100%; max-height: 300px; border-left: none; border-top: 1px solid var(--border); }
+            #map { min-height: 400px; }
+            .nav-center { display: none; }
+            .map-header { padding: 20px max(5%,24px) 12px; }
+            .region-summary { padding: 16px; }
+            .footer-grid { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-ambient"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo"><img src="logo.png/logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div>
+        <div class="nav-center">
+            <a href="index.html" data-i18n="nav.marketplace">Marketplace</a>
+            <a href="new.html" data-i18n="nav.explore">Explore</a>
+            <a href="map.html" class="active" data-i18n="nav.map">Map</a>
+            <a href="social.html" data-i18n="nav.social">Social</a>
+            <a href="form.html" data-i18n="nav.register">Register</a>
+            <a href="Submit.html" data-i18n="nav.sell">Sell</a>
+            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="transport.html" data-i18n="nav.transport">Transport</a>
+        </div>
+        <div class="nav-right">
+            <div class="wallet-chip" id="wallet-balance" style="display:none">
+                <span class="dot"></span>
+                <span id="pi-username"></span>
+            </div>
+            <a href="https://109.199.109.143/services" target="_blank" class="btn-primary" style="background:transparent;border:1px solid var(--border);color:var(--text-primary);text-decoration:none">All Services</a>
+            <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
+        </div>
+    </nav>
+
+    <div class="quick-links">
+        <a class="quick-link" href="index.html">Home</a>
+        <a class="quick-link" href="overview.html">Overview</a>
+        <a class="quick-link" href="transport.html">Transport</a>
+        <a class="quick-link" href="admin-panel.html">Admin</a>
+        <a class="quick-link" href="https://109.199.109.143/services" target="_blank" rel="noopener noreferrer">All Services</a>
+    </div>
+
+    <!-- Map Header -->
+    <div class="map-header">
+        <div class="map-header-left">
+            <h1><span data-i18n="map.title">Global</span> <span class="gradient" data-i18n="map.titleHighlight">Pioneer Map</span></h1>
+            <p data-i18n="map.subtitle">Discover pioneers, businesses &amp; services accepting Pi worldwide</p>
+        </div>
+        <div class="live-stats">
+            <div class="live-stat"><span class="dot green"></span><strong id="stat-users">12,480</strong><span data-i18n="map.pioneers">Pioneers</span></div>
+            <div class="live-stat"><span class="dot gold"></span><strong id="stat-biz">3,240</strong><span data-i18n="map.businesses">Businesses</span></div>
+            <div class="live-stat"><span class="dot purple"></span><strong id="stat-services">890</strong><span data-i18n="map.servicesLabel">Services</span></div>
+            <div class="live-stat"><span class="dot" style="background:#06b6d4"></span><strong id="stat-transport">2,400</strong><span data-i18n="nav.transport">Transport</span></div>
+            <div class="live-stat"><span class="dot" style="background:#ec4899"></span><strong id="stat-social">4,800</strong><span data-i18n="nav.social">Social</span></div>
+        </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">&#127758; <span data-i18n="products.all">All</span> <span class="count" id="count-all">114</span></button>
+        <button class="filter-btn" data-filter="user">&#128100; <span data-i18n="map.pioneers">Pioneers</span> <span class="count" id="count-users">42</span></button>
+        <button class="filter-btn" data-filter="business">&#127978; <span data-i18n="map.businesses">Businesses</span> <span class="count" id="count-biz">28</span></button>
+        <button class="filter-btn" data-filter="service">&#9881; <span data-i18n="map.servicesLabel">Services</span> <span class="count" id="count-svc">16</span></button>
+        <button class="filter-btn" data-filter="hotel">&#127976; <span data-i18n="map.hotels">Hotels</span></button>
+        <button class="filter-btn" data-filter="realestate">&#127968; <span data-i18n="map.realEstate">Real Estate</span></button>
+        <button class="filter-btn" data-filter="bills">&#128176; <span data-i18n="map.billPay">Bill Pay</span></button>
+        <button class="filter-btn" data-filter="transport">&#128663; <span data-i18n="nav.transport">Transport</span> <span class="count" id="count-transport">0</span></button>
+        <button class="filter-btn" data-filter="social">&#128172; <span data-i18n="nav.social">Social</span> <span class="count" id="count-social">0</span></button>
+    </div>
+
+    <!-- Map + Sidebar -->
+    <div class="map-wrapper">
+        <div id="map"></div>
+        <div class="map-sidebar">
+            <div class="sidebar-header">
+                <h3 data-i18n="map.nearby">Nearby</h3>
+                <span class="result-count" id="sidebar-count">86 results</span>
+            </div>
+            <div class="sidebar-search">
+                <span class="search-icon">&#128269;</span>
+                <input type="text" id="sidebar-search" placeholder="Search by name, city..." data-i18n-placeholder="map.searchPlaceholder">
+            </div>
+            <div class="sidebar-list" id="sidebar-list"></div>
+        </div>
+    </div>
+
+    <!-- Regional Stats -->
+    <section class="region-summary">
+        <div class="region-card">
+            <h3>&#127466;&#127482; <span data-i18n="region.europe">Europe</span></h3>
+            <p class="region-sub" data-i18n="region.europeSub">Leading in Pi merchant adoption</p>
+            <div class="region-stats">
+                <div class="r-stat"><strong class="gold">3,840</strong><span data-i18n="map.pioneers">Pioneers</span></div>
+                <div class="r-stat"><strong class="purple">920</strong><span data-i18n="map.businesses">Businesses</span></div>
+                <div class="r-stat"><strong class="green">245</strong><span data-i18n="map.servicesLabel">Services</span></div>
+            </div>
+        </div>
+        <div class="region-card">
+            <h3>&#127462;&#127480; <span data-i18n="region.asiaPacific">Asia Pacific</span></h3>
+            <p class="region-sub" data-i18n="region.asiaSub">Fastest growing Pi community</p>
+            <div class="region-stats">
+                <div class="r-stat"><strong class="gold">4,200</strong><span data-i18n="map.pioneers">Pioneers</span></div>
+                <div class="r-stat"><strong class="purple">1,100</strong><span data-i18n="map.businesses">Businesses</span></div>
+                <div class="r-stat"><strong class="green">310</strong><span data-i18n="map.servicesLabel">Services</span></div>
+            </div>
+        </div>
+        <div class="region-card">
+            <h3>&#127482;&#127480; <span data-i18n="region.americas">Americas</span></h3>
+            <p class="region-sub" data-i18n="region.americasSub">Strong enterprise Pi integration</p>
+            <div class="region-stats">
+                <div class="r-stat"><strong class="gold">2,900</strong><span data-i18n="map.pioneers">Pioneers</span></div>
+                <div class="r-stat"><strong class="purple">780</strong><span data-i18n="map.businesses">Businesses</span></div>
+                <div class="r-stat"><strong class="green">190</strong><span data-i18n="map.servicesLabel">Services</span></div>
+            </div>
+        </div>
+        <div class="region-card">
+            <h3>&#127462;&#127467; <span data-i18n="region.africa">Africa</span></h3>
+            <p class="region-sub" data-i18n="region.africaSub">Emerging Pi payment ecosystem</p>
+            <div class="region-stats">
+                <div class="r-stat"><strong class="gold">1,540</strong><span data-i18n="map.pioneers">Pioneers</span></div>
+                <div class="r-stat"><strong class="purple">440</strong><span data-i18n="map.businesses">Businesses</span></div>
+                <div class="r-stat"><strong class="green">145</strong><span data-i18n="map.servicesLabel">Services</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4 data-i18n="footer.marketplace">Marketplace</h4>
+                <a href="new.html" data-i18n="footer.exploreProducts">Explore Products</a>
+                <a href="new.html#fashion" data-i18n="products.fashion">Fashion</a>
+                <a href="new.html#electronics" data-i18n="products.electronics">Electronics</a>
+                <a href="new.html#digital" data-i18n="products.digital">Digital</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.sellers">Sellers</h4>
+                <a href="form.html" data-i18n="cta.registerBusiness">Register Business</a>
+                <a href="form.html" data-i18n="footer.quickRegistration">Quick Registration</a>
+                <a href="Submit.html" data-i18n="footer.postProduct">Post Product</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="nav.services">Services</h4>
+                <a href="https://109.199.109.143/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="https://109.199.109.143/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="https://109.199.109.143/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="https://109.199.109.143/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="transport.html" data-i18n="nav.transport">Transport</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.community">Community</h4>
+                <a href="map.html" data-i18n="footer.globalMap">Global Map</a>
+                <a href="n2 .html" data-i18n="footer.mobileView">Mobile View</a>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.legal">Legal</h4>
+                <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
+                <a href="terms-of-service.html" data-i18n="footer.termsOfService">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
+            &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:var(--text-muted);text-decoration:none" data-i18n="general.privacy">Privacy</a>
+            &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:var(--text-muted);text-decoration:none" data-i18n="general.terms">Terms</a>
+        </div>
+    </footer>
+
+    <script>
+    // ── Pi SDK Auth ──
+    let piUser = null;
+    const isPiBrowser = typeof window.Pi !== 'undefined';
+
+    async function piConnect() {
+        if (!isPiBrowser) { alert('Please open in Pi Browser'); return; }
+        try {
+            const auth = await window.Pi.authenticate(['username','payments'], function(p){ console.log('Incomplete payment',p); });
+            piUser = { uid: auth.user.uid, username: auth.user.username };
+            sessionStorage.setItem('pi_uid', piUser.uid);
+            sessionStorage.setItem('pi_username', piUser.username);
+            document.getElementById('pi-username').textContent = '@' + piUser.username;
+            document.getElementById('wallet-balance').style.display = 'flex';
+            document.getElementById('pi-connect-btn').style.display = 'none';
+        } catch(e) { console.error('Auth failed', e); }
+    }
+
+    (function restoreSession(){
+        const uid = sessionStorage.getItem('pi_uid');
+        const user = sessionStorage.getItem('pi_username');
+        if(uid && user){
+            piUser = { uid, username: user };
+            document.getElementById('pi-username').textContent = '@' + user;
+            document.getElementById('wallet-balance').style.display = 'flex';
+            document.getElementById('pi-connect-btn').style.display = 'none';
+        } else if(isPiBrowser){ piConnect(); }
+    })();
+
+    if(isPiBrowser){ window.Pi.init({ version:'2.0', sandbox: true }); }
+
+    // ── Map Data: Global pioneers, businesses & services ──
+    const mapData = [
+        // ── AFRICA ──
+        { id:1, name:"Omenda Pi Pays HQ", lat:-1.2921, lng:36.8219, type:"business", city:"Nairobi, Kenya", desc:"Flagship decentralized marketplace for Pi payments across Africa.", users:1840, txns:9500, category:"marketplace" },
+        { id:2, name:"Pi Cafe Nairobi", lat:-1.3000, lng:36.8150, type:"business", city:"Nairobi, Kenya", desc:"Coffee shop & co-working space accepting Pi payments.", users:320, txns:2100, category:"food" },
+        { id:3, name:"Lagos Pi Merchants Hub", lat:6.5244, lng:3.3792, type:"business", city:"Lagos, Nigeria", desc:"West Africa's largest Pi merchant network & payment gateway.", users:980, txns:5200, category:"marketplace" },
+        { id:4, name:"Cape Town Pioneer Community", lat:-33.9249, lng:18.4241, type:"user", city:"Cape Town, South Africa", desc:"Pioneer meetup group with monthly Pi trading events.", users:450, txns:1800, category:"community" },
+        { id:5, name:"Accra Pi Services", lat:5.6037, lng:-0.1870, type:"service", city:"Accra, Ghana", desc:"Bill payments, airtime top-up & utility services via Pi.", users:290, txns:3400, category:"bills" },
+        { id:6, name:"Dar es Salaam Pi Hotels", lat:-6.7924, lng:39.2083, type:"service", city:"Dar es Salaam, Tanzania", desc:"Hotel bookings along the coast — all payable in Pi.", users:180, txns:620, category:"hotel" },
+        { id:7, name:"Kampala Pi Market", lat:0.3476, lng:32.5825, type:"business", city:"Kampala, Uganda", desc:"East African agricultural Pi trading marketplace.", users:540, txns:2800, category:"marketplace" },
+        { id:8, name:"Mombasa Pioneer Group", lat:-4.0435, lng:39.6682, type:"user", city:"Mombasa, Kenya", desc:"Coastal Kenya Pi pioneers network.", users:310, txns:950, category:"community" },
+        { id:9, name:"Kigali Pi Tech Hub", lat:-1.9403, lng:29.8739, type:"service", city:"Kigali, Rwanda", desc:"Tech services and digital products purchasable with Pi.", users:220, txns:1100, category:"service" },
+        { id:10, name:"Cairo Pi Exchange", lat:30.0444, lng:31.2357, type:"business", city:"Cairo, Egypt", desc:"North Africa's first Pi-enabled exchange platform.", users:670, txns:4300, category:"marketplace" },
+
+        // ── EUROPE ──
+        { id:11, name:"London Pi Traders", lat:51.5074, lng:-0.1278, type:"business", city:"London, UK", desc:"Europe's top Pi merchant network. Electronics, fashion & more.", users:1200, txns:7800, category:"marketplace" },
+        { id:12, name:"Berlin Pi Community", lat:52.5200, lng:13.4050, type:"user", city:"Berlin, Germany", desc:"2,000+ pioneers hosting weekly meetups and hackathons.", users:2100, txns:3200, category:"community" },
+        { id:13, name:"Paris Pi Boutique", lat:48.8566, lng:2.3522, type:"business", city:"Paris, France", desc:"Luxury fashion & accessories — accept Pi Network payments.", users:480, txns:2400, category:"marketplace" },
+        { id:14, name:"Amsterdam Pi Hotels", lat:52.3676, lng:4.9041, type:"service", city:"Amsterdam, Netherlands", desc:"Book canal-side hotels & hostels with Pi cryptocurrency.", users:350, txns:1300, category:"hotel" },
+        { id:15, name:"Madrid Pi Services", lat:40.4168, lng:-3.7038, type:"service", city:"Madrid, Spain", desc:"Bill payment & home services platform accepting Pi.", users:290, txns:1800, category:"bills" },
+        { id:16, name:"Rome Pi Dining", lat:41.9028, lng:12.4964, type:"business", city:"Rome, Italy", desc:"Italian restaurants accepting Pi — from pizza to fine dining.", users:410, txns:2100, category:"food" },
+        { id:17, name:"Stockholm Pi Real Estate", lat:59.3293, lng:18.0686, type:"service", city:"Stockholm, Sweden", desc:"Scandinavian property listings — buy & rent with Pi.", users:180, txns:420, category:"realestate" },
+        { id:18, name:"Warsaw Pi Exchange", lat:52.2297, lng:21.0122, type:"business", city:"Warsaw, Poland", desc:"Central European Pi trading & exchange platform.", users:560, txns:3100, category:"marketplace" },
+        { id:19, name:"Zurich Pi Wealth", lat:47.3769, lng:8.5417, type:"service", city:"Zurich, Switzerland", desc:"Pi wealth management and financial services.", users:140, txns:890, category:"service" },
+        { id:20, name:"Dublin Pi Pioneers", lat:53.3498, lng:-6.2603, type:"user", city:"Dublin, Ireland", desc:"Irish Pi community — 500+ active pioneers trading weekly.", users:520, txns:1600, category:"community" },
+
+        // ── ASIA PACIFIC ──
+        { id:21, name:"Tokyo Pi Exchange", lat:35.6762, lng:139.6503, type:"business", city:"Tokyo, Japan", desc:"Japan's largest Pi marketplace — electronics, anime & tech.", users:1800, txns:9200, category:"marketplace" },
+        { id:22, name:"Mumbai Pi Market", lat:19.0760, lng:72.8777, type:"business", city:"Mumbai, India", desc:"India's Pi marketplace — textiles, spices & software.", users:2400, txns:11000, category:"marketplace" },
+        { id:23, name:"Singapore Pi Hotels", lat:1.3521, lng:103.8198, type:"service", city:"Singapore", desc:"Luxury hotel bookings across Southeast Asia — pay with Pi.", users:890, txns:3400, category:"hotel" },
+        { id:24, name:"Bangkok Pi Services", lat:13.7563, lng:100.5018, type:"service", city:"Bangkok, Thailand", desc:"Travel, food & bill payment services all via Pi.", users:720, txns:4100, category:"bills" },
+        { id:25, name:"Seoul Pi Tech", lat:37.5665, lng:126.9780, type:"business", city:"Seoul, South Korea", desc:"Korean tech products & K-pop merchandise — Pi payments.", users:1500, txns:6800, category:"marketplace" },
+        { id:26, name:"Sydney Pioneer Hub", lat:-33.8688, lng:151.2093, type:"user", city:"Sydney, Australia", desc:"Australia's biggest Pi meetup — 800+ active members.", users:820, txns:2400, category:"community" },
+        { id:27, name:"Jakarta Pi Marketplace", lat:-6.2088, lng:106.8456, type:"business", city:"Jakarta, Indonesia", desc:"Southeast Asia's fastest-growing Pi marketplace.", users:1300, txns:5600, category:"marketplace" },
+        { id:28, name:"Manila Pi Bills", lat:14.5995, lng:120.9842, type:"service", city:"Manila, Philippines", desc:"Pay utility bills, load phone credits with Pi.", users:940, txns:7200, category:"bills" },
+        { id:29, name:"Hanoi Pi Real Estate", lat:21.0278, lng:105.8342, type:"service", city:"Hanoi, Vietnam", desc:"Vietnam property listings — rent & buy with Pi.", users:350, txns:680, category:"realestate" },
+        { id:30, name:"Delhi Pi Pioneers", lat:28.7041, lng:77.1025, type:"user", city:"Delhi, India", desc:"North India pioneer community — weekly Pi bazaars.", users:1100, txns:3200, category:"community" },
+
+        // ── AMERICAS ──
+        { id:31, name:"New York Pi Hub", lat:40.7128, lng:-74.0060, type:"business", city:"New York, USA", desc:"East Coast Pi commerce center — retail, dining & services.", users:1600, txns:8400, category:"marketplace" },
+        { id:32, name:"San Francisco Pi Labs", lat:37.7749, lng:-122.4194, type:"service", city:"San Francisco, USA", desc:"Pi Network developer hub & API services.", users:900, txns:2800, category:"service" },
+        { id:33, name:"São Paulo Pi Market", lat:-23.5505, lng:-46.6333, type:"business", city:"São Paulo, Brazil", desc:"Latin America's largest Pi marketplace — everything from coffee to cars.", users:1200, txns:5400, category:"marketplace" },
+        { id:34, name:"Mexico City Pi Services", lat:19.4326, lng:-99.1332, type:"service", city:"Mexico City, Mexico", desc:"Bill payments, remittances & local services via Pi.", users:680, txns:3900, category:"bills" },
+        { id:35, name:"Toronto Pi Community", lat:43.6532, lng:-79.3832, type:"user", city:"Toronto, Canada", desc:"Canada's top Pi pioneer meetup group — 600+ members.", users:640, txns:1900, category:"community" },
+        { id:36, name:"Miami Pi Hotels", lat:25.7617, lng:-80.1918, type:"service", city:"Miami, USA", desc:"Beach-front hotel bookings — pay your stay with Pi.", users:480, txns:1200, category:"hotel" },
+        { id:37, name:"Buenos Aires Pi Exchange", lat:-34.6037, lng:-58.3816, type:"business", city:"Buenos Aires, Argentina", desc:"South American Pi exchange & trading platform.", users:560, txns:2600, category:"marketplace" },
+        { id:38, name:"Lima Pi Real Estate", lat:-12.0464, lng:-77.0428, type:"service", city:"Lima, Peru", desc:"Peruvian property listings purchasable with Pi.", users:280, txns:450, category:"realestate" },
+        { id:39, name:"Chicago Pi Pioneers", lat:41.8781, lng:-87.6298, type:"user", city:"Chicago, USA", desc:"Midwest pioneer community with Pi-powered local shops.", users:520, txns:1500, category:"community" },
+        { id:40, name:"Vancouver Pi Tech", lat:49.2827, lng:-123.1207, type:"business", city:"Vancouver, Canada", desc:"Canadian tech marketplace accepting Pi payments.", users:380, txns:1800, category:"marketplace" },
+
+        // ── MIDDLE EAST ──
+        { id:41, name:"Dubai Pi Luxury", lat:25.2048, lng:55.2708, type:"business", city:"Dubai, UAE", desc:"Luxury goods, real estate & hotel services — all Pi-enabled.", users:920, txns:4800, category:"marketplace" },
+        { id:42, name:"Istanbul Pi Bazaar", lat:41.0082, lng:28.9784, type:"business", city:"Istanbul, Turkey", desc:"Historic crossroads of commerce — now powered by Pi.", users:740, txns:3600, category:"marketplace" },
+        { id:43, name:"Riyadh Pi Services", lat:24.7136, lng:46.6753, type:"service", city:"Riyadh, Saudi Arabia", desc:"Government bill payments & telecom services via Pi.", users:410, txns:2200, category:"bills" },
+        { id:44, name:"Tel Aviv Pi Tech", lat:32.0853, lng:34.7818, type:"service", city:"Tel Aviv, Israel", desc:"Pi-powered startup ecosystem & tech services.", users:320, txns:1400, category:"service" },
+
+        // ── MORE SPOTS ──
+        { id:45, name:"Auckland Pi Pioneers", lat:-36.8485, lng:174.7633, type:"user", city:"Auckland, New Zealand", desc:"Kiwi pioneer community — regular Pi meetups & workshops.", users:280, txns:820, category:"community" },
+        { id:46, name:"Lisbon Pi Cafe", lat:38.7223, lng:-9.1393, type:"business", city:"Lisbon, Portugal", desc:"Cafe & bookshop in Alfama — pay with Pi for pastéis de nata.", users:190, txns:1100, category:"food" },
+        { id:47, name:"Ho Chi Minh Pi Market", lat:10.8231, lng:106.6297, type:"business", city:"Ho Chi Minh City, Vietnam", desc:"Vietnamese goods marketplace accepting Pi — fashion, food & crafts.", users:620, txns:2800, category:"marketplace" },
+        { id:48, name:"Kuala Lumpur Pi Hotels", lat:3.1390, lng:101.6869, type:"service", city:"Kuala Lumpur, Malaysia", desc:"Malaysian hotel & resort bookings payable in Pi.", users:410, txns:1500, category:"hotel" },
+        { id:49, name:"Bogotá Pi Services", lat:4.7110, lng:-74.0721, type:"service", city:"Bogotá, Colombia", desc:"Colombian utility & telecom payments via Pi cryptocurrency.", users:340, txns:1900, category:"bills" },
+        { id:50, name:"Addis Ababa Pi Hub", lat:9.0192, lng:38.7525, type:"user", city:"Addis Ababa, Ethiopia", desc:"Growing East African pioneer community — education & trade.", users:260, txns:540, category:"community" },
+
+        // Additional hotspots
+        { id:51, name:"Los Angeles Pi Market", lat:34.0522, lng:-118.2437, type:"business", city:"Los Angeles, USA", desc:"West Coast Pi marketplace — entertainment, fashion & tech.", users:1100, txns:5200, category:"marketplace" },
+        { id:52, name:"Shanghai Pi Commerce", lat:31.2304, lng:121.4737, type:"business", city:"Shanghai, China", desc:"Chinese Pi commerce hub — electronics & manufacturing.", users:1900, txns:8600, category:"marketplace" },
+        { id:53, name:"Moscow Pi Exchange", lat:55.7558, lng:37.6173, type:"business", city:"Moscow, Russia", desc:"Eastern European Pi trading & marketplace platform.", users:780, txns:3400, category:"marketplace" },
+        { id:54, name:"Helsinki Pi Hotels", lat:60.1699, lng:24.9384, type:"service", city:"Helsinki, Finland", desc:"Nordic hotel bookings — sauna retreats payable in Pi.", users:210, txns:680, category:"hotel" },
+        { id:55, name:"Casablanca Pi Market", lat:33.5731, lng:-7.5898, type:"business", city:"Casablanca, Morocco", desc:"North African Pi marketplace — textiles, argan oil & crafts.", users:380, txns:1600, category:"marketplace" },
+
+        // More users/communities
+        { id:56, name:"Bangalore Pi Devs", lat:12.9716, lng:77.5946, type:"user", city:"Bangalore, India", desc:"Indian developer community building on Pi Network.", users:960, txns:1200, category:"community" },
+        { id:57, name:"Barcelona Pi Pioneers", lat:41.3874, lng:2.1686, type:"user", city:"Barcelona, Spain", desc:"Catalan pioneers — beach meetups & Pi trading events.", users:440, txns:1300, category:"community" },
+        { id:58, name:"Johannesburg Pi Trade", lat:-26.2041, lng:28.0473, type:"business", city:"Johannesburg, South Africa", desc:"South African Pi trading platform for local goods.", users:520, txns:2400, category:"marketplace" },
+        { id:59, name:"Athens Pi Pioneers", lat:37.9838, lng:23.7275, type:"user", city:"Athens, Greece", desc:"Greek pioneers unite — Pi meetups at the Acropolis.", users:310, txns:780, category:"community" },
+        { id:60, name:"Taipei Pi Market", lat:25.0330, lng:121.5654, type:"business", city:"Taipei, Taiwan", desc:"Taiwanese electronics & night market goods — Pi accepted.", users:690, txns:3100, category:"marketplace" },
+
+        // Extra services
+        { id:61, name:"Bali Pi Villas", lat:-8.3405, lng:115.0920, type:"service", city:"Bali, Indonesia", desc:"Rent luxury villas in Bali — pay with Pi cryptocurrency.", users:340, txns:480, category:"realestate" },
+        { id:62, name:"Prague Pi Real Estate", lat:50.0755, lng:14.4378, type:"service", city:"Prague, Czech Republic", desc:"Czech property listings — buy apartments with Pi.", users:240, txns:320, category:"realestate" },
+        { id:63, name:"Nairobi Pi Bills", lat:-1.2700, lng:36.8100, type:"service", city:"Nairobi, Kenya", desc:"M-Pesa & utility bill payments bridged to Pi Network.", users:620, txns:4800, category:"bills" },
+        { id:64, name:"Hong Kong Pi Finance", lat:22.3193, lng:114.1694, type:"service", city:"Hong Kong", desc:"Pi-powered financial services & wealth management.", users:510, txns:2100, category:"service" },
+
+        // More global communities
+        { id:65, name:"Osaka Pi Community", lat:34.6937, lng:135.5023, type:"user", city:"Osaka, Japan", desc:"Kansai region pioneers — street food & Pi trading.", users:580, txns:1600, category:"community" },
+        { id:66, name:"Denver Pi Pioneers", lat:39.7392, lng:-104.9903, type:"user", city:"Denver, USA", desc:"Rocky Mountain pioneers — outdoor gear trades via Pi.", users:340, txns:920, category:"community" },
+        { id:67, name:"Colombo Pi Services", lat:6.9271, lng:79.8612, type:"service", city:"Colombo, Sri Lanka", desc:"Sri Lankan telecom & utility payments via Pi.", users:280, txns:1400, category:"bills" },
+        { id:68, name:"Lyon Pi Cafe", lat:45.7640, lng:4.8357, type:"business", city:"Lyon, France", desc:"French gastronomy meets Pi — café & gourmet shop.", users:170, txns:680, category:"food" },
+
+        // Additional business hotspots
+        { id:69, name:"Shenzhen Pi Electronics", lat:22.5431, lng:114.0579, type:"business", city:"Shenzhen, China", desc:"Electronics manufacturing & wholesale — Pi payments.", users:1400, txns:7200, category:"marketplace" },
+        { id:70, name:"Dhaka Pi Commerce", lat:23.8103, lng:90.4125, type:"business", city:"Dhaka, Bangladesh", desc:"Garments & textiles marketplace — powered by Pi.", users:680, txns:2800, category:"marketplace" },
+        { id:71, name:"Karachi Pi Market", lat:24.8607, lng:67.0011, type:"business", city:"Karachi, Pakistan", desc:"Pakistani goods & services marketplace accepting Pi.", users:540, txns:2100, category:"marketplace" },
+        { id:72, name:"Medellín Pi Hub", lat:6.2476, lng:-75.5658, type:"user", city:"Medellín, Colombia", desc:"Colombian innovators building Pi-powered solutions.", users:290, txns:640, category:"community" },
+
+        // Hotels worldwide
+        { id:73, name:"Phuket Pi Resorts", lat:7.8804, lng:98.3923, type:"service", city:"Phuket, Thailand", desc:"Thai beach resorts & island hopping — book with Pi.", users:450, txns:1100, category:"hotel" },
+        { id:74, name:"Cancún Pi Hotels", lat:21.1619, lng:-86.8515, type:"service", city:"Cancún, Mexico", desc:"Caribbean resort bookings — all-inclusive Pi packages.", users:320, txns:780, category:"hotel" },
+        { id:75, name:"Marrakech Pi Riads", lat:31.6295, lng:-7.9811, type:"service", city:"Marrakech, Morocco", desc:"Traditional riad stays in the medina — payable in Pi.", users:190, txns:420, category:"hotel" },
+
+        // Real estate
+        { id:76, name:"Dubai Pi Properties", lat:25.1972, lng:55.2744, type:"service", city:"Dubai, UAE", desc:"Luxury apartments & villas — purchase with Pi.", users:280, txns:180, category:"realestate" },
+        { id:77, name:"Lisbon Pi Real Estate", lat:38.7167, lng:-9.1395, type:"service", city:"Lisbon, Portugal", desc:"Portuguese golden visa properties — Pi payments accepted.", users:160, txns:90, category:"realestate" },
+
+        // Food & dining
+        { id:78, name:"Bangkok Pi Street Food", lat:13.7500, lng:100.4914, type:"business", city:"Bangkok, Thailand", desc:"Bangkok's famous street food — scan QR, pay with Pi.", users:580, txns:4200, category:"food" },
+        { id:79, name:"New York Pi Dining", lat:40.7580, lng:-73.9855, type:"business", city:"New York, USA", desc:"Manhattan restaurants accepting Pi — fine dining to pizza.", users:720, txns:3600, category:"food" },
+
+        // More services
+        { id:80, name:"Lagos Pi Bills", lat:6.5200, lng:3.3800, type:"service", city:"Lagos, Nigeria", desc:"Nigerian utility payments, DSTV & airtime — via Pi.", users:840, txns:6200, category:"bills" },
+        { id:81, name:"São Paulo Pi Bills", lat:-23.5600, lng:-46.6250, type:"service", city:"São Paulo, Brazil", desc:"Brazilian utility & telecom bill payments via Pi.", users:560, txns:3800, category:"bills" },
+
+        // Pioneer communities
+        { id:82, name:"Kathmandu Pi Pioneers", lat:27.7172, lng:85.3240, type:"user", city:"Kathmandu, Nepal", desc:"Himalayan Pi pioneer community — growing fast.", users:380, txns:560, category:"community" },
+        { id:83, name:"Bucharest Pi Club", lat:44.4268, lng:26.1025, type:"user", city:"Bucharest, Romania", desc:"Romanian pioneers — monthly meetups & Pi trading.", users:290, txns:720, category:"community" },
+        { id:84, name:"Nairobi Pi Pioneers", lat:-1.2850, lng:36.8300, type:"user", city:"Nairobi, Kenya", desc:"Kenya's largest pioneer community — 1,200+ active members.", users:1200, txns:4500, category:"community" },
+        { id:85, name:"Santiago Pi Hub", lat:-33.4489, lng:-70.6693, type:"user", city:"Santiago, Chile", desc:"Chilean pioneers — tech meetups & Pi commerce.", users:310, txns:680, category:"community" },
+        { id:86, name:"Vienna Pi Culture", lat:48.2082, lng:16.3738, type:"user", city:"Vienna, Austria", desc:"Austrian pioneers — art, music & Pi at coffee houses.", users:250, txns:540, category:"community" },
+
+        // ── TRANSPORT & RIDE SERVICES ──
+        { id:87, name:"Nairobi Pi Rides", lat:-1.2800, lng:36.8200, type:"service", city:"Nairobi, Kenya", desc:"City rides, taxis & boda-boda — book and pay with Pi.", users:1200, txns:8400, category:"transport" },
+        { id:88, name:"Lagos Pi Transport", lat:6.5300, lng:3.3850, type:"service", city:"Lagos, Nigeria", desc:"Taxi & ride-hailing across Lagos — powered by Pi.", users:980, txns:6800, category:"transport" },
+        { id:89, name:"London Pi Cabs", lat:51.5100, lng:-0.1300, type:"service", city:"London, UK", desc:"Black cab & minicab bookings — pay with Pi cryptocurrency.", users:750, txns:4200, category:"transport" },
+        { id:90, name:"Dubai Pi Rides", lat:25.2100, lng:55.2750, type:"service", city:"Dubai, UAE", desc:"Luxury rides, airport transfers & desert excursions via Pi.", users:620, txns:3100, category:"transport" },
+        { id:91, name:"Mumbai Pi Auto", lat:19.0800, lng:72.8800, type:"service", city:"Mumbai, India", desc:"Auto-rickshaw & cab bookings across Mumbai — Pi payments.", users:1400, txns:9200, category:"transport" },
+        { id:92, name:"São Paulo Pi Rides", lat:-23.5550, lng:-46.6400, type:"service", city:"São Paulo, Brazil", desc:"City rides & airport shuttles — pay with Pi in Brazil.", users:680, txns:3800, category:"transport" },
+        { id:93, name:"Bangkok Pi Tuk-Tuk", lat:13.7600, lng:100.5050, type:"service", city:"Bangkok, Thailand", desc:"Tuk-tuk, taxi & motorbike rides — all bookable with Pi.", users:890, txns:5600, category:"transport" },
+        { id:94, name:"New York Pi Rides", lat:40.7200, lng:-74.0000, type:"service", city:"New York, USA", desc:"Yellow cab & ride-share bookings — Pi-powered transport.", users:1100, txns:7400, category:"transport" },
+        { id:95, name:"Tokyo Pi Rides", lat:35.6800, lng:139.6550, type:"service", city:"Tokyo, Japan", desc:"Train passes, taxi & ride-hailing — pay with Pi in Japan.", users:950, txns:5200, category:"transport" },
+        { id:96, name:"Kampala Pi Boda", lat:0.3500, lng:32.5850, type:"service", city:"Kampala, Uganda", desc:"Boda-boda & matatu rides — book safely with Pi.", users:540, txns:3400, category:"transport" },
+        { id:97, name:"Cairo Pi Transport", lat:30.0500, lng:31.2400, type:"service", city:"Cairo, Egypt", desc:"City taxis, Uber-style rides & Nile transfers via Pi.", users:480, txns:2600, category:"transport" },
+        { id:98, name:"Paris Pi Transport", lat:48.8600, lng:2.3550, type:"service", city:"Paris, France", desc:"Taxi, VTC & airport shuttle — pay with Pi in Paris.", users:560, txns:2800, category:"transport" },
+        { id:99, name:"Dar es Salaam Pi Rides", lat:-6.7950, lng:39.2100, type:"service", city:"Dar es Salaam, Tanzania", desc:"Dala-dala & taxi rides along the coast — Pi payments.", users:320, txns:1800, category:"transport" },
+        { id:100, name:"Singapore Pi Rides", lat:1.3550, lng:103.8200, type:"service", city:"Singapore", desc:"Premium & economy rides across the city-state — Pi enabled.", users:710, txns:3600, category:"transport" },
+
+        // ── PI AIRWAYS / FLIGHTS ──
+        { id:101, name:"Pi Airways — Africa Hub", lat:-1.3200, lng:36.9300, type:"service", city:"Nairobi, Kenya (JKIA)", desc:"Book flights across Africa — Nairobi to Lagos, Cairo, Cape Town & more.", users:2400, txns:4200, category:"transport" },
+        { id:102, name:"Pi Airways — Europe Hub", lat:51.4700, lng:-0.4543, type:"service", city:"London, UK (Heathrow)", desc:"European flights — London to Paris, Berlin, Dubai & beyond.", users:1800, txns:3600, category:"transport" },
+        { id:103, name:"Pi Airways — Asia Hub", lat:1.3644, lng:103.9915, type:"service", city:"Singapore (Changi)", desc:"Asia-Pacific flights — Singapore to Tokyo, Mumbai, Sydney.", users:1600, txns:3200, category:"transport" },
+        { id:104, name:"Pi Airways — Americas Hub", lat:40.6413, lng:-73.7781, type:"service", city:"New York, USA (JFK)", desc:"Americas flights — New York to São Paulo, LA, Toronto.", users:1400, txns:2800, category:"transport" },
+
+        // ── SOCIAL / COMMUNITY HUBS ──
+        { id:105, name:"Nairobi Pi Social Hub", lat:-1.2750, lng:36.8150, type:"user", city:"Nairobi, Kenya", desc:"Pioneer social feed — share posts, photos & trade tips in Pi.", users:2800, txns:1200, category:"social" },
+        { id:106, name:"Lagos Pi Social", lat:6.5280, lng:3.3750, type:"user", city:"Lagos, Nigeria", desc:"West African pioneer social community — trending posts & discussions.", users:1600, txns:860, category:"social" },
+        { id:107, name:"London Pi Social", lat:51.5120, lng:-0.1250, type:"user", city:"London, UK", desc:"European pioneer social feed — meetup announcements & Pi tips.", users:1400, txns:740, category:"social" },
+        { id:108, name:"Mumbai Pi Social", lat:19.0820, lng:72.8750, type:"user", city:"Mumbai, India", desc:"Largest South Asian Pi social community — 2,000+ active daily.", users:2200, txns:980, category:"social" },
+        { id:109, name:"Tokyo Pi Social", lat:35.6720, lng:139.6480, type:"user", city:"Tokyo, Japan", desc:"Japanese pioneer broadcast — Pi culture, anime & trading.", users:1300, txns:620, category:"social" },
+        { id:110, name:"São Paulo Pi Social", lat:-23.5480, lng:-46.6300, type:"user", city:"São Paulo, Brazil", desc:"Latin American Pi social — posts in Portuguese & Spanish.", users:1100, txns:540, category:"social" },
+        { id:111, name:"Dubai Pi Social", lat:25.2000, lng:55.2650, type:"user", city:"Dubai, UAE", desc:"Middle East pioneer social hub — luxury lifestyle & Pi commerce.", users:900, txns:480, category:"social" },
+        { id:112, name:"New York Pi Social", lat:40.7150, lng:-74.0080, type:"user", city:"New York, USA", desc:"US pioneer social feed — tech discussions & Pi marketplace.", users:1800, txns:920, category:"social" },
+        { id:113, name:"Kampala Pi Social", lat:0.3450, lng:32.5800, type:"user", city:"Kampala, Uganda", desc:"East African pioneer social — agricultural Pi trading tips.", users:680, txns:340, category:"social" },
+        { id:114, name:"Bangkok Pi Social", lat:13.7580, lng:100.5000, type:"user", city:"Bangkok, Thailand", desc:"Southeast Asian social hub — food, travel & Pi discussions.", users:760, txns:380, category:"social" },
+    ];
+
+    // ── Custom marker icons ──
+    function createIcon(type, category) {
+        const catColors = { transport: '#06b6d4', social: '#ec4899' };
+        const typeColors = { user: '#22c55e', business: '#f5a623', service: '#7c3aed' };
+        const color = catColors[category] || typeColors[type] || '#7c3aed';
+        return L.divIcon({
+            className: 'custom-marker',
+            html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:3px solid rgba(255,255,255,0.9);box-shadow:0 0 12px ${color}88, 0 2px 8px rgba(0,0,0,0.4);"></div>`,
+            iconSize: [14,14],
+            iconAnchor: [7,7],
+            popupAnchor: [0,-12]
+        });
+    }
+
+    // ── Initialize map ──
+    const map = L.map('map', {
+        center: [20, 10],
+        zoom: 2,
+        minZoom: 2,
+        maxZoom: 16,
+        zoomControl: true,
+        attributionControl: false
+    });
+
+    // Dark tile layer
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(map);
+
+    // Attribution in corner
+    L.control.attribution({ position: 'bottomleft', prefix: false })
+        .addAttribution('&copy; <a href="https://carto.com/" style="color:#71717a">CARTO</a> | <a href="https://www.openstreetmap.org/" style="color:#71717a">OSM</a>')
+        .addTo(map);
+
+    // ── Markers & popups ──
+    let markers = [];
+    let activeFilter = 'all';
+    let searchQuery = '';
+
+    function getTypeLabel(type) {
+        return { user: 'Pioneer', business: 'Business', service: 'Service' }[type] || type;
+    }
+    function getTypeBadgeClass(type) {
+        return { user: 'user', business: 'business', service: 'service' }[type] || 'service';
+    }
+    function getCategoryIcon(cat) {
+        const icons = { marketplace:'&#127979;', community:'&#128101;', food:'&#127860;', hotel:'&#127976;', bills:'&#128176;', realestate:'&#127968;', service:'&#9881;', transport:'&#128663;', social:'&#128172;' };
+        return icons[cat] || '&#128204;';
+    }
+
+    function popupHTML(d) {
+        const badge = getTypeBadgeClass(d.type);
+        const catBadge = {
+            transport: 'background:rgba(6,182,212,0.12);color:#22d3ee',
+            social: 'background:rgba(236,72,153,0.12);color:#f472b6'
+        };
+        const typeBadge = {
+            user: 'background:rgba(34,197,94,0.12);color:#4ade80',
+            business: 'background:rgba(245,166,35,0.12);color:#f5a623',
+            service: 'background:rgba(124,58,237,0.12);color:#a78bfa'
+        };
+        const badgeStyle = catBadge[d.category] || typeBadge[d.type];
+        const labelMap = { transport: 'Transport', social: 'Social' };
+        const label = labelMap[d.category] || getTypeLabel(d.type);
+        return `<div class="popup-content">
+            <h4>${d.name}</h4>
+            <span class="popup-type" style="${badgeStyle}">${label}</span>
+            <p>${d.desc}</p>
+            <div class="popup-stats">
+                <span>&#128100; ${d.users.toLocaleString()} users</span>
+                <span>&#128260; ${d.txns.toLocaleString()} txns</span>
+            </div>
+            <span style="color:var(--text-muted);font-size:0.75rem">&#128205; ${d.city}</span>
+        </div>`;
+    }
+
+    function sidebarCardHTML(d, idx) {
+        return `<div class="loc-card" data-id="${d.id}" onclick="focusMarker(${d.id})">
+            <div class="loc-card-top">
+                <h4>${getCategoryIcon(d.category)} ${d.name}</h4>
+                <span class="type-badge ${getTypeBadgeClass(d.type)}">${getTypeLabel(d.type)}</span>
+            </div>
+            <div class="loc-desc">${d.desc}</div>
+            <div class="loc-meta">
+                <span>&#128205; ${d.city}</span>
+                <span>&#128100; ${d.users.toLocaleString()}</span>
+                <span>&#128260; ${d.txns.toLocaleString()} txns</span>
+            </div>
+        </div>`;
+    }
+
+    function matchesFilter(d) {
+        if (activeFilter === 'all') return true;
+        if (['user','business','service'].includes(activeFilter)) return d.type === activeFilter;
+        return d.category === activeFilter;
+    }
+
+    function matchesSearch(d) {
+        if (!searchQuery) return true;
+        const q = searchQuery.toLowerCase();
+        return d.name.toLowerCase().includes(q) || d.city.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q);
+    }
+
+    function renderMap() {
+        // Clear old markers
+        markers.forEach(m => map.removeLayer(m.marker));
+        markers = [];
+
+        const filtered = mapData.filter(d => matchesFilter(d) && matchesSearch(d));
+
+        // Add markers
+        filtered.forEach(d => {
+            const marker = L.marker([d.lat, d.lng], { icon: createIcon(d.type, d.category) })
+                .bindPopup(popupHTML(d), { maxWidth: 280 })
+                .addTo(map);
+            markers.push({ id: d.id, marker, data: d });
+        });
+
+        // Sidebar
+        const list = document.getElementById('sidebar-list');
+        list.innerHTML = filtered.length
+            ? filtered.map((d, i) => sidebarCardHTML(d, i)).join('')
+            : '<div style="padding:32px;text-align:center;color:var(--text-muted)">No results found</div>';
+
+        document.getElementById('sidebar-count').textContent = filtered.length + ' result' + (filtered.length !== 1 ? 's' : '');
+
+        // Update filter counts
+        document.getElementById('count-all').textContent = mapData.filter(d => matchesSearch(d)).length;
+        document.getElementById('count-users').textContent = mapData.filter(d => d.type === 'user' && matchesSearch(d)).length;
+        document.getElementById('count-biz').textContent = mapData.filter(d => d.type === 'business' && matchesSearch(d)).length;
+        document.getElementById('count-svc').textContent = mapData.filter(d => d.type === 'service' && matchesSearch(d)).length;
+        document.getElementById('count-transport').textContent = mapData.filter(d => d.category === 'transport' && matchesSearch(d)).length;
+        document.getElementById('count-social').textContent = mapData.filter(d => d.category === 'social' && matchesSearch(d)).length;
+    }
+
+    function focusMarker(id) {
+        const entry = markers.find(m => m.id === id);
+        if (!entry) return;
+        map.setView([entry.data.lat, entry.data.lng], 10, { animate: true });
+        entry.marker.openPopup();
+        // Highlight active card
+        document.querySelectorAll('.loc-card').forEach(c => c.classList.remove('active'));
+        const card = document.querySelector(`.loc-card[data-id="${id}"]`);
+        if (card) { card.classList.add('active'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.dataset.filter;
+            renderMap();
+        });
+    });
+
+    // Sidebar search
+    document.getElementById('sidebar-search').addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderMap();
+    });
+
+    // Initial render
+    renderMap();
+
+    // ── Animate stats ──
+    function animateCount(el, target, duration) {
+        const start = 0;
+        const startTime = performance.now();
+        function update(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(start + (target - start) * eased).toLocaleString();
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+    }
+    animateCount(document.getElementById('stat-users'), 12480, 2000);
+    animateCount(document.getElementById('stat-biz'), 3240, 2000);
+    animateCount(document.getElementById('stat-services'), 890, 2000);
+    animateCount(document.getElementById('stat-transport'), 2400, 2000);
+    animateCount(document.getElementById('stat-social'), 4800, 2000);
+    </script>
+</body>
+</html>
