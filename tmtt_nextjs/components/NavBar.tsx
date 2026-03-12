@@ -25,7 +25,7 @@ export function NavBar() {
           <Link href="/" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
             {t("nav.home")}
           </Link>
-          <a href="../index.html" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
+          <a href="/index.html" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
             {t("nav.marketplace")}
           </a>
           <Link href="/map" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">

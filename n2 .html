@@ -28,6 +28,7 @@
             --success: #22c55e;
             --radius: 16px;
             --radius-sm: 10px;
+            --shadow-soft: 0 10px 28px rgba(0,0,0,0.24);
         }
         html.light {
             --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
@@ -56,6 +57,7 @@
         }
         .header-top {
             display: flex; align-items: center; gap: 12px;
+            width: 100%;
         }
         .back-btn {
             background: none; border: none; color: var(--text-secondary);
@@ -69,6 +71,36 @@
         }
         .search-input::placeholder { color: var(--text-muted); }
         .search-input:focus { border-color: var(--pi-purple); }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .pill-btn {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.72rem;
+            min-height: 36px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .pill-btn.primary {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            border-color: transparent;
+            color: #fff;
+            cursor: pointer;
+        }
 
         /* Content */
         .content { padding: 16px; }
@@ -89,7 +121,8 @@
         }
         .card {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 14px; overflow: hidden; transition: all 0.2s;
+            border-radius: 16px; overflow: hidden; transition: all 0.2s;
+            box-shadow: var(--shadow-soft);
         }
         .card:active { transform: scale(0.98); }
         .card-img { position: relative; overflow: hidden; }
@@ -114,13 +147,18 @@
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
             background: rgba(9,9,11,0.95); backdrop-filter: blur(20px);
-            display: flex; justify-content: space-around; align-items: center;
+            display: flex; align-items: center; gap: 4px;
+            overflow-x: auto; scrollbar-width: none;
             border-top: 1px solid var(--border); z-index: 100;
+            padding: 0 8px;
         }
+        .bottom-nav::-webkit-scrollbar { display: none; }
         .nav-item {
             display: flex; flex-direction: column; align-items: center; gap: 2px;
             text-decoration: none; color: var(--text-muted); font-size: 0.625rem;
             font-weight: 600; transition: color 0.2s; padding: 8px;
+            min-width: 58px;
+            flex: 0 0 auto;
         }
         .nav-item.active { color: var(--pi-purple); }
         .nav-item .nav-icon { font-size: 1.25rem; }
@@ -135,6 +173,45 @@
             transition: transform 0.2s;
         }
         .sell-fab:active { transform: scale(0.9); }
+
+        @media (max-width: 540px) {
+            .header-top {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .search-input {
+                order: 2;
+                width: 100%;
+                flex: 1 0 100%;
+            }
+
+            .header-actions {
+                order: 3;
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .pill-btn {
+                min-height: 42px;
+                flex: 1;
+                font-size: 0.78rem;
+            }
+
+            .content {
+                padding: 14px;
+            }
+
+            .product-grid {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -144,10 +221,10 @@
         <div class="header-top">
             <button class="back-btn" onclick="history.back()">&#8592;</button>
             <input type="text" class="search-input" placeholder="Search Pi Market...">
-            <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+            <div class="header-actions">
                 <span id="pi-username" style="color:#f5a623;font-weight:600;font-size:0.75rem;display:none"></span>
-                <a href="https://109.199.109.143/services" target="_blank" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:6px 10px;border-radius:8px;font-weight:600;font-size:0.7rem;white-space:nowrap;text-decoration:none">Services</a>
-                <button id="pi-connect-btn" onclick="piConnect()" style="background:#7c3aed;color:#fff;border:none;padding:6px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.75rem;white-space:nowrap" data-i18n="nav.connectPi">Connect Pi</button>
+                <a href="/services" target="_blank" class="pill-btn">Services</a>
+                <button id="pi-connect-btn" onclick="piConnect()" class="pill-btn primary" data-i18n="nav.connectPi">Connect Pi</button>
             </div>
         </div>
     </header>
@@ -504,7 +581,7 @@
             <span data-i18n="nav.explore">Explore</span>
         </a>
         <a href="Submit.html" class="sell-fab">+</a>
-        <a href="https://109.199.109.143/services" class="nav-item" target="_blank">
+        <a href="/services" class="nav-item" target="_blank">
             <span class="nav-icon">&#128736;</span>
             <span data-i18n="nav.services">Services</span>
         </a>
@@ -536,6 +613,7 @@
                 document.getElementById('pi-username').style.display = 'inline';
                 document.getElementById('pi-connect-btn').textContent = 'Connected';
                 document.getElementById('pi-connect-btn').style.background = '#16a34a';
+                document.getElementById('pi-connect-btn').style.borderColor = '#16a34a';
                 sessionStorage.setItem('piUser', JSON.stringify(auth.user));
             }).catch(function(e) { console.error('Pi auth error:', e); });
         }
@@ -547,6 +625,7 @@
                 document.getElementById('pi-username').style.display = 'inline';
                 document.getElementById('pi-connect-btn').textContent = 'Connected';
                 document.getElementById('pi-connect-btn').style.background = '#16a34a';
+                document.getElementById('pi-connect-btn').style.borderColor = '#16a34a';
             } else if (typeof window.Pi !== 'undefined') {
                 // Auto-login in Pi Browser
                 piConnect();
@@ -587,5 +666,6 @@
         // Show an ad on page load (if available)
         piShowAd();
     </script>
+    <script src="clear-button.js"></script>
 </body>
 </html>

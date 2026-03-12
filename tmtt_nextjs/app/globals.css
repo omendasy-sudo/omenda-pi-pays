@@ -24,6 +24,22 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* Basic responsive safety */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img, video, iframe, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+a[role="button"] {
+  min-height: 40px;
+}
+
 /* Light mode overrides */
 html.light body { background: #ffffff; color: #18181b; }
 html.light nav { background: rgba(255,255,255,0.88) !important; }
@@ -51,4 +67,15 @@ html.light ::-webkit-scrollbar-thumb { background: #d4d4d8; }
 html.light ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
 ::-webkit-scrollbar-thumb:hover {
   background: #3f3f46;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+
+  button,
+  a[role="button"] {
+    min-height: 44px;
+  }
 }

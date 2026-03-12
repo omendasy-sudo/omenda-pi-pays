@@ -229,22 +229,21 @@
             <a href="social.html" data-i18n="nav.social">Social</a>
             <a href="form.html" class="active" data-i18n="nav.register">Register</a>
             <a href="Submit.html" data-i18n="nav.sell">Sell</a>
-            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="/services" target="_blank" data-i18n="nav.services">Services</a>
             <a href="transport.html" data-i18n="nav.transport">Transport</a>
         </div>
         <div style="display:flex;align-items:center;gap:10px">
             <span id="pi-username" style="color:#f5a623;font-weight:600;font-size:0.85rem;display:none"></span>
-            <a href="https://109.199.109.143/services" target="_blank" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.82rem;text-decoration:none">All Services</a>
+            <a href="/services" target="_blank" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.82rem;text-decoration:none">All Services</a>
             <button id="pi-connect-btn" onclick="piConnect()" style="background:#7c3aed;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.85rem" data-i18n="nav.connectPi">Connect Pi</button>
         </div>
     </nav>
 
     <div class="quick-links">
         <a class="quick-link" href="index.html">Home</a>
-        <a class="quick-link" href="overview.html">Overview</a>
         <a class="quick-link" href="transport.html">Transport</a>
         <a class="quick-link" href="admin-panel.html">Admin</a>
-        <a class="quick-link" href="https://109.199.109.143/services" target="_blank" rel="noopener noreferrer">All Services</a>
+        <a class="quick-link" href="/services" target="_blank" rel="noopener noreferrer">All Services</a>
     </div>
 
     <!-- Page Header -->
@@ -556,5 +555,6 @@
             el.addEventListener('click', function() { piRequestPermission('camera'); });
         });
     </script>
+    <script src="clear-button.js"></script>
 </body>
 </html>

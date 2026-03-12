@@ -21,18 +21,18 @@ export function FooterTranslated() {
           <div>
             <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-zinc-500">{t("footer.marketplace")}</h4>
             <div className="space-y-2">
-              <a href="../index.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.home")}</a>
-              <a href="../new.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.explore")}</a>
-              <a href="../Submit.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.sellProduct")}</a>
-              <a href="../form.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.registerBusiness")}</a>
+              <a href="/index.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.home")}</a>
+              <a href="/new.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.explore")}</a>
+              <a href="/Submit.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.sellProduct")}</a>
+              <a href="/form.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.registerBusiness")}</a>
             </div>
           </div>
           <div>
             <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-zinc-500">{t("footer.platform")}</h4>
             <div className="space-y-2">
               <Link href="/services" className="block text-sm text-zinc-400 hover:text-white">{t("footer.allServices")}</Link>
-              <a href="../index.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.piMarketplace")}</a>
-              <a href="../f1.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.quickRegister")}</a>
+              <a href="/index.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.piMarketplace")}</a>
+              <a href="/f1.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.quickRegister")}</a>
             </div>
           </div>
           <div>

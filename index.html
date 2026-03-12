@@ -314,7 +314,7 @@
             <a href="social.html" data-i18n="nav.social">Social</a>
             <a href="form.html" data-i18n="nav.register">Register</a>
             <a href="Submit.html" data-i18n="nav.sell">Sell</a>
-            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="/services" target="_blank" data-i18n="nav.services">Services</a>
             <a href="transport.html" data-i18n="nav.transport">Transport</a>
             <a href="pi-converter.html">Pi Converter</a>
         </div>
@@ -323,7 +323,7 @@
                 <span class="dot"></span>
                 <span id="pi-username"></span>
             </div>
-            <button class="btn-primary" onclick="openServiceBrowser('https://109.199.109.143/services')" style="background:transparent;border:1px solid var(--border);color:var(--text-primary)">All Services</button>
+            <button class="btn-primary" onclick="openServiceBrowser('/services')" style="background:transparent;border:1px solid var(--border);color:var(--text-primary)">All Services</button>
             <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
         </div>
     </nav>
@@ -390,10 +390,10 @@
             <h2>Open All Services in Browser</h2>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">All Services</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Open complete services portal.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Hotels</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Book and pay hotels with Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/hotels')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Homes</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Browse homes and rentals.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/homes')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Bills</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Pay utility bills in Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://109.199.109.143/services/bills')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">All Services</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Open complete services portal.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Hotels</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Book and pay hotels with Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/hotels')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Homes</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Browse homes and rentals.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/homes')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Bills</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Pay utility bills in Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/bills')">Open</button></div>
             <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Transport</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Open ride and transport services.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('transport.html')">Open</button></div>
             <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Map</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">View Pi locations on map.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('map.html')">Open</button></div>
         </div>
@@ -417,10 +417,10 @@
             </div>
             <div class="footer-col">
                 <h4 data-i18n="nav.services">Services</h4>
-                <a href="https://109.199.109.143/services" target="_blank" data-i18n="footer.allServices">All Services</a>
-                <a href="https://109.199.109.143/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
-                <a href="https://109.199.109.143/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
-                <a href="https://109.199.109.143/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
                 <a href="transport.html" data-i18n="nav.transport">Transport</a>
             </div>
             <div class="footer-col">
@@ -713,5 +713,6 @@
             renderProducts(filter);
         });
     </script>
+    <script src="clear-button.js"></script>
 </body>
 </html>

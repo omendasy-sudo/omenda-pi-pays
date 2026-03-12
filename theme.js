@@ -114,38 +114,14 @@
     return btn;
   }
 
-  function createOverviewButton() {
-    var link = document.createElement("a");
-    link.id = "project-overview-btn";
-    link.href = "overview.html";
-    link.textContent = "Overview";
-    link.style.cssText = [
-      "background:transparent",
-      "border:1px solid rgba(255,255,255,0.14)",
-      "color:inherit",
-      "padding:8px 12px",
-      "border-radius:10px",
-      "font-size:12.5px",
-      "font-weight:700",
-      "text-decoration:none",
-      "display:inline-flex",
-      "align-items:center",
-      "justify-content:center",
-      "line-height:1",
-      "min-height:36px",
-    ].join(";") + ";";
-    return link;
-  }
-
   // ── Inject into nav ──
   function injectToggle() {
-    var existingOverview = document.getElementById("project-overview-btn");
-    if (existingOverview) return;
+    var existingTheme = document.getElementById("theme-toggle-btn");
+    if (existingTheme) return;
 
     // Try nav-right (desktop nav)
     var navRight = document.querySelector(".nav-right");
     if (navRight) {
-      navRight.insertBefore(createOverviewButton(), navRight.firstChild);
       var langSelector = navRight.querySelector(".lang-selector");
       if (langSelector) {
         navRight.insertBefore(createThemeToggle(), langSelector);
@@ -158,14 +134,12 @@
     // Try topbar-nav or header
     var topbar = document.querySelector(".topbar-nav, .topbar-actions, .mobile-header-actions");
     if (topbar) {
-      topbar.insertBefore(createOverviewButton(), topbar.firstChild);
       topbar.insertBefore(createThemeToggle(), topbar.firstChild);
       return;
     }
     // Fallback: fixed position
     var container = document.createElement("div");
-    container.style.cssText = "position:fixed;top:12px;right:56px;z-index:9999;display:flex;gap:8px;align-items:center;";
-    container.appendChild(createOverviewButton());
+    container.style.cssText = "position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:8px;align-items:center;";
     container.appendChild(createThemeToggle());
     document.body.appendChild(container);
   }
@@ -173,27 +147,16 @@
   // ── Apply correct button styling in light mode ──
   function updateToggleStyle() {
     var btn = document.getElementById("theme-toggle-btn");
-    var overviewBtn = document.getElementById("project-overview-btn");
     if (!btn) return;
     var isLight = getTheme() === "light";
     if (isLight) {
       btn.style.background = "rgba(0,0,0,0.06)";
       btn.style.borderColor = "rgba(0,0,0,0.12)";
       btn.style.color = "#52525b";
-      if (overviewBtn) {
-        overviewBtn.style.borderColor = "rgba(0,0,0,0.14)";
-        overviewBtn.style.color = "#52525b";
-        overviewBtn.style.background = "rgba(0,0,0,0.02)";
-      }
     } else {
       btn.style.background = "rgba(255,255,255,0.06)";
       btn.style.borderColor = "rgba(255,255,255,0.10)";
       btn.style.color = "#a1a1aa";
-      if (overviewBtn) {
-        overviewBtn.style.borderColor = "rgba(255,255,255,0.14)";
-        overviewBtn.style.color = "#d4d4d8";
-        overviewBtn.style.background = "transparent";
-      }
     }
   }
 

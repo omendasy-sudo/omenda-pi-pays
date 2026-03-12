@@ -604,7 +604,7 @@
             <a href="social.html" data-i18n="nav.social">Social</a>
             <a href="form.html" data-i18n="nav.register">Register</a>
             <a href="Submit.html" data-i18n="nav.sell">Sell</a>
-            <a href="https://109.199.109.143/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="/services" target="_blank" data-i18n="nav.services">Services</a>
             <a href="transport.html" class="active" data-i18n="nav.transport">Transport</a>
         </div>
         <div class="nav-right">
@@ -612,17 +612,16 @@
                 <span class="dot"></span>
                 <span id="pi-username"></span>
             </div>
-            <button class="btn-services" onclick="openServiceUrl('https://109.199.109.143/services')">All Services</button>
+            <button class="btn-services" onclick="openServiceUrl('/services')">All Services</button>
             <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
         </div>
     </nav>
 
     <div class="quick-links">
         <a class="quick-link" href="index.html">Home</a>
-        <a class="quick-link" href="overview.html">Overview</a>
         <a class="quick-link" href="transport.html">Transport</a>
         <a class="quick-link" href="admin-panel.html">Admin</a>
-        <a class="quick-link" href="https://109.199.109.143/services" target="_blank" rel="noopener noreferrer">All Services</a>
+        <a class="quick-link" href="/services" target="_blank" rel="noopener noreferrer">All Services</a>
     </div>
 
     <!-- Hero -->
@@ -992,10 +991,10 @@
             </div>
             <div class="footer-col">
                 <h4 data-i18n="nav.services">Services</h4>
-                <a href="https://109.199.109.143/services" target="_blank" data-i18n="footer.allServices">All Services</a>
-                <a href="https://109.199.109.143/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
-                <a href="https://109.199.109.143/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
-                <a href="https://109.199.109.143/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
                 <a href="transport.html" data-i18n="transport.title">Transport</a>
             </div>
             <div class="footer-col">
@@ -1086,10 +1085,10 @@
     ];
 
     const browserServices = [
-        { name: 'All Services', desc: 'Open the complete Omenda services portal.', url: 'https://109.199.109.143/services' },
-        { name: 'Hotels', desc: 'Book and pay for hotels using Pi.', url: 'https://109.199.109.143/services/hotels' },
-        { name: 'Homes', desc: 'Browse homes and rentals available for Pi.', url: 'https://109.199.109.143/services/homes' },
-        { name: 'Bills', desc: 'Pay utility and service bills with Pi.', url: 'https://109.199.109.143/services/bills' },
+        { name: 'All Services', desc: 'Open the complete Omenda services portal.', url: '/services' },
+        { name: 'Hotels', desc: 'Book and pay for hotels using Pi.', url: '/services/hotels' },
+        { name: 'Homes', desc: 'Browse homes and rentals available for Pi.', url: '/services/homes' },
+        { name: 'Bills', desc: 'Pay utility and service bills with Pi.', url: '/services/bills' },
         { name: 'Map', desc: 'View verified Pi locations on the map.', url: 'map.html' },
         { name: 'Social', desc: 'Open Pi social feed and community posts.', url: 'social.html' },
         { name: 'Marketplace', desc: 'Shop products in the Pi marketplace.', url: 'index.html' },
@@ -1636,5 +1635,6 @@
     renderBrowserServices();
     renderCargoRecent();
     </script>
+    <script src="clear-button.js"></script>
 </body>
 </html>
