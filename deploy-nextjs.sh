@@ -6,6 +6,7 @@ ROOT_DIR="${ROOT_DIR:-/var/www/omendapipays}"
 APP_DIR="${APP_DIR:-$ROOT_DIR/tmtt_nextjs}"
 BRANCH="${BRANCH:-main}"
 APP_NAME="${APP_NAME:-omendapipays-next}"
+APP_URL="${APP_URL:-https://omendapipaysglobel.online}"
 
 echo "==> Deploying branch $BRANCH from $ROOT_DIR"
 cd "$ROOT_DIR"
@@ -32,5 +33,7 @@ pm2 save
 
 sudo nginx -t
 sudo systemctl reload nginx
+
+APP_URL="$APP_URL" bash "$ROOT_DIR/verify-pi-browser-headers.sh"
 
 echo "==> Deployment complete"

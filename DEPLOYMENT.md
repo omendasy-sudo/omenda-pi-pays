@@ -22,6 +22,8 @@ cd /var/www/omendapipays
 bash ./deploy-nextjs.sh
 ```
 
+The deploy script now finishes by running [verify-pi-browser-headers.sh](verify-pi-browser-headers.sh) and fails if the live site still sends `X-Frame-Options` or is missing the required Pi `frame-ancestors` policy.
+
 ## GitHub Actions auto-deploy
 
 The workflow in [.github/workflows/deploy-production.yml](.github/workflows/deploy-production.yml) deploys on every push to `main`.
@@ -47,7 +49,7 @@ bash ./deploy-nextjs.sh
 After every deploy, confirm the live site can be embedded in Pi Browser:
 
 ```bash
-curl -I https://omendapipaysglobel.online/
+bash ./verify-pi-browser-headers.sh
 ```
 
 Expected result:
