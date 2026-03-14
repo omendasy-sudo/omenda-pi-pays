@@ -3,7 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omenda Pi Pays | Decentralized Marketplace</title>
+    <title>Omenda Pi Pays Global | Pi Crypto Marketplace &amp; Services</title>
+    <meta name="description" content="Omenda Pi Pays Global is a Pi Network-powered marketplace. Buy, sell, and pay for products, hotels, homes, bills, and transport — all with Pi cryptocurrency.">
+    <meta name="keywords" content="Pi Network, Pi crypto marketplace, Pi payments, buy with Pi, Pi Network app, decentralized marketplace">
+    <meta name="robots" content="index, follow">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://omendapipaysglobel.online/">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://omendapipaysglobel.online/">
+    <meta property="og:title" content="Omenda Pi Pays Global | Pi Crypto Marketplace &amp; Services">
+    <meta property="og:description" content="Buy, sell, and pay for products, hotels, homes, bills, and transport — all with Pi cryptocurrency on Omenda Pi Pays Global.">
+    <meta property="og:image" content="https://omendapipaysglobel.online/og-image.png">
+    <meta property="og:site_name" content="Omenda Pi Pays Global">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Omenda Pi Pays Global | Pi Crypto Marketplace">
+    <meta name="twitter:description" content="Buy, sell, and pay for products, hotels, homes, bills, and transport — all with Pi cryptocurrency.">
+    <meta name="twitter:image" content="https://omendapipaysglobel.online/og-image.png">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
+    <link rel="shortcut icon" href="https://omendapipaysglobel.online/globe.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -297,6 +317,170 @@
         @media (max-width: 480px) {
             .product-grid { grid-template-columns: 1fr; }
         }
+
+        /* Phone product overview look (screenshot-style) */
+        .phone-bottom-nav { display: none; }
+        @media (max-width: 768px) {
+            body {
+                background: #f1f5f9;
+                color: #0f172a;
+                padding-bottom: 84px;
+            }
+            .bg-ambient,
+            .stats-row,
+            footer,
+            .cta-banner,
+            .toast-container {
+                display: none;
+            }
+            nav {
+                background: rgba(255,255,255,0.96);
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .logo,
+            .nav-center a,
+            .nav-right .btn-primary {
+                color: #0f172a;
+            }
+            .hero {
+                padding: 18px 12px 10px;
+                text-align: left;
+                max-width: 100%;
+            }
+            .hero h1 {
+                font-size: 1.25rem;
+                line-height: 1.25;
+                margin-bottom: 10px;
+            }
+            .hero p,
+            .hero-badge {
+                display: none;
+            }
+            .search-wrapper {
+                margin: 0;
+                max-width: 100%;
+            }
+            .search-wrapper input {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                color: #0f172a;
+                border-radius: 12px;
+                padding: 12px 96px 12px 40px;
+            }
+            .search-wrapper .btn-primary {
+                padding: 8px 12px;
+                border-radius: 10px;
+            }
+            .section {
+                padding: 12px;
+            }
+            .section-header {
+                margin-bottom: 12px;
+                align-items: flex-start;
+            }
+            .section-header h2 {
+                font-size: 1.05rem;
+            }
+            .filter-pills {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                width: 100%;
+                gap: 8px;
+                padding-bottom: 4px;
+            }
+            .pill {
+                white-space: nowrap;
+                background: #ffffff;
+                border: 1px solid #dbeafe;
+                color: #334155;
+                font-weight: 600;
+            }
+            .pill.active {
+                background: #eff6ff;
+                border-color: #93c5fd;
+                color: #1d4ed8;
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+            .card {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+            }
+            .card-body {
+                padding: 10px;
+            }
+            .card-body h3 {
+                font-size: 0.75rem;
+                min-height: 2.2em;
+                overflow: hidden;
+            }
+            .card-body .card-desc {
+                display: none;
+            }
+            .card-badge {
+                background: rgba(255,255,255,0.95);
+                color: #334155;
+            }
+            .card-price {
+                color: #111827;
+                font-size: 1.05rem;
+                font-weight: 800;
+            }
+            .card-price small {
+                color: #64748b;
+            }
+            .card-footer {
+                padding-top: 8px;
+            }
+            .btn-buy {
+                width: 100%;
+                border-radius: 8px;
+                padding: 8px;
+                font-size: 0.76rem;
+            }
+
+            .phone-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 1200;
+                height: 64px;
+                background: rgba(255,255,255,0.96);
+                border-top: 1px solid #dbe1ea;
+                backdrop-filter: blur(8px);
+                align-items: center;
+                justify-content: space-around;
+            }
+            .phone-bottom-nav a {
+                color: #6b7280;
+                text-decoration: none;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            .phone-bottom-nav a.active {
+                color: #60a5fa;
+            }
+            .phone-bottom-nav .icon {
+                font-size: 20px;
+                line-height: 1;
+            }
+        }
+        @media (max-width: 380px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -305,25 +489,23 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="logo"><img src="logo.png/logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div>
+        <div class="logo"><img src="logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div>
         <div class="nav-center">
-            <img src="./logo.png.html" alt="">
             <a href="index.html" class="active" data-i18n="nav.marketplace">Marketplace</a>
             <a href="new.html" data-i18n="nav.explore">Explore</a>
             <a href="map.html" data-i18n="nav.map">Map</a>
             <a href="social.html" data-i18n="nav.social">Social</a>
             <a href="form.html" data-i18n="nav.register">Register</a>
             <a href="Submit.html" data-i18n="nav.sell">Sell</a>
-            <a href="/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="nav.services">Services</a>
             <a href="transport.html" data-i18n="nav.transport">Transport</a>
-            <a href="pi-converter.html">Pi Converter</a>
         </div>
         <div class="nav-right">
             <div class="wallet-chip" id="wallet-balance" style="display:none">
                 <span class="dot"></span>
                 <span id="pi-username"></span>
             </div>
-            <button class="btn-primary" onclick="openServiceBrowser('/services')" style="background:transparent;border:1px solid var(--border);color:var(--text-primary)">All Services</button>
+            <button class="btn-primary" onclick="openServiceBrowser('https://omendapipaysglobel.online/services')" style="background:transparent;border:1px solid var(--border);color:var(--text-primary)">All Services</button>
             <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
         </div>
     </nav>
@@ -390,10 +572,10 @@
             <h2>Open All Services in Browser</h2>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">All Services</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Open complete services portal.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Hotels</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Book and pay hotels with Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/hotels')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Homes</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Browse homes and rentals.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/homes')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Bills</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Pay utility bills in Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/bills')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">All Services</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Open complete services portal.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://omendapipaysglobel.online/services')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Hotels</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Book and pay hotels with Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://omendapipaysglobel.online/services/hotels')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Homes</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Browse homes and rentals.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://omendapipaysglobel.online/services/homes')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Bills</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Pay utility bills in Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://omendapipaysglobel.online/services/bills')">Open</button></div>
             <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Transport</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">Open ride and transport services.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('transport.html')">Open</button></div>
             <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Map</h3><p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:12px">View Pi locations on map.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('map.html')">Open</button></div>
         </div>
@@ -417,31 +599,52 @@
             </div>
             <div class="footer-col">
                 <h4 data-i18n="nav.services">Services</h4>
-                <a href="/services" target="_blank" data-i18n="footer.allServices">All Services</a>
-                <a href="/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
-                <a href="/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
-                <a href="/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="https://omendapipaysglobel.online/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="https://omendapipaysglobel.online/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="https://omendapipaysglobel.online/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
                 <a href="transport.html" data-i18n="nav.transport">Transport</a>
             </div>
             <div class="footer-col">
                 <h4>Resources</h4>
-                <a href="n2 .html">Mobile View</a>
+                <a href="n2%20.html">Mobile View</a>
                 <a href="form.html">KYC Verification</a>
-                <a href="submit success full.html">Submission Status</a>
-                <a href="admin-login.html">Admin Login</a>
+                <a href="submit%20success%20full.html">Submission Status</a>
             </div>
             <div class="footer-col">
                 <h4 data-i18n="footer.legal">Legal</h4>
+                <a href="about.html">About</a>
+                <a href="security.html">Security</a>
                 <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
                 <a href="terms-of-service.html" data-i18n="footer.termsOfService">Terms of Service</a>
+            </div>
+            <div class="footer-col">
+                <h4>Business Address</h4>
+                <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:10px;">
+                    Omenda Pi Pays Global<br>
+                    Block A, Nyerere Road<br>
+                    Dodoma, Dodoma 41101<br>
+                    Tanzania
+                </p>
+                <a href="mailto:support@omendapipaysglobel.online">support@omendapipaysglobel.online</a>
+                <a href="https://omendapipaysglobel.online" target="_blank" rel="noopener noreferrer">omendapipaysglobel.online</a>
             </div>
         </div>
         <div class="footer-bottom">
             &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
+            &nbsp;&bull;&nbsp; <a href="about.html" style="color:var(--text-muted);text-decoration:none">About</a>
+            &nbsp;&bull;&nbsp; <a href="security.html" style="color:var(--text-muted);text-decoration:none">Security</a>
             &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:var(--text-muted);text-decoration:none" data-i18n="general.privacy">Privacy</a>
             &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:var(--text-muted);text-decoration:none" data-i18n="general.terms">Terms</a>
         </div>
     </footer>
+
+    <section style="max-width:1200px;margin:16px auto 0;padding:0 24px 12px;color:var(--text-secondary);font-size:.86rem;line-height:1.7;">
+        <strong style="color:var(--text-primary)">Safety &amp; Trust</strong><br>
+        Omenda Pi Pays Global does not ask for private wallet keys, seed phrases, or account passwords.
+        Always verify merchant details before payment and report suspicious behavior at
+        <a href="scam-report.html" style="color:var(--pi-gold);text-decoration:none">Scam Report</a>.
+    </section>
 
     <!-- Toast -->
     <div class="toast-container">
@@ -454,39 +657,181 @@
         </div>
     </div>
 
+    <nav class="phone-bottom-nav" aria-label="Mobile bottom navigation">
+        <a href="index.html" class="active"><span class="icon">&#8962;</span><span>Home</span></a>
+        <a href="new.html"><span class="icon">&#9825;</span><span>Favorites</span></a>
+        <a href="Submit.html"><span class="icon">&#65291;</span><span>Sell</span></a>
+        <a href="social.html"><span class="icon">&#9993;</span><span>Chat</span></a>
+        <a href="form.html"><span class="icon">&#9711;</span><span>Profile</span></a>
+    </nav>
+
     <script>
         // Pi SDK Initialization & Authentication
         let piUser = null;
-        const isPiBrowser = typeof window.Pi !== 'undefined';
+        let piAccessToken = null;
+        const isPiBrowser = /PiBrowser/i.test(navigator.userAgent || '');
+        let piInitialized = false;
 
-        if (isPiBrowser) {
-            Pi.init({ version: "2.0", sandbox: false });
-            // Auto-login: authenticate automatically in Pi Browser
-            piConnect();
+        function hasPiSdk() {
+            return typeof window.Pi !== 'undefined';
         }
 
-        async function piConnect() {
-            if (!isPiBrowser) {
-                alert('Please open this app in Pi Browser to connect your wallet.');
+        function isPiEnvironment() {
+            return isPiBrowser || hasPiSdk();
+        }
+
+        function setConnectedState(user, accessToken) {
+            if (!user || !user.username) {
                 return;
             }
+
+            piUser = user;
+            if (accessToken) {
+                piAccessToken = accessToken;
+                sessionStorage.setItem('pi_access_token', accessToken);
+            }
+            sessionStorage.setItem('pi_username', user.username);
+
+            document.getElementById('wallet-balance').style.display = 'flex';
+            document.getElementById('pi-username').textContent = '@' + user.username;
+            document.getElementById('pi-connect-btn').textContent = 'Connected ✓';
+            document.getElementById('pi-connect-btn').disabled = true;
+            document.getElementById('pi-connect-btn').style.opacity = '0.6';
+        }
+
+        function restoreConnectedState() {
+            var savedUsername = sessionStorage.getItem('pi_username');
+            var savedToken = sessionStorage.getItem('pi_access_token');
+            if (savedUsername && !piUser) {
+                setConnectedState({ username: savedUsername }, savedToken);
+            }
+        }
+
+        async function waitForPiSdk(timeoutMs) {
+            if (hasPiSdk()) {
+                return;
+            }
+
+            if (!isPiEnvironment()) {
+                throw new Error('Open this app inside Pi Browser.');
+            }
+
+            var start = Date.now();
+            while (!hasPiSdk() && Date.now() - start < timeoutMs) {
+                await new Promise(function(resolve) { setTimeout(resolve, 120); });
+            }
+
+            if (!hasPiSdk()) {
+                throw new Error('Pi SDK not ready. Reload inside Pi Browser.');
+            }
+        }
+
+        function usePiSandbox() {
+            return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+        }
+
+        async function ensurePiInitialized() {
+            if (piInitialized) {
+                return;
+            }
+
+            await waitForPiSdk(10000);
+            const initResult = window.Pi.init({ version: "2.0", sandbox: usePiSandbox() });
+            if (initResult && typeof initResult.then === 'function') {
+                await initResult;
+            }
+            piInitialized = true;
+        }
+
+        restoreConnectedState();
+        if (isPiEnvironment()) {
+            // Auto connect/login for Pi Browser users.
+            piConnect(true).catch(function(err) {
+                console.warn('Pi auto-login skipped:', err);
+            });
+        }
+
+        async function piConnect(silent) {
+            if (!isPiEnvironment()) {
+                if (!silent) {
+                    alert('Please open this app in Pi Browser to connect your wallet.');
+                }
+                return;
+            }
+
             try {
-                const auth = await Pi.authenticate(['username', 'payments'], function(payment) {
+                await ensurePiInitialized();
+                const auth = await window.Pi.authenticate(['username', 'payments'], function(payment) {
                     console.log('Incomplete payment:', payment);
                 });
-                piUser = auth.user;
-                document.getElementById('wallet-balance').style.display = 'flex';
-                document.getElementById('pi-username').textContent = '@' + piUser.username;
-                document.getElementById('pi-connect-btn').textContent = 'Connected ✓';
-                document.getElementById('pi-connect-btn').disabled = true;
-                document.getElementById('pi-connect-btn').style.opacity = '0.6';
+                if (auth && auth.user) {
+                    setConnectedState(auth.user, auth.accessToken);
+                }
             } catch (err) {
-                alert('Pi authentication failed: ' + (err.message || 'Unknown error'));
+                if (!silent) {
+                    alert('Pi login failed: ' + (err.message || 'Unknown error'));
+                }
+                throw err;
+            }
+        }
+
+        const PAYMENT_CALLBACK_TTL_MS = 60000;
+        const PAYMENT_CALLBACK_RETRIES = 8;
+        const PAYMENT_RETRY_DELAY_MS = 1200;
+        const paymentCallbackCache = new Map();
+
+        function sleep(ms) {
+            return new Promise(function(resolve) { setTimeout(resolve, ms); });
+        }
+
+        function claimPaymentCallback(key) {
+            var now = Date.now();
+            paymentCallbackCache.forEach(function(expiry, k) {
+                if (expiry <= now) {
+                    paymentCallbackCache.delete(k);
+                }
+            });
+
+            if (paymentCallbackCache.has(key)) {
+                return false;
+            }
+
+            paymentCallbackCache.set(key, now + PAYMENT_CALLBACK_TTL_MS);
+            return true;
+        }
+
+        async function postPiPaymentEvent(url, payload, retries) {
+            var attempt = typeof retries === 'number' ? retries : 0;
+            try {
+                var response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    return response;
+                }
+
+                var bodyText = await response.text();
+                var shouldRetry = /NotFound/i.test(bodyText) && attempt < PAYMENT_CALLBACK_RETRIES;
+                if (shouldRetry) {
+                    await sleep(PAYMENT_RETRY_DELAY_MS);
+                    return postPiPaymentEvent(url, payload, attempt + 1);
+                }
+
+                throw new Error('HTTP ' + response.status + ': ' + bodyText);
+            } catch (err) {
+                if (attempt < PAYMENT_CALLBACK_RETRIES) {
+                    await sleep(PAYMENT_RETRY_DELAY_MS);
+                    return postPiPaymentEvent(url, payload, attempt + 1);
+                }
+                throw err;
             }
         }
 
         function processPayment(price, productName) {
-            if (!isPiBrowser) {
+            if (!isPiEnvironment()) {
                 alert('Please open in Pi Browser to make payments.');
                 return;
             }
@@ -494,32 +839,76 @@
                 alert('Please connect your Pi wallet first.');
                 return;
             }
-            Pi.createPayment({
-                amount: price,
-                memo: 'Purchase: ' + productName,
-                metadata: { productName: productName, type: 'marketplace' }
-            }, {
-                onReadyForServerApproval: function(paymentId) {
-                    console.log('Payment approved:', paymentId);
-                },
-                onReadyForServerCompletion: function(paymentId, txid) {
-                    console.log('Payment complete:', txid);
-                    const toast = document.getElementById('toast');
-                    toast.classList.add('show');
-                    setTimeout(function() { toast.classList.remove('show'); }, 3500);
-                },
-                onCancel: function() {
-                    alert('Payment cancelled.');
-                },
-                onError: function(error) {
-                    alert('Payment error: ' + (error.message || 'Unknown error'));
-                }
-            });
+
+            ensurePiInitialized()
+                .then(function() {
+                    Pi.createPayment({
+                        amount: price,
+                        memo: 'Purchase: ' + productName,
+                        metadata: { productName: productName, type: 'marketplace' }
+                    }, {
+                        // Phase I: Get paymentId → send to server for Pi /approve
+                        onReadyForServerApproval: async function(paymentId) {
+                            var key = 'approve-' + paymentId;
+                            if (!claimPaymentCallback(key)) return;
+
+                            console.log('[Pi Payment] onReadyForServerApproval', paymentId);
+                            await postPiPaymentEvent('/api/pi_payment/approve', {
+                                    paymentId: paymentId,
+                                    accessToken: piAccessToken || ''
+                                });
+                        },
+                        // Phase III: Get txid → send to server for Pi /complete
+                        onReadyForServerCompletion: async function(paymentId, txid) {
+                            var key = 'complete-' + paymentId;
+                            if (!claimPaymentCallback(key)) return;
+
+                            console.log('[Pi Payment] onReadyForServerCompletion', paymentId, txid);
+                            await postPiPaymentEvent('/api/pi_payment/complete', {
+                                paymentId: paymentId,
+                                transactionId: txid
+                            });
+
+                            var toast = document.getElementById('toast');
+                            toast.classList.add('show');
+                            setTimeout(function() { toast.classList.remove('show'); }, 3500);
+                        },
+                        onCancel: function(paymentId) {
+                            var key = 'cancel-' + paymentId;
+                            if (!claimPaymentCallback(key)) return;
+
+                            console.log('[Pi Payment] cancelled', paymentId);
+                            postPiPaymentEvent('/api/pi_payment/cancel', {
+                                paymentId: paymentId,
+                                accessToken: piAccessToken || ''
+                            }).catch(function(e) { console.warn('[Pi] Cancel notify error:', e); });
+                            alert('Payment cancelled.');
+                        },
+                        onError: function(error, payment) {
+                            console.error('[Pi Payment] error', error, payment);
+                            var paymentId = payment && payment.identifier;
+                            if (paymentId) {
+                                var key = 'error-' + paymentId;
+                                if (claimPaymentCallback(key)) {
+                                    postPiPaymentEvent('/api/pi_payment/error', {
+                                        paymentId: paymentId,
+                                        accessToken: piAccessToken || '',
+                                        errorMessage: error && error.message || 'Unknown error'
+                                    }).catch(function(e) { console.warn('[Pi] Error notify failed:', e); });
+                                }
+                            }
+                            alert('Payment error: ' + (error && error.message || 'Unknown error'));
+                        }
+                    });
+                })
+                .catch(function(err) {
+                    alert('Pi SDK initialization failed: ' + (err.message || 'Unknown error'));
+                });
         }
 
         // Pi SDK — Share
         function piShare(title, message) {
-            if (isPiBrowser && Pi.openShareDialog) {
+            if (isPiEnvironment() && Pi.openShareDialog) {
                 Pi.openShareDialog(title, message);
             } else {
                 navigator.share ? navigator.share({ title: title, text: message }) : alert('Sharing not available');
@@ -528,7 +917,7 @@
 
         // Pi SDK — Copy to clipboard
         function piCopy(text) {
-            if (isPiBrowser && Pi.copyText) {
+            if (isPiEnvironment() && Pi.copyText) {
                 Pi.copyText(text);
             } else {
                 navigator.clipboard && navigator.clipboard.writeText(text);
@@ -541,7 +930,7 @@
 
         // Pi SDK — Open URL in system browser
         function piOpenUrl(url) {
-            if (isPiBrowser && Pi.openUrlInSystemBrowser) {
+            if (isPiEnvironment() && Pi.openUrlInSystemBrowser) {
                 Pi.openUrlInSystemBrowser(url);
             } else {
                 window.open(url, '_blank');
@@ -555,7 +944,7 @@
 
         // Pi SDK — Ads
         async function piShowAd() {
-            if (!isPiBrowser || !Pi.Ads) return;
+            if (!isPiEnvironment() || !Pi.Ads) return;
             try {
                 await Pi.Ads.requestAd('interstitial');
                 var ready = await Pi.Ads.isAdReady('interstitial');
@@ -565,58 +954,73 @@
 
         // Pi SDK — Native features
         function piNativeFeatures() {
-            if (isPiBrowser && Pi.nativeFeaturesList) return Pi.nativeFeaturesList();
+            if (isPiEnvironment() && Pi.nativeFeaturesList) return Pi.nativeFeaturesList();
             return [];
         }
 
         // Pi SDK — Request permission
         function piRequestPermission(perm) {
-            if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
+            if (isPiEnvironment() && Pi.requestPermission) Pi.requestPermission(perm);
         }
 
         // Pi SDK — Open conversation
         function piChat(conversationId) {
-            if (isPiBrowser && Pi.openConversation) Pi.openConversation(conversationId);
+            if (isPiEnvironment() && Pi.openConversation) Pi.openConversation(conversationId);
         }
 
         const products = [
-            // Electronics
-            { id: 1, name: "iPhone 15 Pro Max", desc: "256GB, Titanium Natural", price: 4500, category: "electronics", badge: "Popular", img: "https://picsum.photos/seed/phone/600/400" },
-            { id: 2, name: "MacBook Air M2", desc: "13-inch, 8GB RAM, Space Gray", price: 6200, category: "electronics", badge: "Featured", img: "https://picsum.photos/seed/laptop/600/400" },
-            { id: 4, name: "Wireless ANC Headphones", desc: "40hr battery, Hi-Res audio", price: 850, category: "electronics", badge: "New", img: "https://picsum.photos/seed/headphones/600/400" },
-            { id: 7, name: "Samsung Galaxy S24 Ultra", desc: "512GB, AI Camera, Titanium", price: 5100, category: "electronics", badge: "Hot", img: "https://picsum.photos/seed/galaxy24/600/400" },
-            { id: 8, name: "Sony PlayStation 5 Pro", desc: "1TB SSD, 4K 120fps gaming", price: 3200, category: "electronics", badge: "Limited", img: "https://picsum.photos/seed/ps5pro/600/400" },
-            { id: 9, name: "DJI Mini 4 Pro Drone", desc: "4K HDR, 34min flight, obstacle avoidance", price: 4800, category: "electronics", badge: "New", img: "https://picsum.photos/seed/drone4/600/400" },
-            { id: 10, name: "iPad Air M2", desc: "11-inch, 256GB, Starlight", price: 3600, category: "electronics", badge: "Popular", img: "https://picsum.photos/seed/ipadair/600/400" },
-            // Fashion
-            { id: 3, name: "Luxury Chronograph Watch", desc: "Swiss automatic movement", price: 1200, category: "fashion", badge: "Premium", img: "https://picsum.photos/seed/watch/600/400" },
-            { id: 5, name: "Designer Leather Bag", desc: "Handcrafted Italian leather", price: 380, category: "fashion", badge: "Trending", img: "https://picsum.photos/seed/bag/600/400" },
-            { id: 11, name: "Ray-Ban Aviator Sunglasses", desc: "Classic gold frame, polarized", price: 250, category: "fashion", badge: "Iconic", img: "https://picsum.photos/seed/rayban/600/400" },
-            { id: 12, name: "Nike Air Jordan 4 Retro", desc: "Size 40-46, Military Black", price: 420, category: "fashion", badge: "Trending", img: "https://picsum.photos/seed/jordan4/600/400" },
-            { id: 13, name: "Cashmere Wool Overcoat", desc: "Hand-stitched, Italian cut", price: 650, category: "fashion", badge: "Premium", img: "https://picsum.photos/seed/overcoat/600/400" },
-            // Digital
-            { id: 6, name: "Digital Marketing Course", desc: "12-week certified program", price: 25, category: "digital", badge: "Best Seller", img: "https://picsum.photos/seed/course/600/400" },
-            { id: 14, name: "UI/UX Design Masterclass", desc: "Figma + Framer, 80+ lessons", price: 15, category: "digital", badge: "New", img: "https://picsum.photos/seed/uxcourse/600/400" },
-            { id: 15, name: "African Beats Music Pack", desc: "50 royalty-free Afrobeat loops", price: 3, category: "digital", badge: "Hot", img: "https://picsum.photos/seed/afrobeats/600/400" },
-            { id: 16, name: "Pi Commerce eBook Bundle", desc: "3 books: Trading, Mining, DApps", price: 5, category: "digital", badge: "Bundle", img: "https://picsum.photos/seed/pibundle/600/400" },
-            // Home & Living
-            { id: 17, name: "Smart LED Desk Lamp", desc: "Wireless charging, 5 light modes", price: 120, category: "home", badge: "Smart", img: "https://picsum.photos/seed/desklamp/600/400" },
-            { id: 18, name: "Espresso Coffee Machine", desc: "15-bar pump, milk frother", price: 680, category: "home", badge: "Popular", img: "https://picsum.photos/seed/espresso/600/400" },
-            { id: 19, name: "Memory Foam Mattress", desc: "Queen size, cooling gel layer", price: 1500, category: "home", badge: "Best Seller", img: "https://picsum.photos/seed/mattress/600/400" },
-            { id: 20, name: "Robot Vacuum Pro", desc: "LIDAR navigation, auto-empty", price: 950, category: "home", badge: "New", img: "https://picsum.photos/seed/robovac/600/400" },
-            // Beauty & Health
-            { id: 21, name: "Organic Skincare Set", desc: "Cleanser, toner, moisturizer, serum", price: 85, category: "beauty", badge: "Natural", img: "https://picsum.photos/seed/skincare/600/400" },
-            { id: 22, name: "Electric Massage Gun", desc: "6 heads, 30 speeds, deep tissue", price: 160, category: "beauty", badge: "Trending", img: "https://picsum.photos/seed/massagegun/600/400" },
-            { id: 23, name: "Vitamin C Glow Serum", desc: "30ml, hyaluronic acid blend", price: 35, category: "beauty", badge: "Hot", img: "https://picsum.photos/seed/serum/600/400" },
-            // Sports & Outdoor
-            { id: 24, name: "Mountain Trekking Backpack", desc: "65L, waterproof, ergonomic frame", price: 220, category: "sports", badge: "Adventure", img: "https://picsum.photos/seed/trekbag/600/400" },
-            { id: 25, name: "Adjustable Dumbbell Set", desc: "2-24kg per hand, quick-lock", price: 350, category: "sports", badge: "Fitness", img: "https://picsum.photos/seed/dumbbells/600/400" },
-            { id: 26, name: "Carbon Road Bicycle", desc: "Shimano 105, 8.2kg ultra-light", price: 4200, category: "sports", badge: "Premium", img: "https://picsum.photos/seed/roadbike/600/400" },
-            // Food & Groceries
-            { id: 27, name: "Organic Coffee Beans 1kg", desc: "Single-origin Ethiopian Yirgacheffe", price: 28, category: "food", badge: "Organic", img: "https://picsum.photos/seed/coffeebeans/600/400" },
-            { id: 28, name: "Premium Honey Gift Box", desc: "3x 500g, raw wildflower + manuka", price: 65, category: "food", badge: "Gift", img: "https://picsum.photos/seed/honeygift/600/400" },
-            { id: 29, name: "Spice Collection Kit", desc: "24 organic East African spices", price: 45, category: "food", badge: "New", img: "https://picsum.photos/seed/spicebox/600/400" }
+            // New generation cars and EVs
+            { id: 1, name: "BYD Seal 2025 EV", desc: "Long-range electric sedan with ADAS package and panoramic cabin", price: 18500, category: "electronics", badge: "New Gen", img: "https://source.unsplash.com/featured/600x400/?BYD,Seal,EV&sig=11", images: ["https://source.unsplash.com/featured/600x400/?BYD,Seal,EV&sig=11", "https://source.unsplash.com/featured/600x400/?BYD,Seal,interior&sig=12", "https://source.unsplash.com/featured/600x400/?BYD,electric,sedan&sig=13", "https://source.unsplash.com/featured/600x400/?BYD,car,front&sig=14", "https://source.unsplash.com/featured/600x400/?BYD,vehicle,side&sig=15"] },
+            { id: 2, name: "Tesla Model 3 Highland", desc: "Refreshed EV sedan, dual-motor option, premium interior", price: 24200, category: "electronics", badge: "Featured", img: "https://source.unsplash.com/featured/600x400/?Tesla,Model,3&sig=21", images: ["https://source.unsplash.com/featured/600x400/?Tesla,Model,3&sig=21", "https://source.unsplash.com/featured/600x400/?Tesla,sedan,EV&sig=22", "https://source.unsplash.com/featured/600x400/?Tesla,interior,car&sig=23", "https://source.unsplash.com/featured/600x400/?Tesla,Highland,car&sig=24", "https://source.unsplash.com/featured/600x400/?Tesla,vehicle,front&sig=25"] },
+            { id: 3, name: "Toyota Land Cruiser Prado 2025", desc: "Next-generation 4x4 SUV built for business fleets and safari operations", price: 31800, category: "electronics", badge: "Hot", img: "https://source.unsplash.com/featured/600x400/?Toyota,Prado,SUV&sig=31", images: ["https://source.unsplash.com/featured/600x400/?Toyota,Prado,SUV&sig=31", "https://source.unsplash.com/featured/600x400/?Land,Cruiser,Prado&sig=32", "https://source.unsplash.com/featured/600x400/?Toyota,4x4,vehicle&sig=33", "https://source.unsplash.com/featured/600x400/?Toyota,SUV,interior&sig=34", "https://source.unsplash.com/featured/600x400/?Prado,offroad,car&sig=35"] },
+            { id: 4, name: "Ford Ranger Raptor 2024", desc: "Twin-turbo performance pickup for logistics and site support", price: 28900, category: "electronics", badge: "Popular", img: "https://source.unsplash.com/featured/600x400/?Ford,Ranger,Raptor&sig=41", images: ["https://source.unsplash.com/featured/600x400/?Ford,Ranger,Raptor&sig=41", "https://source.unsplash.com/featured/600x400/?Ford,pickup,truck&sig=42", "https://source.unsplash.com/featured/600x400/?Ranger,Raptor,truck&sig=43", "https://source.unsplash.com/featured/600x400/?Ford,offroad,pickup&sig=44", "https://source.unsplash.com/featured/600x400/?Ford,Ranger,interior&sig=45"] },
+            { id: 5, name: "Hyundai Ioniq 5 N", desc: "Performance EV crossover with rapid charging and track mode", price: 33400, category: "electronics", badge: "New", img: "https://source.unsplash.com/featured/600x400/?Hyundai,Ioniq,5&sig=51", images: ["https://source.unsplash.com/featured/600x400/?Hyundai,Ioniq,5&sig=51", "https://source.unsplash.com/featured/600x400/?Hyundai,EV,crossover&sig=52", "https://source.unsplash.com/featured/600x400/?Ioniq,5,N&sig=53", "https://source.unsplash.com/featured/600x400/?Hyundai,electric,car&sig=54", "https://source.unsplash.com/featured/600x400/?Hyundai,vehicle,interior&sig=55"] },
+            { id: 6, name: "Mercedes-Benz EQE SUV", desc: "Luxury electric SUV for executive transport and premium rentals", price: 35600, category: "electronics", badge: "Premium", img: "https://source.unsplash.com/featured/600x400/?Mercedes,EQE,SUV&sig=61", images: ["https://source.unsplash.com/featured/600x400/?Mercedes,EQE,SUV&sig=61", "https://source.unsplash.com/featured/600x400/?Mercedes,electric,SUV&sig=62", "https://source.unsplash.com/featured/600x400/?Mercedes,luxury,car&sig=63", "https://source.unsplash.com/featured/600x400/?Mercedes,interior,SUV&sig=64", "https://source.unsplash.com/featured/600x400/?Mercedes,vehicle,front&sig=65"] },
+            // Motorbikes and mobility
+            { id: 7, name: "Honda CB500X Adventure Bike", desc: "Mid-size touring motorcycle for cross-border delivery and agency work", price: 4800, category: "fashion", badge: "Adventure", img: "https://picsum.photos/seed/cb500x/600/400" },
+            { id: 8, name: "Yamaha MT-07 Street Bike", desc: "Agile twin-cylinder bike for urban mobility and fleet resale", price: 5200, category: "fashion", badge: "Trending", img: "https://picsum.photos/seed/mt07/600/400" },
+            { id: 9, name: "Segway eScooter Commercial Pack", desc: "Smart electric scooter bundle for campus and last-mile operations", price: 1450, category: "fashion", badge: "Smart", img: "https://picsum.photos/seed/segwayfleet/600/400" },
+            { id: 10, name: "Electric Cargo Tricycle Pro", desc: "Heavy-duty 3-wheel cargo hauler for market deliveries", price: 2100, category: "fashion", badge: "Utility", img: "https://picsum.photos/seed/cargotricycle/600/400" },
+            // Software and digital operations
+            { id: 11, name: "Fleet Management SaaS Annual License", desc: "Dispatch, fuel analytics, route optimization, and driver monitoring", price: 120, category: "digital", badge: "Best Seller", img: "https://picsum.photos/seed/fleetsaas/600/400" },
+            { id: 12, name: "ERPNext Deployment and Training", desc: "Inventory, procurement, invoicing, and finance rollout for SMEs", price: 65, category: "digital", badge: "Business", img: "https://picsum.photos/seed/erpnextsuite/600/400" },
+            { id: 13, name: "Logistics Dispatch App Source Code", desc: "Ready-made courier and cargo dispatch platform with admin panel", price: 45, category: "digital", badge: "Source Code", img: "https://picsum.photos/seed/dispatchsource/600/400" },
+            { id: 14, name: "Industrial IoT Dashboard License", desc: "Factory monitoring dashboards for solar, generators, and machine uptime", price: 28, category: "digital", badge: "Industrial", img: "https://picsum.photos/seed/iotdashboard/600/400" },
+            // Energy and power systems
+            { id: 15, name: "Huawei 20kW Solar Inverter", desc: "Commercial inverter for solar mini-grids and warehouse power systems", price: 5400, category: "home", badge: "Energy", img: "https://picsum.photos/seed/solarinverter/600/400" },
+            { id: 16, name: "CATL 15kWh Wall Battery", desc: "Lithium storage battery for backup power and EV charging sites", price: 7600, category: "home", badge: "Power", img: "https://picsum.photos/seed/catlbattery/600/400" },
+            { id: 17, name: "Bosch EV Fast Charger 60kW", desc: "Fast charging station for dealerships, malls, and fleet depots", price: 11800, category: "home", badge: "Fast Charge", img: "https://picsum.photos/seed/evcharger/600/400" },
+            { id: 18, name: "Solar Water Pump 7.5HP", desc: "High-efficiency agricultural pumping system for remote irrigation", price: 1450, category: "home", badge: "Farm Power", img: "https://picsum.photos/seed/solarpump/600/400" },
+            // Parts and workshop inventory
+            { id: 19, name: "Michelin Truck Tire Set", desc: "Long-haul commercial tires for buses, trailers, and cargo trucks", price: 850, category: "beauty", badge: "Fleet", img: "https://picsum.photos/seed/trucktires/600/400" },
+            { id: 20, name: "Brembo Brake Kit Premium", desc: "Performance brake kit for SUVs, executive sedans, and tuned pickups", price: 950, category: "beauty", badge: "Workshop", img: "https://picsum.photos/seed/brembokit/600/400" },
+            { id: 21, name: "Toyota Hilux Spare Parts Kit", desc: "Filters, brake pads, belts, and service components for field fleets", price: 420, category: "beauty", badge: "Service Kit", img: "https://picsum.photos/seed/hiluxparts/600/400" },
+            // Machinery and agriculture
+            { id: 22, name: "Komatsu PC200 Excavator", desc: "20-ton crawler excavator for construction, mining, and infrastructure", price: 64800, category: "sports", badge: "Heavy Duty", img: "https://picsum.photos/seed/komatsupc200/600/400" },
+            { id: 23, name: "Toyota 3 Ton Forklift", desc: "Warehouse and port forklift for container yards and factory loading", price: 14800, category: "sports", badge: "Warehouse", img: "https://picsum.photos/seed/forklift3ton/600/400" },
+            { id: 24, name: "John Deere 5075E Tractor", desc: "Reliable farm tractor for ploughing, transport, and attachment work", price: 23500, category: "sports", badge: "Agriculture", img: "https://picsum.photos/seed/johndeere5075e/600/400" },
+            { id: 25, name: "Rice Milling Machine Line", desc: "Integrated rice processing line for cooperatives and export processors", price: 13700, category: "sports", badge: "Factory", img: "https://picsum.photos/seed/ricemillline/600/400" },
+            // Commodities
+            { id: 26, name: "Premium Basmati Rice 25kg Bulk", desc: "Wholesale food-grade rice bag for restaurants, retailers, and traders", price: 32, category: "food", badge: "Commodity", img: "https://picsum.photos/seed/basmatibulk/600/400" },
+            { id: 27, name: "Brazilian Arabica Coffee 30kg Sack", desc: "Export-grade roasted or green bean supply for cafés and distributors", price: 48, category: "food", badge: "Export", img: "https://picsum.photos/seed/arabicasack/600/400" },
+            { id: 28, name: "Refined Sunflower Oil 20L Pack", desc: "Commercial kitchen and wholesale grocery supply pack", price: 22, category: "food", badge: "Wholesale", img: "https://picsum.photos/seed/sunfloweroil20l/600/400" },
+            { id: 29, name: "Industrial Sugar 50kg Bag", desc: "Bakery and beverage manufacturing sugar bag for B2B purchase", price: 16, category: "food", badge: "Factory Supply", img: "https://picsum.photos/seed/sugar50kg/600/400" }
         ];
+
+        const STD_PI_RATE = 0.17;
+        const GCV_PI_RATE = 314159;
+
+        function toGcvPi(standardPiPrice) {
+            return (standardPiPrice * STD_PI_RATE) / GCV_PI_RATE;
+        }
+
+        function formatPi(piAmount) {
+            if (piAmount >= 1) {
+                return piAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+            }
+
+            return piAmount.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+        }
 
         let balance = 1250.00;
 
@@ -624,13 +1028,21 @@
             const grid = document.getElementById('product-grid');
             const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
             grid.innerHTML = filtered.map(p => {
-                var m = p.img.match(/\/seed\/([^\/]+)\//);
-                var seed = m ? m[1] : '';
-                var suffixes = ['', '_v2', '_v3', '_v4', '_v5'];
-                var imgs = suffixes.map(function(s, i) {
-                    return '<img src="https://picsum.photos/seed/' + seed + s + '/600/400" alt="' + p.name + (i > 0 ? ' ' + (i+1) : '') + '" loading="lazy">';
+                var gcvPi = toGcvPi(p.price);
+                var imageList = Array.isArray(p.images) && p.images.length
+                    ? p.images
+                    : (function() {
+                        var m = p.img.match(/\/seed\/([^\/]+)\//);
+                        var seed = m ? m[1] : '';
+                        var suffixes = ['', '_v2', '_v3', '_v4', '_v5'];
+                        return suffixes.map(function(s) {
+                            return 'https://picsum.photos/seed/' + seed + s + '/600/400';
+                        });
+                    })();
+                var imgs = imageList.map(function(src, i) {
+                    return '<img src="' + src + '" alt="' + p.name + (i > 0 ? ' ' + (i + 1) : '') + '" loading="lazy">';
                 }).join('');
-                var dots = suffixes.map(function(_, i) {
+                var dots = imageList.map(function(_, i) {
                     return '<span data-idx="' + i + '"' + (i === 0 ? ' class="active"' : '') + '></span>';
                 }).join('');
                 return `
@@ -648,16 +1060,19 @@
                         <h3>${p.name}</h3>
                         <p class="card-desc">${p.desc}</p>
                         <div class="card-footer">
-                            <div class="card-price">${p.price.toLocaleString()} π<small>≈ ${window.OmendaGcv ? OmendaGcv.formatUsd(p.price) : '$' + (p.price * 0.17).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</small></div>
+                            <div class="card-price">${formatPi(gcvPi)} π<small>≈ ${window.OmendaGcv ? OmendaGcv.formatUsd(gcvPi) : '$' + (gcvPi * GCV_PI_RATE).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</small></div>
                             <div style="display:flex;gap:6px;align-items:center">
-                                <button class="btn-buy" onclick="processPayment(${p.price}, '${p.name}')" style="flex:1">π Pay Now</button>
-                                <button onclick="piShare('${p.name}', 'Check out ${p.name} for ${p.price} π on Omenda Pi Pays!')" style="background:none;border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:8px;padding:8px 10px;cursor:pointer;font-size:0.85rem" title="Share">📤</button>
+                                <button class="btn-buy" onclick="processPayment(${gcvPi}, '${p.name}')" style="flex:1">π Pay Now</button>
+                                <button onclick="piShare('${p.name}', 'Check out ${p.name} for ${formatPi(gcvPi)} π on Omenda Pi Pays!')" style="background:none;border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:8px;padding:8px 10px;cursor:pointer;font-size:0.85rem" title="Share">📤</button>
                             </div>
                         </div>
                     </div>
                 </div>`;
             }).join('');
             initSliders(grid);
+            if (window.OmendaGcv) {
+                OmendaGcv.setMode('gcv');
+            }
         }
 
         function filterProducts(filter) {
@@ -714,5 +1129,49 @@
         });
     </script>
     <script src="clear-button.js"></script>
+        <!-- Structured Data — Organisation + WebSite (helps Google/Bing verify legitimacy) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "Organization",
+                    "@id": "https://omendapipaysglobel.online/#organization",
+                    "name": "Omenda Pi Pays Global",
+                    "url": "https://omendapipaysglobel.online/",
+                    "logo": "https://omendapipaysglobel.online/globe.svg",
+                    "description": "A Pi Network-powered global marketplace for buying, selling, and paying for products and services with Pi cryptocurrency.",
+                    "foundingDate": "2024",
+                    "contactPoint": {
+                        "@type": "ContactPoint",
+                        "contactType": "customer support",
+                        "availableLanguage": ["English", "Swahili"],
+                        "url": "https://omendapipaysglobel.online/scam-report.html"
+                    },
+                    "sameAs": [
+                        "https://minepi.com"
+                    ],
+                    "legalName": "Omenda Pi Pays Global",
+                    "hasCredential": "Pi Network Approved Third-Party Application"
+                },
+                {
+                    "@type": "WebSite",
+                    "@id": "https://omendapipaysglobel.online/#website",
+                    "url": "https://omendapipaysglobel.online/",
+                    "name": "Omenda Pi Pays Global",
+                    "description": "Pi Network marketplace — buy, sell, and pay with Pi cryptocurrency.",
+                    "publisher": { "@id": "https://omendapipaysglobel.online/#organization" },
+                    "potentialAction": {
+                        "@type": "SearchAction",
+                        "target": {
+                            "@type": "EntryPoint",
+                            "urlTemplate": "https://omendapipaysglobel.online/new.html?q={search_term_string}"
+                        },
+                        "query-input": "required name=search_term_string"
+                    }
+                }
+            ]
+        }
+        </script>
 </body>
 </html>

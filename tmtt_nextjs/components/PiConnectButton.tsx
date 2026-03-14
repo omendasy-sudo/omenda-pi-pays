@@ -3,6 +3,14 @@
 import { useState } from "react";
 import { usePiAuth } from "./PiAuthProvider";
 
+const APP_URL = "https://omendapipaysglobel.online";
+
+function openInPiBrowser() {
+  // Pi Browser deep link — on mobile with Pi Browser installed this opens the app directly.
+  // Falls back gracefully if Pi Browser is not installed.
+  window.location.href = `pi://${APP_URL.replace(/^https?:\/\//, "")}`;
+}
+
 export function PiConnectButton() {
   const { user, loading, connected, error, connect, disconnect, isPiBrowser } = usePiAuth();
   const [showMenu, setShowMenu] = useState(false);
@@ -58,13 +66,26 @@ export function PiConnectButton() {
     );
   }
 
+  if (!isPiBrowser) {
+    return (
+      <div>
+        <button
+          onClick={openInPiBrowser}
+          className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-amber-400"
+        >
+          Open in Pi Browser
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div>
       <button
         onClick={connect}
         className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold transition-colors hover:bg-violet-700"
       >
-        {isPiBrowser ? "Login with Pi" : "Open in Pi Browser"}
+        Login with Pi
       </button>
       {error && (
         <div className="absolute right-6 top-full mt-2 rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-xs text-rose-400">

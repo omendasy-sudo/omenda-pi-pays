@@ -1,6 +1,7 @@
 "use client";
 
 import { usePiAuth } from "./PiAuthProvider";
+import { PiSdkBase } from "pi-sdk-js";
 
 interface PiPayButtonProps {
   amount: number;
@@ -26,7 +27,7 @@ export function PiPayButton({
   const { connected, paymentAuthorized, connect, authorizePayments, isPiBrowser } = usePiAuth();
 
   async function handlePayment() {
-    if (!window.Pi) {
+    if (typeof window === "undefined" || !window.Pi) {
       onError?.("Please open in Pi Browser");
       return;
     }
@@ -43,33 +44,26 @@ export function PiPayButton({
       }
     }
 
-    window.Pi.createPayment(
-      { amount, memo, metadata },
-      {
-        onReadyForServerApproval(paymentId: string) {
-          fetch("/api/pi_payment/approve", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ paymentId }),
-          }).catch(() => onError?.("Approval failed"));
-        },
-        onReadyForServerCompletion(paymentId: string, txid: string) {
-          fetch("/api/pi_payment/complete", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ paymentId, txid }),
-          })
-            .then(() => onSuccess?.(txid))
-            .catch(() => onError?.("Completion failed"));
-        },
-        onCancel() {
-          onError?.("Payment cancelled");
-        },
-        onError(error: Error) {
-          onError?.(error.message || "Payment failed");
-        },
-      }
-    );
+    // PiSdkBase.createPayment posts approve/complete/cancel/error
+    // to /api/pi_payment/* automatically (auto-detected in Next.js).
+    const sdk = new PiSdkBase();
+    sdk.onConnection = () => {
+      sdk.createPayment({ amount, memo, metadata });
+    };
+
+    // Patch completion callback so the UI can react
+    const origComplete = PiSdkBase.onReadyForServerCompletion.bind(PiSdkBase);
+    PiSdkBase.onReadyForServerCompletion = async (paymentId: string, txid: string) => {
+      await origComplete(paymentId, txid);
+      onSuccess?.(txid);
+      PiSdkBase.onReadyForServerCompletion = origComplete;
+    };
+
+    if (!PiSdkBase.connected) {
+      await sdk.connect();
+    } else {
+      sdk.createPayment({ amount, memo, metadata });
+    }
   }
 
   const baseClass =

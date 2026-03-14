@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Business | Omenda Pi Pays</title>
+    <title>Register Your Business | Omenda Pi Pays Global</title>
+    <meta name="description" content="Register your business on Omenda Pi Pays Global to start selling products and services. Accept Pi cryptocurrency payments.">
+    <meta name="robots" content="index, follow">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://omendapipaysglobel.online/form.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://omendapipaysglobel.online/form.html">
+    <meta property="og:title" content="Register Your Business | Omenda Pi Pays Global">
+    <meta property="og:description" content="Register your business to start selling and accepting Pi cryptocurrency payments.">
+    <meta property="og:site_name" content="Omenda Pi Pays Global">
+    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -221,7 +231,7 @@
 
     <!-- Nav -->
     <nav>
-        <a href="index.html" style="text-decoration:none;color:inherit"><div class="logo"><img src="logo.png/logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div></a>
+        <a href="index.html" style="text-decoration:none;color:inherit"><div class="logo"><img src="logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div></a>
         <div class="nav-center">
             <a href="index.html" data-i18n="nav.home">Home</a>
             <a href="new.html" data-i18n="nav.explore">Explore</a>
@@ -229,12 +239,12 @@
             <a href="social.html" data-i18n="nav.social">Social</a>
             <a href="form.html" class="active" data-i18n="nav.register">Register</a>
             <a href="Submit.html" data-i18n="nav.sell">Sell</a>
-            <a href="/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="nav.services">Services</a>
             <a href="transport.html" data-i18n="nav.transport">Transport</a>
         </div>
         <div style="display:flex;align-items:center;gap:10px">
             <span id="pi-username" style="color:#f5a623;font-weight:600;font-size:0.85rem;display:none"></span>
-            <a href="/services" target="_blank" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.82rem;text-decoration:none">All Services</a>
+            <a href="https://omendapipaysglobel.online/services" target="_blank" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.82rem;text-decoration:none">All Services</a>
             <button id="pi-connect-btn" onclick="piConnect()" style="background:#7c3aed;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.85rem" data-i18n="nav.connectPi">Connect Pi</button>
         </div>
     </nav>
@@ -242,8 +252,7 @@
     <div class="quick-links">
         <a class="quick-link" href="index.html">Home</a>
         <a class="quick-link" href="transport.html">Transport</a>
-        <a class="quick-link" href="admin-panel.html">Admin</a>
-        <a class="quick-link" href="/services" target="_blank" rel="noopener noreferrer">All Services</a>
+        <a class="quick-link" href="https://omendapipaysglobel.online/services" target="_blank" rel="noopener noreferrer">All Services</a>
     </div>
 
     <!-- Page Header -->
@@ -273,7 +282,7 @@
             </div>
         </div>
 
-        <form action="https://formspree.io" method="POST" enctype="multipart/form-data">
+        <form id="businessForm" action="https://formspree.io/f/xpwzovkw" method="POST" enctype="multipart/form-data">
 
             <!-- Section 1: KYC -->
             <div class="form-section">
@@ -370,6 +379,7 @@
     <!-- Footer -->
     <footer>
         &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
+        <br><span style="display:inline-block;margin-top:8px;color:#71717a">Omenda Pi Pays Global, Block A, Nyerere Road, Dodoma, Dodoma 41101, Tanzania | <a href="mailto:support@omendapipaysglobel.online" style="color:#71717a;text-decoration:none">support@omendapipaysglobel.online</a></span>
         &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:#71717a;text-decoration:none" data-i18n="footer.privacyPolicy">Privacy Policy</a>
         &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:#71717a;text-decoration:none" data-i18n="footer.termsOfService">Terms of Service</a>
     </footer>
@@ -488,39 +498,90 @@
         });
     </script>
     <script>
-        function piConnect() {
-            if (typeof window.Pi === 'undefined') {
-                alert('Please open this app in Pi Browser to connect.');
-                return;
+        // Handle form submission with loading state and redirect
+        document.getElementById('businessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            const form = e.target;
+            const formData = new FormData(form);
+
+            btn.textContent = 'Submitting…';
+            btn.disabled = true;
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    window.location.href = 'submit%20success%20full.html';
+                } else {
+                    throw new Error('Submission failed');
+                }
+            })
+            .catch(function() {
+                alert('Submission failed. Please check your connection and try again.');
+                btn.textContent = 'Submit Registration';
+                btn.disabled = false;
+            });
+        });
+    </script>
+    <script>
+        function waitForPiSdk(timeout) {
+            return new Promise(function(resolve, reject) {
+                if (window.Pi) return resolve(window.Pi);
+                var elapsed = 0, interval = 120;
+                var t = setInterval(function() {
+                    if (window.Pi) { clearInterval(t); resolve(window.Pi); return; }
+                    elapsed += interval;
+                    if (elapsed >= timeout) { clearInterval(t); reject(new Error('Pi SDK did not load within ' + timeout + 'ms')); }
+                }, interval);
+            });
+        }
+        var _piInitPromise = null;
+        function usePiSandbox() {
+            return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+        }
+        function ensurePiInitialized() {
+            if (_piInitPromise) return _piInitPromise;
+            _piInitPromise = waitForPiSdk(10000).then(function() {
+                return Pi.init({ version: '2.0', sandbox: usePiSandbox() });
+            }).catch(function(e) { _piInitPromise = null; return Promise.reject(e); });
+            return _piInitPromise;
+        }
+        var isPiBrowser = /PiBrowser/i.test(navigator.userAgent) || typeof window.Pi !== 'undefined';
+        function setConnectedState(username) {
+            document.getElementById('pi-username').textContent = '@' + username;
+            document.getElementById('pi-username').style.display = 'inline';
+            document.getElementById('pi-connect-btn').textContent = 'Connected';
+            document.getElementById('pi-connect-btn').style.background = '#16a34a';
+        }
+        function restoreConnectedState() {
+            var u = sessionStorage.getItem('piUser');
+            if (u) { var user = JSON.parse(u); setConnectedState(user.username); return true; }
+            return false;
+        }
+        function piConnect(silent) {
+            if (!isPiBrowser) {
+                if (!silent) alert('Please open this app in Pi Browser to connect.');
+                return Promise.resolve(null);
             }
-            Pi.init({ version: '2.0', sandbox: false });
-            Pi.authenticate(['username','payments'], {
-                onIncompletePaymentFound: function(p) { console.log('Incomplete payment:', p); }
+            return ensurePiInitialized().then(function() {
+                return Pi.authenticate(['username','payments'], {
+                    onIncompletePaymentFound: function(p) { console.log('Incomplete payment:', p); }
+                });
             }).then(function(auth) {
-                document.getElementById('pi-username').textContent = '@' + auth.user.username;
-                document.getElementById('pi-username').style.display = 'inline';
-                document.getElementById('pi-connect-btn').textContent = 'Connected';
-                document.getElementById('pi-connect-btn').style.background = '#16a34a';
+                setConnectedState(auth.user.username);
                 sessionStorage.setItem('piUser', JSON.stringify(auth.user));
-            }).catch(function(e) { console.error('Pi auth error:', e); });
+                return auth;
+            }).catch(function(e) { if (!silent) console.error('Pi auth error:', e); });
         }
         (function() {
-            var u = sessionStorage.getItem('piUser');
-            if (u) {
-                var user = JSON.parse(u);
-                document.getElementById('pi-username').textContent = '@' + user.username;
-                document.getElementById('pi-username').style.display = 'inline';
-                document.getElementById('pi-connect-btn').textContent = 'Connected';
-                document.getElementById('pi-connect-btn').style.background = '#16a34a';
-            } else if (typeof window.Pi !== 'undefined') {
-                // Auto-login in Pi Browser
-                piConnect();
-            }
+            if (!restoreConnectedState() && isPiBrowser) piConnect(true);
         })();
 
         // Pi SDK — Request camera permission for business photo uploads
-        var isPiBrowser = typeof window.Pi !== 'undefined';
-        if (isPiBrowser) Pi.init({ version: '2.0', sandbox: false });
 
         function piRequestPermission(perm) {
             if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);

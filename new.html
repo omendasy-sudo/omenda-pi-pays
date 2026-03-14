@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore Marketplace | Omenda Pi Pays</title>
-    <img src="logo.png/" alt="">
+    <title>Explore Products | Omenda Pi Pays Global Marketplace</title>
+    <meta name="description" content="Browse thousands of products — electronics, fashion, digital goods, and more. Buy with Pi cryptocurrency on Omenda Pi Pays Global.">
+    <meta name="robots" content="index, follow">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://omendapipaysglobel.online/new.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://omendapipaysglobel.online/new.html">
+    <meta property="og:title" content="Explore Products | Omenda Pi Pays Global">
+    <meta property="og:description" content="Browse thousands of products and buy with Pi cryptocurrency.">
+    <meta property="og:site_name" content="Omenda Pi Pays Global">
+    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -311,6 +320,175 @@
             .product-grid { grid-template-columns: 1fr; }
             .categories-grid { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* Phone product overview look (screenshot-style) */
+        .phone-bottom-nav { display: none; }
+        @media (max-width: 768px) {
+            body {
+                background: #f1f5f9;
+                color: #0f172a;
+                padding-bottom: 84px;
+            }
+            .bg-ambient,
+            .promo-banner,
+            .trust-bar,
+            footer {
+                display: none;
+            }
+            nav {
+                background: rgba(255,255,255,0.96);
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .logo,
+            .nav-center a,
+            .nav-right .btn-primary,
+            .nav-right .btn-outline {
+                color: #0f172a;
+            }
+            .hero {
+                padding: 16px 12px 8px;
+                text-align: left;
+            }
+            .hero h1 {
+                font-size: 1.25rem;
+                margin-bottom: 8px;
+            }
+            .hero p,
+            .hero-actions {
+                display: none;
+            }
+            .search-section {
+                padding: 0 12px 12px;
+            }
+            .search-bar input {
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                color: #0f172a;
+                border-radius: 12px;
+                padding: 12px 90px 12px 40px;
+            }
+            .search-bar .btn-primary {
+                padding: 8px 10px;
+                border-radius: 10px;
+            }
+            .categories-section,
+            .section,
+            .mp-overview {
+                padding-left: 12px;
+                padding-right: 12px;
+                padding-bottom: 14px;
+            }
+            .section-header h2 {
+                font-size: 1.06rem;
+            }
+            .section-header a {
+                color: #60a5fa;
+            }
+            .categories-grid {
+                display: flex;
+                overflow-x: auto;
+                gap: 8px;
+                padding-bottom: 4px;
+            }
+            .category-card {
+                min-width: 120px;
+                border-radius: 12px;
+                border: 1px solid #dbeafe;
+                background: #fff;
+                padding: 12px 10px;
+            }
+            .category-card .cat-name {
+                color: #334155;
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+            .card {
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+            }
+            .card-body {
+                padding: 10px;
+            }
+            .card-body h3 {
+                font-size: 0.75rem;
+                min-height: 2.2em;
+                overflow: hidden;
+            }
+            .card-body .card-desc {
+                margin-bottom: 8px;
+                font-size: 0.75rem;
+                line-height: 1.25;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .card-badge {
+                background: rgba(255,255,255,0.95);
+                color: #334155;
+            }
+            .card-price {
+                color: #111827;
+                font-size: 1.05rem;
+                font-weight: 800;
+            }
+            .card-footer {
+                padding-top: 8px;
+            }
+            .btn-buy {
+                border-radius: 8px;
+                padding: 8px 10px;
+                font-size: 0.75rem;
+            }
+            .mp-overview,
+            .mp-nav-btn,
+            .mp-cat-pills,
+            .section[style*="padding-top:0"] {
+                display: none;
+            }
+
+            .phone-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 1200;
+                height: 64px;
+                background: rgba(255,255,255,0.96);
+                border-top: 1px solid #dbe1ea;
+                backdrop-filter: blur(8px);
+                align-items: center;
+                justify-content: space-around;
+            }
+            .phone-bottom-nav a {
+                color: #6b7280;
+                text-decoration: none;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            .phone-bottom-nav a.active {
+                color: #60a5fa;
+            }
+            .phone-bottom-nav .icon {
+                font-size: 20px;
+                line-height: 1;
+            }
+        }
+        @media (max-width: 380px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -333,21 +511,20 @@
 
     <!-- Nav -->
     <nav>
-        <a href="index.html" style="text-decoration:none;color:inherit"><div class="logo"><img src="logo.png/logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div></a>
+        <a href="index.html" style="text-decoration:none;color:inherit"><div class="logo"><img src="logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div></a>
         <div class="nav-center">
-            <img src="logo.png/logo.png" alt="logo ">
             <a href="index.html" data-i18n="nav.home">Home</a>
             <a href="new.html" class="active" data-i18n="nav.explore">Explore</a>
             <a href="map.html" data-i18n="nav.map">Map</a>
             <a href="social.html" data-i18n="nav.social">Social</a>
             <a href="form.html" data-i18n="nav.register">Register</a>
             <a href="Submit.html" data-i18n="nav.sell">Sell</a>
-            <a href="/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="nav.services">Services</a>
             <a href="transport.html" data-i18n="nav.transport">Transport</a>
         </div>
         <div class="nav-right">
             <span id="pi-user-badge" style="display:none;background:rgba(245,166,35,0.12);color:#f5a623;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:6px"></span><span id="pi-username"></span></span>
-            <button class="btn-primary" onclick="openServiceBrowser('/services')" style="background:transparent;border:1px solid var(--border);color:var(--text-primary)">All Services</button>
+            <button class="btn-primary" onclick="openServiceBrowser('https://omendapipaysglobel.online/services')" style="background:transparent;border:1px solid var(--border);color:var(--text-primary)">All Services</button>
             <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
         </div>
     </nav>
@@ -389,15 +566,19 @@
                 <span class="cat-icon">&#128190;</span>
                 <span class="cat-name">Digital</span>
             </div>
-            <div class="category-card">
+            <div class="category-card" onclick="scrollToSection('home')">
                 <span class="cat-icon">&#127968;</span>
                 <span class="cat-name">Home</span>
             </div>
-            <div class="category-card">
+            <div class="category-card" onclick="scrollToSection('sports')">
                 <span class="cat-icon">&#9917;</span>
                 <span class="cat-name">Sports</span>
             </div>
-            <div class="category-card">
+            <div class="category-card" onclick="scrollToSection('food')">
+                <span class="cat-icon">&#127824;</span>
+                <span class="cat-name">Food</span>
+            </div>
+            <div class="category-card" onclick="scrollToSection('books')">
                 <span class="cat-icon">&#128218;</span>
                 <span class="cat-name">Books</span>
             </div>
@@ -436,66 +617,66 @@
             <div class="mp-carousel-track" id="mp-track">
                 <!-- Slide 1: Fashion -->
                 <div class="mp-slide" data-cat="Fashion">
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/watch1/600/400" alt="Watch" loading="lazy"><span class="card-badge">Fashion</span></div><div class="card-body"><h3>NAVIFORCE Elegant Watch</h3><p class="card-desc">Women's square quartz, stainless steel</p><div class="card-footer"><div class="card-price">300 &#960;<small>&asymp; $51.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/sneakers/600/400" alt="Sneakers" loading="lazy"><span class="card-badge">Trending</span></div><div class="card-body"><h3>Chunky Platform Sneakers</h3><p class="card-desc">Size 41-44, premium sole</p><div class="card-footer"><div class="card-price">180 &#960;<small>&asymp; $30.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/leatherbag/600/400" alt="Bag" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Italian Leather Handbag</h3><p class="card-desc">Handcrafted, genuine leather</p><div class="card-footer"><div class="card-price">450 &#960;<small>&asymp; $76.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/rayban/600/400" alt="Sunglasses" loading="lazy"><span class="card-badge">Iconic</span></div><div class="card-body"><h3>Ray-Ban Aviator Sunglasses</h3><p class="card-desc">Classic gold frame, polarized</p><div class="card-footer"><div class="card-price">250 &#960;<small>&asymp; $42.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/jordan4/600/400" alt="Jordan" loading="lazy"><span class="card-badge">Trending</span></div><div class="card-body"><h3>Nike Air Jordan 4 Retro</h3><p class="card-desc">Size 40-46, Military Black</p><div class="card-footer"><div class="card-price">420 &#960;<small>&asymp; $71.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/overcoat/600/400" alt="Overcoat" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Cashmere Wool Overcoat</h3><p class="card-desc">Hand-stitched, Italian cut</p><div class="card-footer"><div class="card-price">650 &#960;<small>&asymp; $110.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/bydseal/600/400" alt="BYD Seal" loading="lazy"><span class="card-badge">New Gen</span></div><div class="card-body"><h3>BYD Seal 2025 EV</h3><p class="card-desc">Long-range electric sedan with ADAS package</p><div class="card-footer"><div class="card-price">18,500 &#960;<small>&asymp; $3.15K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/model3highland/600/400" alt="Tesla Model 3" loading="lazy"><span class="card-badge">Featured</span></div><div class="card-body"><h3>Tesla Model 3 Highland</h3><p class="card-desc">Refreshed EV sedan for premium fleet buyers</p><div class="card-footer"><div class="card-price">24,200 &#960;<small>&asymp; $4.11K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/prado2025/600/400" alt="Prado" loading="lazy"><span class="card-badge">4x4</span></div><div class="card-body"><h3>Toyota Land Cruiser Prado 2025</h3><p class="card-desc">Next-generation SUV for safari and executive travel</p><div class="card-footer"><div class="card-price">31,800 &#960;<small>&asymp; $5.41K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/rangerraptor/600/400" alt="Ranger Raptor" loading="lazy"><span class="card-badge">Pickup</span></div><div class="card-body"><h3>Ford Ranger Raptor 2024</h3><p class="card-desc">Twin-turbo performance pickup for logistics teams</p><div class="card-footer"><div class="card-price">28,900 &#960;<small>&asymp; $4.91K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ioniq5n/600/400" alt="Ioniq 5 N" loading="lazy"><span class="card-badge">Performance</span></div><div class="card-body"><h3>Hyundai Ioniq 5 N</h3><p class="card-desc">High-performance EV crossover with rapid charging</p><div class="card-footer"><div class="card-price">33,400 &#960;<small>&asymp; $5.68K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/eqesuv/600/400" alt="EQE SUV" loading="lazy"><span class="card-badge">Luxury</span></div><div class="card-body"><h3>Mercedes-Benz EQE SUV</h3><p class="card-desc">Premium electric SUV for executive transport</p><div class="card-footer"><div class="card-price">35,600 &#960;<small>&asymp; $6.05K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
                 </div>
                 <!-- Slide 2: Electronics -->
                 <div class="mp-slide" data-cat="Electronics">
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/laptop22/600/400" alt="Laptop" loading="lazy"><span class="card-badge">Featured</span></div><div class="card-body"><h3>Workstation Laptop M3</h3><p class="card-desc">16GB RAM, 512GB SSD</p><div class="card-footer"><div class="card-price">1,250 &#960;<small>&asymp; $212.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/smartwatch2/600/400" alt="Smartwatch" loading="lazy"><span class="card-badge">Popular</span></div><div class="card-body"><h3>Smart Fitness Pro</h3><p class="card-desc">Heart rate, GPS, waterproof</p><div class="card-footer"><div class="card-price">180 &#960;<small>&asymp; $30.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/galaxy24/600/400" alt="Galaxy" loading="lazy"><span class="card-badge">Hot</span></div><div class="card-body"><h3>Samsung Galaxy S24 Ultra</h3><p class="card-desc">512GB, AI Camera, Titanium</p><div class="card-footer"><div class="card-price">5,100 &#960;<small>&asymp; $867.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ps5pro/600/400" alt="PS5" loading="lazy"><span class="card-badge">Limited</span></div><div class="card-body"><h3>Sony PlayStation 5 Pro</h3><p class="card-desc">1TB SSD, 4K 120fps gaming</p><div class="card-footer"><div class="card-price">3,200 &#960;<small>&asymp; $544.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/drone4/600/400" alt="Drone" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>DJI Mini 4 Pro Drone</h3><p class="card-desc">4K HDR, 34min flight time</p><div class="card-footer"><div class="card-price">4,800 &#960;<small>&asymp; $816.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ipadair/600/400" alt="iPad" loading="lazy"><span class="card-badge">Popular</span></div><div class="card-body"><h3>iPad Air M2</h3><p class="card-desc">11-inch, 256GB, Starlight</p><div class="card-footer"><div class="card-price">3,600 &#960;<small>&asymp; $612.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/agrasdrone/600/400" alt="Agras Drone" loading="lazy"><span class="card-badge">AgriTech</span></div><div class="card-body"><h3>DJI Agras T50 Drone</h3><p class="card-desc">High-capacity crop spraying drone for commercial farms</p><div class="card-footer"><div class="card-price">12,800 &#960;<small>&asymp; $2.18K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/starlinkgen3/600/400" alt="Starlink" loading="lazy"><span class="card-badge">Connectivity</span></div><div class="card-body"><h3>Starlink Gen 3 Kit</h3><p class="card-desc">Business internet terminal for remote sites and trucks</p><div class="card-footer"><div class="card-price">900 &#960;<small>&asymp; $153.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/catlbattery/600/400" alt="Battery" loading="lazy"><span class="card-badge">Storage</span></div><div class="card-body"><h3>CATL Home Battery 15kWh</h3><p class="card-desc">Lithium storage for backup power and charging stations</p><div class="card-footer"><div class="card-price">7,600 &#960;<small>&asymp; $1.29K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/solarinverter/600/400" alt="Solar Inverter" loading="lazy"><span class="card-badge">Power</span></div><div class="card-body"><h3>Huawei 20kW Solar Inverter</h3><p class="card-desc">Commercial inverter for mini-grids and warehouses</p><div class="card-footer"><div class="card-price">5,400 &#960;<small>&asymp; $918.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/cctvkit/600/400" alt="CCTV" loading="lazy"><span class="card-badge">Security</span></div><div class="card-body"><h3>Hikvision AI CCTV 8-Cam Kit</h3><p class="card-desc">Smart surveillance bundle for depots and showrooms</p><div class="card-footer"><div class="card-price">1,250 &#960;<small>&asymp; $212.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/fleetgps/600/400" alt="GPS" loading="lazy"><span class="card-badge">Fleet</span></div><div class="card-body"><h3>Garmin Fleet GPS Gateway</h3><p class="card-desc">Live route and driver tracking unit for commercial fleets</p><div class="card-footer"><div class="card-price">680 &#960;<small>&asymp; $115.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
                 </div>
                 <!-- Slide 3: Digital -->
                 <div class="mp-slide" data-cat="Digital">
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/music1/600/400" alt="Music" loading="lazy"><span class="card-badge">Hot</span></div><div class="card-body"><h3>GPM Music Pack</h3><p class="card-desc">Support artists, exclusive tracks</p><div class="card-footer"><div class="card-price">0.10 &#960;<small>&asymp; $0.02</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ebook1/600/400" alt="Ebook" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>Pi Trading Guide eBook</h3><p class="card-desc">Master Pi commerce, 200+ pages</p><div class="card-footer"><div class="card-price">2.5 &#960;<small>&asymp; $0.43</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/uxcourse/600/400" alt="Course" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>UI/UX Design Masterclass</h3><p class="card-desc">Figma + Framer, 80+ lessons</p><div class="card-footer"><div class="card-price">15 &#960;<small>&asymp; $2.55</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/afrobeats/600/400" alt="Beats" loading="lazy"><span class="card-badge">Hot</span></div><div class="card-body"><h3>African Beats Music Pack</h3><p class="card-desc">50 royalty-free Afrobeat loops</p><div class="card-footer"><div class="card-price">3 &#960;<small>&asymp; $0.51</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/pibundle/600/400" alt="Bundle" loading="lazy"><span class="card-badge">Bundle</span></div><div class="card-body"><h3>Pi Commerce eBook Bundle</h3><p class="card-desc">3 books: Trading, Mining, DApps</p><div class="card-footer"><div class="card-price">5 &#960;<small>&asymp; $0.85</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/social1/600/400" alt="Social Pack" loading="lazy"><span class="card-badge">Value</span></div><div class="card-body"><h3>Social Media Pack &mdash; 30 Days</h3><p class="card-desc">Posting templates for Pi Network</p><div class="card-footer"><div class="card-price">0.10 &#960;<small>&asymp; $0.02</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/fleetsaas/600/400" alt="Fleet SaaS" loading="lazy"><span class="card-badge">Business</span></div><div class="card-body"><h3>Fleet Management SaaS License</h3><p class="card-desc">Dispatch, fuel analytics, and route optimization</p><div class="card-footer"><div class="card-price">120 &#960;<small>&asymp; $20.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/erpnextsuite/600/400" alt="ERP" loading="lazy"><span class="card-badge">ERP</span></div><div class="card-body"><h3>ERPNext Deployment and Training</h3><p class="card-desc">Inventory, finance, and procurement setup for SMEs</p><div class="card-footer"><div class="card-price">65 &#960;<small>&asymp; $11.05</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/dispatchsource/600/400" alt="Dispatch App" loading="lazy"><span class="card-badge">Source Code</span></div><div class="card-body"><h3>Logistics Dispatch App Source Code</h3><p class="card-desc">Ready-made courier and cargo dispatch platform</p><div class="card-footer"><div class="card-price">45 &#960;<small>&asymp; $7.65</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/iotdashboard/600/400" alt="IoT Dashboard" loading="lazy"><span class="card-badge">Industrial</span></div><div class="card-body"><h3>Industrial IoT Dashboard License</h3><p class="card-desc">Monitor factories, batteries, pumps, and uptime</p><div class="card-footer"><div class="card-price">28 &#960;<small>&asymp; $4.76</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/autocadtrade/600/400" alt="CAD Suite" loading="lazy"><span class="card-badge">Engineering</span></div><div class="card-body"><h3>AutoCAD Construction Suite</h3><p class="card-desc">Commercial design license for engineering teams</p><div class="card-footer"><div class="card-price">340 &#960;<small>&asymp; $57.80</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/shopifyb2b/600/400" alt="B2B Store Build" loading="lazy"><span class="card-badge">Ecommerce</span></div><div class="card-body"><h3>Shopify B2B Store Build Package</h3><p class="card-desc">Catalog, payments, and supplier workflow setup</p><div class="card-footer"><div class="card-price">85 &#960;<small>&asymp; $14.45</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
                 </div>
                 <!-- Slide 4: Home & Living -->
                 <div class="mp-slide" data-cat="Home">
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/desklamp/600/400" alt="Lamp" loading="lazy"><span class="card-badge">Smart</span></div><div class="card-body"><h3>Smart LED Desk Lamp</h3><p class="card-desc">Wireless charging, 5 light modes</p><div class="card-footer"><div class="card-price">120 &#960;<small>&asymp; $20.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/espresso/600/400" alt="Coffee" loading="lazy"><span class="card-badge">Popular</span></div><div class="card-body"><h3>Espresso Coffee Machine</h3><p class="card-desc">15-bar pump, milk frother</p><div class="card-footer"><div class="card-price">680 &#960;<small>&asymp; $115.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/robovac/600/400" alt="Vacuum" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>Robot Vacuum Pro</h3><p class="card-desc">LIDAR nav, auto-empty dock</p><div class="card-footer"><div class="card-price">950 &#960;<small>&asymp; $161.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/mattress/600/400" alt="Mattress" loading="lazy"><span class="card-badge">Best Seller</span></div><div class="card-body"><h3>Memory Foam Mattress</h3><p class="card-desc">Queen size, cooling gel layer</p><div class="card-footer"><div class="card-price">1,500 &#960;<small>&asymp; $255.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/airpurifier/600/400" alt="Purifier" loading="lazy"><span class="card-badge">Health</span></div><div class="card-body"><h3>HEPA Air Purifier</h3><p class="card-desc">Covers 50m&#178;, PM2.5 sensor</p><div class="card-footer"><div class="card-price">380 &#960;<small>&asymp; $64.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/smartplug/600/400" alt="Plugs" loading="lazy"><span class="card-badge">Value</span></div><div class="card-body"><h3>Wi-Fi Smart Plug 4-Pack</h3><p class="card-desc">Voice control, energy monitor</p><div class="card-footer"><div class="card-price">55 &#960;<small>&asymp; $9.35</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/solarinverter2/600/400" alt="Inverter" loading="lazy"><span class="card-badge">Energy</span></div><div class="card-body"><h3>Huawei 20kW Solar Inverter</h3><p class="card-desc">Commercial inverter for mini-grids and warehouses</p><div class="card-footer"><div class="card-price">5,400 &#960;<small>&asymp; $918.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/catlbattery2/600/400" alt="Battery" loading="lazy"><span class="card-badge">Storage</span></div><div class="card-body"><h3>CATL 15kWh Wall Battery</h3><p class="card-desc">Backup storage for charging stations and depots</p><div class="card-footer"><div class="card-price">7,600 &#960;<small>&asymp; $1.29K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/evcharger2/600/400" alt="EV Charger" loading="lazy"><span class="card-badge">Fast Charge</span></div><div class="card-body"><h3>Bosch EV Fast Charger 60kW</h3><p class="card-desc">Commercial charging unit for dealerships and malls</p><div class="card-footer"><div class="card-price">11,800 &#960;<small>&asymp; $2.01K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/solarpump2/600/400" alt="Solar Pump" loading="lazy"><span class="card-badge">Farm Power</span></div><div class="card-body"><h3>Solar Water Pump 7.5HP</h3><p class="card-desc">Irrigation pump for farms and remote water supply</p><div class="card-footer"><div class="card-price">1,450 &#960;<small>&asymp; $246.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/backupgen/600/400" alt="Generator" loading="lazy"><span class="card-badge">Backup</span></div><div class="card-body"><h3>Cummins Diesel Generator 80kVA</h3><p class="card-desc">Prime and standby generator for businesses and sites</p><div class="card-footer"><div class="card-price">9,600 &#960;<small>&asymp; $1.63K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/coldroomunit/600/400" alt="Cold Room" loading="lazy"><span class="card-badge">Cold Chain</span></div><div class="card-body"><h3>Cold Room Compressor Unit</h3><p class="card-desc">Cold-chain equipment for produce and pharma storage</p><div class="card-footer"><div class="card-price">3,100 &#960;<small>&asymp; $527.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
                 </div>
                 <!-- Slide 5: Beauty -->
                 <div class="mp-slide" data-cat="Beauty">
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/skincare/600/400" alt="Skincare" loading="lazy"><span class="card-badge">Natural</span></div><div class="card-body"><h3>Organic Skincare Set</h3><p class="card-desc">Cleanser, toner, moisturizer, serum</p><div class="card-footer"><div class="card-price">85 &#960;<small>&asymp; $14.45</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/massagegun/600/400" alt="Massage" loading="lazy"><span class="card-badge">Trending</span></div><div class="card-body"><h3>Electric Massage Gun</h3><p class="card-desc">6 heads, 30 speeds, deep tissue</p><div class="card-footer"><div class="card-price">160 &#960;<small>&asymp; $27.20</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/serum/600/400" alt="Serum" loading="lazy"><span class="card-badge">Hot</span></div><div class="card-body"><h3>Vitamin C Glow Serum</h3><p class="card-desc">30ml, hyaluronic acid blend</p><div class="card-footer"><div class="card-price">35 &#960;<small>&asymp; $5.95</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/toothbrush/600/400" alt="Toothbrush" loading="lazy"><span class="card-badge">Smart</span></div><div class="card-body"><h3>Sonic Electric Toothbrush</h3><p class="card-desc">5 modes, pressure sensor, USB-C</p><div class="card-footer"><div class="card-price">48 &#960;<small>&asymp; $8.16</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/essential/600/400" alt="Oils" loading="lazy"><span class="card-badge">Wellness</span></div><div class="card-body"><h3>Essential Oil Diffuser Set</h3><p class="card-desc">Ultrasonic mist + 6 pure oils</p><div class="card-footer"><div class="card-price">72 &#960;<small>&asymp; $12.24</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/hairdryer/600/400" alt="Dryer" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Ionic Hair Dryer Pro</h3><p class="card-desc">1800W, 3 attachments, frizz-free</p><div class="card-footer"><div class="card-price">110 &#960;<small>&asymp; $18.70</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/trucktires2/600/400" alt="Truck Tires" loading="lazy"><span class="card-badge">Fleet</span></div><div class="card-body"><h3>Michelin Truck Tire Set</h3><p class="card-desc">Commercial tire set for buses, trucks, and trailers</p><div class="card-footer"><div class="card-price">850 &#960;<small>&asymp; $144.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/brembokit2/600/400" alt="Brake Kit" loading="lazy"><span class="card-badge">Workshop</span></div><div class="card-body"><h3>Brembo Brake Kit Premium</h3><p class="card-desc">Performance brake kit for SUVs and pickups</p><div class="card-footer"><div class="card-price">950 &#960;<small>&asymp; $161.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/hiluxparts2/600/400" alt="Hilux Parts" loading="lazy"><span class="card-badge">Service Kit</span></div><div class="card-body"><h3>Toyota Hilux Spare Parts Kit</h3><p class="card-desc">Filters, belts, pads, and service components</p><div class="card-footer"><div class="card-price">420 &#960;<small>&asymp; $71.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/lubricants2/600/400" alt="Lubricants" loading="lazy"><span class="card-badge">Workshop</span></div><div class="card-body"><h3>Lubricant Distributor Pack</h3><p class="card-desc">Engine oil and hydraulic fluids for garages</p><div class="card-footer"><div class="card-price">180 &#960;<small>&asymp; $30.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/evcable2/600/400" alt="EV Cable" loading="lazy"><span class="card-badge">EV Parts</span></div><div class="card-body"><h3>Type 2 EV Cable Kit</h3><p class="card-desc">Commercial charging cables and wall-mount hardware</p><div class="card-footer"><div class="card-price">115 &#960;<small>&asymp; $19.55</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/servicescanner/600/400" alt="Service Scanner" loading="lazy"><span class="card-badge">Diagnostics</span></div><div class="card-body"><h3>OBD Workshop Scanner Pro</h3><p class="card-desc">Dealer-grade diagnostics for modern vehicles</p><div class="card-footer"><div class="card-price">260 &#960;<small>&asymp; $44.20</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
                 </div>
                 <!-- Slide 6: Sports -->
                 <div class="mp-slide" data-cat="Sports">
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/trekbag/600/400" alt="Backpack" loading="lazy"><span class="card-badge">Adventure</span></div><div class="card-body"><h3>Mountain Trekking Backpack</h3><p class="card-desc">65L, waterproof, ergonomic frame</p><div class="card-footer"><div class="card-price">220 &#960;<small>&asymp; $37.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/dumbbells/600/400" alt="Dumbbells" loading="lazy"><span class="card-badge">Fitness</span></div><div class="card-body"><h3>Adjustable Dumbbell Set</h3><p class="card-desc">2-24kg per hand, quick-lock</p><div class="card-footer"><div class="card-price">350 &#960;<small>&asymp; $59.50</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/roadbike/600/400" alt="Bicycle" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Carbon Road Bicycle</h3><p class="card-desc">Shimano 105, 8.2kg ultra-light</p><div class="card-footer"><div class="card-price">4,200 &#960;<small>&asymp; $714.00</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/yogamat/600/400" alt="Yoga" loading="lazy"><span class="card-badge">Eco</span></div><div class="card-body"><h3>Premium Yoga Mat</h3><p class="card-desc">6mm, natural rubber, non-slip</p><div class="card-footer"><div class="card-price">42 &#960;<small>&asymp; $7.14</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/tent2p/600/400" alt="Tent" loading="lazy"><span class="card-badge">Camping</span></div><div class="card-body"><h3>2-Person Camping Tent</h3><p class="card-desc">4-season, aluminum poles, 2.1kg</p><div class="card-footer"><div class="card-price">280 &#960;<small>&asymp; $47.60</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/football/600/400" alt="Football" loading="lazy"><span class="card-badge">Official</span></div><div class="card-body"><h3>FIFA Pro Match Football</h3><p class="card-desc">Thermal-bonded, size 5</p><div class="card-footer"><div class="card-price">55 &#960;<small>&asymp; $9.35</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/komatsupc200b/600/400" alt="Excavator" loading="lazy"><span class="card-badge">Heavy Duty</span></div><div class="card-body"><h3>Komatsu PC200 Excavator</h3><p class="card-desc">20-ton crawler excavator for roads and mining</p><div class="card-footer"><div class="card-price">64,800 &#960;<small>&asymp; $11.02K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/forklift3tonb/600/400" alt="Forklift" loading="lazy"><span class="card-badge">Warehouse</span></div><div class="card-body"><h3>Toyota 3 Ton Forklift</h3><p class="card-desc">Container yard and warehouse loading equipment</p><div class="card-footer"><div class="card-price">14,800 &#960;<small>&asymp; $2.52K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/johndeereb/600/400" alt="Tractor" loading="lazy"><span class="card-badge">Agriculture</span></div><div class="card-body"><h3>John Deere 5075E Tractor</h3><p class="card-desc">Reliable tractor for ploughing and transport work</p><div class="card-footer"><div class="card-price">23,500 &#960;<small>&asymp; $4.00K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ricemilllineb/600/400" alt="Rice Mill" loading="lazy"><span class="card-badge">Factory</span></div><div class="card-body"><h3>Rice Milling Machine Line</h3><p class="card-desc">Integrated rice processing for cooperatives and exporters</p><div class="card-footer"><div class="card-price">13,700 &#960;<small>&asymp; $2.33K</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/greenhousekit/600/400" alt="Greenhouse" loading="lazy"><span class="card-badge">Farm Build</span></div><div class="card-body"><h3>Greenhouse Tunnel Kit 100sqm</h3><p class="card-desc">Protected cultivation kit for horticulture projects</p><div class="card-footer"><div class="card-price">620 &#960;<small>&asymp; $105.40</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/dripfarmset/600/400" alt="Drip Irrigation" loading="lazy"><span class="card-badge">Irrigation</span></div><div class="card-body"><h3>Drip Irrigation Farm Set</h3><p class="card-desc">Commercial irrigation kit for vegetable and fruit farms</p><div class="card-footer"><div class="card-price">210 &#960;<small>&asymp; $35.70</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
                 </div>
                 <!-- Slide 7: Food -->
                 <div class="mp-slide" data-cat="Food">
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/coffeebeans/600/400" alt="Coffee" loading="lazy"><span class="card-badge">Organic</span></div><div class="card-body"><h3>Organic Coffee Beans 1kg</h3><p class="card-desc">Single-origin Ethiopian Yirgacheffe</p><div class="card-footer"><div class="card-price">28 &#960;<small>&asymp; $4.76</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/honeygift/600/400" alt="Honey" loading="lazy"><span class="card-badge">Gift</span></div><div class="card-body"><h3>Premium Honey Gift Box</h3><p class="card-desc">3x 500g, raw wildflower + manuka</p><div class="card-footer"><div class="card-price">65 &#960;<small>&asymp; $11.05</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/spicebox/600/400" alt="Spices" loading="lazy"><span class="card-badge">New</span></div><div class="card-body"><h3>Spice Collection Kit</h3><p class="card-desc">24 organic East African spices</p><div class="card-footer"><div class="card-price">45 &#960;<small>&asymp; $7.65</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/teabox/600/400" alt="Tea" loading="lazy"><span class="card-badge">Premium</span></div><div class="card-body"><h3>Kenyan Tea Sampler</h3><p class="card-desc">12 varieties, loose leaf, wooden box</p><div class="card-footer"><div class="card-price">38 &#960;<small>&asymp; $6.46</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/driedfruit/600/400" alt="Fruit" loading="lazy"><span class="card-badge">Healthy</span></div><div class="card-body"><h3>Mixed Dried Fruit Pack</h3><p class="card-desc">500g, mango, pineapple, coconut</p><div class="card-footer"><div class="card-price">18 &#960;<small>&asymp; $3.06</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
-                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/macadamia/600/400" alt="Nuts" loading="lazy"><span class="card-badge">Local</span></div><div class="card-body"><h3>Roasted Macadamia Nuts</h3><p class="card-desc">400g, lightly salted, Kenyan grown</p><div class="card-footer"><div class="card-price">22 &#960;<small>&asymp; $3.74</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/basmatibulk2/600/400" alt="Basmati Rice" loading="lazy"><span class="card-badge">Commodity</span></div><div class="card-body"><h3>Premium Basmati Rice 25kg Bulk</h3><p class="card-desc">Wholesale rice bag for retailers and restaurants</p><div class="card-footer"><div class="card-price">32 &#960;<small>&asymp; $5.44</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/arabicasack2/600/400" alt="Coffee Sack" loading="lazy"><span class="card-badge">Export</span></div><div class="card-body"><h3>Brazilian Arabica Coffee 30kg Sack</h3><p class="card-desc">Export-grade coffee sack for cafés and distributors</p><div class="card-footer"><div class="card-price">48 &#960;<small>&asymp; $8.16</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/sunfloweroil20l2/600/400" alt="Sunflower Oil" loading="lazy"><span class="card-badge">Wholesale</span></div><div class="card-body"><h3>Refined Sunflower Oil 20L Pack</h3><p class="card-desc">Commercial kitchen and grocery supply pack</p><div class="card-footer"><div class="card-price">22 &#960;<small>&asymp; $3.74</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/frozenchicken10k/600/400" alt="Frozen Chicken" loading="lazy"><span class="card-badge">Cold Chain</span></div><div class="card-body"><h3>Frozen Chicken Carton 10kg</h3><p class="card-desc">Foodservice carton for hotels and large kitchens</p><div class="card-footer"><div class="card-price">18 &#960;<small>&asymp; $3.06</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/sugar50kg2/600/400" alt="Sugar Bag" loading="lazy"><span class="card-badge">Factory Supply</span></div><div class="card-body"><h3>Industrial Sugar 50kg Bag</h3><p class="card-desc">Bakery and beverage manufacturing sugar supply</p><div class="card-footer"><div class="card-price">16 &#960;<small>&asymp; $2.72</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
+                    <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/avocrate2/600/400" alt="Avocado Crate" loading="lazy"><span class="card-badge">Fresh Export</span></div><div class="card-body"><h3>Organic Avocado Export Crate</h3><p class="card-desc">Fresh produce crate for exporters and wholesalers</p><div class="card-footer"><div class="card-price">14 &#960;<small>&asymp; $2.38</small></div><button class="btn-buy">&#960; Buy</button></div></div></div>
                 </div>
             </div>
         </div>
@@ -513,672 +694,98 @@
     <!-- Fashion Section -->
     <section class="section" id="fashion">
         <div class="section-header">
-            <h2 data-i18n="explore.fashionSection">Fashion & Accessories</h2>
+            <h2>New Generation Cars</h2>
             <a href="index.html">View All &rarr;</a>
         </div>
         <div class="product-grid">
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/watch1/600/400" alt="Watch" loading="lazy">
-                    <span class="card-badge">New</span>
-                </div>
-                <div class="card-body">
-                    <h3>NAVIFORCE Elegant Watch</h3>
-                    <p class="card-desc">Women's square quartz, stainless steel</p>
-                    <div class="card-footer">
-                        <div class="card-price">300 &#960;<small>&asymp; $51.00</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/sneakers/600/400" alt="Sneakers" loading="lazy">
-                    <span class="card-badge">Trending</span>
-                </div>
-                <div class="card-body">
-                    <h3>Chunky Platform Sneakers</h3>
-                    <p class="card-desc">Size 41-44, premium sole</p>
-                    <div class="card-footer">
-                        <div class="card-price">180 &#960;<small>&asymp; $30.60</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/leatherbag/600/400" alt="Bag" loading="lazy">
-                    <span class="card-badge">Premium</span>
-                </div>
-                <div class="card-body">
-                    <h3>Italian Leather Handbag</h3>
-                    <p class="card-desc">Handcrafted, genuine leather</p>
-                    <div class="card-footer">
-                        <div class="card-price">450 &#960;<small>&asymp; $76.50</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/rayban/600/400" alt="Sunglasses" loading="lazy">
-                    <span class="card-badge">Iconic</span>
-                </div>
-                <div class="card-body">
-                    <h3>Ray-Ban Aviator Sunglasses</h3>
-                    <p class="card-desc">Classic gold frame, polarized lenses</p>
-                    <div class="card-footer">
-                        <div class="card-price">250 &#960;<small>&asymp; $42.50</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/jordan4/600/400" alt="Jordan Shoes" loading="lazy">
-                    <span class="card-badge">Trending</span>
-                </div>
-                <div class="card-body">
-                    <h3>Nike Air Jordan 4 Retro</h3>
-                    <p class="card-desc">Size 40-46, Military Black</p>
-                    <div class="card-footer">
-                        <div class="card-price">420 &#960;<small>&asymp; $71.40</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/overcoat/600/400" alt="Overcoat" loading="lazy">
-                    <span class="card-badge">Premium</span>
-                </div>
-                <div class="card-body">
-                    <h3>Cashmere Wool Overcoat</h3>
-                    <p class="card-desc">Hand-stitched, Italian cut</p>
-                    <div class="card-footer">
-                        <div class="card-price">650 &#960;<small>&asymp; $110.50</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/bydsealc/600/400" alt="BYD Seal" loading="lazy"><span class="card-badge">New Gen</span></div><div class="card-body"><h3>BYD Seal 2025 EV</h3><p class="card-desc">Long-range electric sedan for modern retail and fleet buyers</p><div class="card-footer"><div class="card-price">18,500 &#960;<small>&asymp; $3.15K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/model3section/600/400" alt="Tesla Model 3" loading="lazy"><span class="card-badge">Featured</span></div><div class="card-body"><h3>Tesla Model 3 Highland</h3><p class="card-desc">Refined EV sedan with dual-motor option and premium cabin</p><div class="card-footer"><div class="card-price">24,200 &#960;<small>&asymp; $4.11K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/pradosection/600/400" alt="Prado 2025" loading="lazy"><span class="card-badge">4x4</span></div><div class="card-body"><h3>Toyota Land Cruiser Prado 2025</h3><p class="card-desc">Business-class 4x4 SUV for tours, security, and travel</p><div class="card-footer"><div class="card-price">31,800 &#960;<small>&asymp; $5.41K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/rangersection/600/400" alt="Ranger Raptor" loading="lazy"><span class="card-badge">Pickup</span></div><div class="card-body"><h3>Ford Ranger Raptor 2024</h3><p class="card-desc">Performance pickup for logistics crews and field service</p><div class="card-footer"><div class="card-price">28,900 &#960;<small>&asymp; $4.91K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
         </div>
     </section>
 
     <!-- Electronics Section -->
     <section class="section" id="electronics">
         <div class="section-header">
-            <h2 data-i18n="explore.electronicsSection">Electronics & Gadgets</h2>
+            <h2>Commercial Tech and Energy</h2>
             <a href="index.html">View All &rarr;</a>
         </div>
         <div class="product-grid">
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/laptop22/600/400" alt="Laptop" loading="lazy">
-                    <span class="card-badge">Featured</span>
-                </div>
-                <div class="card-body">
-                    <h3>Workstation Laptop M3</h3>
-                    <p class="card-desc">16GB RAM, 512GB SSD</p>
-                    <div class="card-footer">
-                        <div class="card-price">1,250 &#960;<small>&asymp; $212.50</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/smartwatch2/600/400" alt="Smartwatch" loading="lazy">
-                    <span class="card-badge">Popular</span>
-                </div>
-                <div class="card-body">
-                    <h3>Smart Fitness Pro</h3>
-                    <p class="card-desc">Heart rate, GPS, waterproof</p>
-                    <div class="card-footer">
-                        <div class="card-price">180 &#960;<small>&asymp; $30.60</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/headphones2/600/400" alt="Headphones" loading="lazy">
-                    <span class="card-badge">New</span>
-                </div>
-                <div class="card-body">
-                    <h3>Audio Bass Ultra</h3>
-                    <p class="card-desc">ANC, 40hr battery, Hi-Res</p>
-                    <div class="card-footer">
-                        <div class="card-price">75.5 &#960;<small>&asymp; $12.84</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/galaxy24/600/400" alt="Galaxy" loading="lazy">
-                    <span class="card-badge">Hot</span>
-                </div>
-                <div class="card-body">
-                    <h3>Samsung Galaxy S24 Ultra</h3>
-                    <p class="card-desc">512GB, AI Camera, Titanium</p>
-                    <div class="card-footer">
-                        <div class="card-price">5,100 &#960;<small>&asymp; $867.00</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/ps5pro/600/400" alt="PS5" loading="lazy">
-                    <span class="card-badge">Limited</span>
-                </div>
-                <div class="card-body">
-                    <h3>Sony PlayStation 5 Pro</h3>
-                    <p class="card-desc">1TB SSD, 4K 120fps gaming</p>
-                    <div class="card-footer">
-                        <div class="card-price">3,200 &#960;<small>&asymp; $544.00</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/drone4/600/400" alt="Drone" loading="lazy">
-                    <span class="card-badge">New</span>
-                </div>
-                <div class="card-body">
-                    <h3>DJI Mini 4 Pro Drone</h3>
-                    <p class="card-desc">4K HDR, 34min flight time</p>
-                    <div class="card-footer">
-                        <div class="card-price">4,800 &#960;<small>&asymp; $816.00</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/ipadair/600/400" alt="iPad" loading="lazy">
-                    <span class="card-badge">Popular</span>
-                </div>
-                <div class="card-body">
-                    <h3>iPad Air M2</h3>
-                    <p class="card-desc">11-inch, 256GB, Starlight</p>
-                    <div class="card-footer">
-                        <div class="card-price">3,600 &#960;<small>&asymp; $612.00</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/agrassection/600/400" alt="Agras Drone" loading="lazy"><span class="card-badge">AgriTech</span></div><div class="card-body"><h3>DJI Agras T50 Drone</h3><p class="card-desc">Crop spraying drone for high-output farming operations</p><div class="card-footer"><div class="card-price">12,800 &#960;<small>&asymp; $2.18K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/starlinksection/600/400" alt="Starlink Kit" loading="lazy"><span class="card-badge">Connectivity</span></div><div class="card-body"><h3>Starlink Gen 3 Kit</h3><p class="card-desc">Business connectivity for remote depots, farms, and trucks</p><div class="card-footer"><div class="card-price">900 &#960;<small>&asymp; $153.00</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/invertersection/600/400" alt="Solar Inverter" loading="lazy"><span class="card-badge">Power</span></div><div class="card-body"><h3>Huawei 20kW Solar Inverter</h3><p class="card-desc">Commercial inverter for mini-grids, shops, and factories</p><div class="card-footer"><div class="card-price">5,400 &#960;<small>&asymp; $918.00</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/cctvsection/600/400" alt="CCTV" loading="lazy"><span class="card-badge">Security</span></div><div class="card-body"><h3>Hikvision AI CCTV 8-Cam Kit</h3><p class="card-desc">AI-enabled surveillance for warehouses and showrooms</p><div class="card-footer"><div class="card-price">1,250 &#960;<small>&asymp; $212.50</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
         </div>
     </section>
 
     <!-- Digital Products Section -->
     <section class="section" id="digital">
         <div class="section-header">
-            <h2 data-i18n="explore.digitalProducts">Digital Products</h2>
+            <h2>Business Software Products</h2>
             <a href="index.html">View All &rarr;</a>
         </div>
         <div class="product-grid">
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/music1/600/400" alt="Music" loading="lazy">
-                    <span class="card-badge">Hot</span>
-                </div>
-                <div class="card-body">
-                    <h3>GPM Music Pack</h3>
-                    <p class="card-desc">Support artists, get exclusive tracks</p>
-                    <div class="card-footer">
-                        <div class="card-price">0.10 &#960;<small>&asymp; $0.02</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/social1/600/400" alt="Social Pack" loading="lazy">
-                    <span class="card-badge">Best Value</span>
-                </div>
-                <div class="card-body">
-                    <h3>Social Media Pack &mdash; 30 Days</h3>
-                    <p class="card-desc">Posting templates for Pi Network</p>
-                    <div class="card-footer">
-                        <div class="card-price">0.10 &#960;<small>&asymp; $0.02</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/ebook1/600/400" alt="Ebook" loading="lazy">
-                    <span class="card-badge">New</span>
-                </div>
-                <div class="card-body">
-                    <h3>Pi Trading Guide eBook</h3>
-                    <p class="card-desc">Master Pi commerce, 200+ pages</p>
-                    <div class="card-footer">
-                        <div class="card-price">2.5 &#960;<small>&asymp; $0.43</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/uxcourse/600/400" alt="UX Course" loading="lazy">
-                    <span class="card-badge">New</span>
-                </div>
-                <div class="card-body">
-                    <h3>UI/UX Design Masterclass</h3>
-                    <p class="card-desc">Figma + Framer, 80+ lessons</p>
-                    <div class="card-footer">
-                        <div class="card-price">15 &#960;<small>&asymp; $2.55</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/afrobeats/600/400" alt="Afrobeats" loading="lazy">
-                    <span class="card-badge">Hot</span>
-                </div>
-                <div class="card-body">
-                    <h3>African Beats Music Pack</h3>
-                    <p class="card-desc">50 royalty-free Afrobeat loops</p>
-                    <div class="card-footer">
-                        <div class="card-price">3 &#960;<small>&asymp; $0.51</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/pibundle/600/400" alt="Pi Bundle" loading="lazy">
-                    <span class="card-badge">Bundle</span>
-                </div>
-                <div class="card-body">
-                    <h3>Pi Commerce eBook Bundle</h3>
-                    <p class="card-desc">3 books: Trading, Mining, DApps</p>
-                    <div class="card-footer">
-                        <div class="card-price">5 &#960;<small>&asymp; $0.85</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/fleetsaassection/600/400" alt="Fleet SaaS" loading="lazy"><span class="card-badge">Business</span></div><div class="card-body"><h3>Fleet Management SaaS License</h3><p class="card-desc">Dispatch, route optimization, and fuel analytics suite</p><div class="card-footer"><div class="card-price">120 &#960;<small>&asymp; $20.40</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/erpsection/600/400" alt="ERP Deployment" loading="lazy"><span class="card-badge">ERP</span></div><div class="card-body"><h3>ERPNext Deployment and Training</h3><p class="card-desc">Complete SME rollout for finance, stock, and sales</p><div class="card-footer"><div class="card-price">65 &#960;<small>&asymp; $11.05</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/dispatchsection/600/400" alt="Dispatch Source Code" loading="lazy"><span class="card-badge">Source Code</span></div><div class="card-body"><h3>Logistics Dispatch App Source Code</h3><p class="card-desc">Courier, dispatch, and admin portal ready for launch</p><div class="card-footer"><div class="card-price">45 &#960;<small>&asymp; $7.65</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/iotsection/600/400" alt="IoT Dashboard" loading="lazy"><span class="card-badge">Industrial</span></div><div class="card-body"><h3>Industrial IoT Dashboard License</h3><p class="card-desc">Monitor machines, power systems, and uptime KPIs</p><div class="card-footer"><div class="card-price">28 &#960;<small>&asymp; $4.76</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
         </div>
     </section>
 
     <!-- Home & Living Section -->
     <section class="section" id="home">
         <div class="section-header">
-            <h2 data-i18n="explore.homeLiving">Home & Living</h2>
+            <h2>Power and Utility Equipment</h2>
             <a href="index.html">View All &rarr;</a>
         </div>
         <div class="product-grid">
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/desklamp/600/400" alt="Desk Lamp" loading="lazy">
-                    <span class="card-badge">Smart</span>
-                </div>
-                <div class="card-body">
-                    <h3>Smart LED Desk Lamp</h3>
-                    <p class="card-desc">Wireless charging base, 5 light modes</p>
-                    <div class="card-footer">
-                        <div class="card-price">120 &#960;<small>&asymp; $20.40</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/espresso/600/400" alt="Coffee Machine" loading="lazy">
-                    <span class="card-badge">Popular</span>
-                </div>
-                <div class="card-body">
-                    <h3>Espresso Coffee Machine</h3>
-                    <p class="card-desc">15-bar pump, integrated milk frother</p>
-                    <div class="card-footer">
-                        <div class="card-price">680 &#960;<small>&asymp; $115.60</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/robovac/600/400" alt="Robot Vacuum" loading="lazy">
-                    <span class="card-badge">New</span>
-                </div>
-                <div class="card-body">
-                    <h3>Robot Vacuum Pro</h3>
-                    <p class="card-desc">LIDAR navigation, auto-empty dock</p>
-                    <div class="card-footer">
-                        <div class="card-price">950 &#960;<small>&asymp; $161.50</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/mattress/600/400" alt="Mattress" loading="lazy">
-                    <span class="card-badge">Best Seller</span>
-                </div>
-                <div class="card-body">
-                    <h3>Memory Foam Mattress</h3>
-                    <p class="card-desc">Queen size, cooling gel layer</p>
-                    <div class="card-footer">
-                        <div class="card-price">1,500 &#960;<small>&asymp; $255.00</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/airpurifier/600/400" alt="Air Purifier" loading="lazy">
-                    <span class="card-badge">Health</span>
-                </div>
-                <div class="card-body">
-                    <h3>HEPA Air Purifier</h3>
-                    <p class="card-desc">Covers 50m², PM2.5 sensor display</p>
-                    <div class="card-footer">
-                        <div class="card-price">380 &#960;<small>&asymp; $64.60</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/smartplug/600/400" alt="Smart Plugs" loading="lazy">
-                    <span class="card-badge">Value</span>
-                </div>
-                <div class="card-body">
-                    <h3>Wi-Fi Smart Plug 4-Pack</h3>
-                    <p class="card-desc">Voice control, energy monitoring</p>
-                    <div class="card-footer">
-                        <div class="card-price">55 &#960;<small>&asymp; $9.35</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/batterysection/600/400" alt="Battery" loading="lazy"><span class="card-badge">Storage</span></div><div class="card-body"><h3>CATL 15kWh Wall Battery</h3><p class="card-desc">Power storage for charging stations and depots</p><div class="card-footer"><div class="card-price">7,600 &#960;<small>&asymp; $1.29K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/evchargersection/600/400" alt="EV Charger" loading="lazy"><span class="card-badge">Fast Charge</span></div><div class="card-body"><h3>Bosch EV Fast Charger 60kW</h3><p class="card-desc">Commercial charger for dealerships and parking hubs</p><div class="card-footer"><div class="card-price">11,800 &#960;<small>&asymp; $2.01K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/solarpumpsection/600/400" alt="Solar Pump" loading="lazy"><span class="card-badge">Farm Power</span></div><div class="card-body"><h3>Solar Water Pump 7.5HP</h3><p class="card-desc">Remote pumping system for irrigation and water supply</p><div class="card-footer"><div class="card-price">1,450 &#960;<small>&asymp; $246.50</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/gensection/600/400" alt="Generator" loading="lazy"><span class="card-badge">Backup</span></div><div class="card-body"><h3>Cummins Diesel Generator 80kVA</h3><p class="card-desc">Backup generator for sites, clinics, and factories</p><div class="card-footer"><div class="card-price">9,600 &#960;<small>&asymp; $1.63K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
         </div>
     </section>
 
     <!-- Beauty & Health Section -->
     <section class="section" id="beauty">
         <div class="section-header">
-            <h2 data-i18n="explore.beautyHealth">Beauty & Health</h2>
+            <h2>Workshop Parts and Service Kits</h2>
             <a href="index.html">View All &rarr;</a>
         </div>
         <div class="product-grid">
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/skincare/600/400" alt="Skincare" loading="lazy">
-                    <span class="card-badge">Natural</span>
-                </div>
-                <div class="card-body">
-                    <h3>Organic Skincare Set</h3>
-                    <p class="card-desc">Cleanser, toner, moisturizer, serum</p>
-                    <div class="card-footer">
-                        <div class="card-price">85 &#960;<small>&asymp; $14.45</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/massagegun/600/400" alt="Massage Gun" loading="lazy">
-                    <span class="card-badge">Trending</span>
-                </div>
-                <div class="card-body">
-                    <h3>Electric Massage Gun</h3>
-                    <p class="card-desc">6 heads, 30 speeds, deep tissue</p>
-                    <div class="card-footer">
-                        <div class="card-price">160 &#960;<small>&asymp; $27.20</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/serum/600/400" alt="Vitamin C Serum" loading="lazy">
-                    <span class="card-badge">Hot</span>
-                </div>
-                <div class="card-body">
-                    <h3>Vitamin C Glow Serum</h3>
-                    <p class="card-desc">30ml, hyaluronic acid blend</p>
-                    <div class="card-footer">
-                        <div class="card-price">35 &#960;<small>&asymp; $5.95</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/toothbrush/600/400" alt="Electric Toothbrush" loading="lazy">
-                    <span class="card-badge">Smart</span>
-                </div>
-                <div class="card-body">
-                    <h3>Sonic Electric Toothbrush</h3>
-                    <p class="card-desc">5 modes, pressure sensor, USB-C</p>
-                    <div class="card-footer">
-                        <div class="card-price">48 &#960;<small>&asymp; $8.16</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/essential/600/400" alt="Essential Oils" loading="lazy">
-                    <span class="card-badge">Wellness</span>
-                </div>
-                <div class="card-body">
-                    <h3>Essential Oil Diffuser Set</h3>
-                    <p class="card-desc">Ultrasonic mist + 6 pure oils</p>
-                    <div class="card-footer">
-                        <div class="card-price">72 &#960;<small>&asymp; $12.24</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/hairdryer/600/400" alt="Hair Dryer" loading="lazy">
-                    <span class="card-badge">Premium</span>
-                </div>
-                <div class="card-body">
-                    <h3>Ionic Hair Dryer Pro</h3>
-                    <p class="card-desc">1800W, 3 attachments, frizz-free</p>
-                    <div class="card-footer">
-                        <div class="card-price">110 &#960;<small>&asymp; $18.70</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/trucktiresection/600/400" alt="Truck Tires" loading="lazy"><span class="card-badge">Fleet</span></div><div class="card-body"><h3>Michelin Truck Tire Set</h3><p class="card-desc">Commercial tire package for buses and freight fleets</p><div class="card-footer"><div class="card-price">850 &#960;<small>&asymp; $144.50</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/brakesection/600/400" alt="Brake Kit" loading="lazy"><span class="card-badge">Workshop</span></div><div class="card-body"><h3>Brembo Brake Kit Premium</h3><p class="card-desc">High-performance brake package for SUVs and pickups</p><div class="card-footer"><div class="card-price">950 &#960;<small>&asymp; $161.50</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/hiluxsection/600/400" alt="Hilux Parts" loading="lazy"><span class="card-badge">Service Kit</span></div><div class="card-body"><h3>Toyota Hilux Spare Parts Kit</h3><p class="card-desc">Common service parts for fleet maintenance programs</p><div class="card-footer"><div class="card-price">420 &#960;<small>&asymp; $71.40</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/scannersection/600/400" alt="Scanner" loading="lazy"><span class="card-badge">Diagnostics</span></div><div class="card-body"><h3>OBD Workshop Scanner Pro</h3><p class="card-desc">Dealer-grade diagnostics for modern vehicles and pickups</p><div class="card-footer"><div class="card-price">260 &#960;<small>&asymp; $44.20</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
         </div>
     </section>
 
     <!-- Sports & Outdoors Section -->
     <section class="section" id="sports">
         <div class="section-header">
-            <h2 data-i18n="explore.sportsOutdoors">Sports & Outdoors</h2>
+            <h2>Machinery and Agriculture</h2>
             <a href="index.html">View All &rarr;</a>
         </div>
         <div class="product-grid">
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/trekbag/600/400" alt="Backpack" loading="lazy">
-                    <span class="card-badge">Adventure</span>
-                </div>
-                <div class="card-body">
-                    <h3>Mountain Trekking Backpack</h3>
-                    <p class="card-desc">65L, waterproof, ergonomic frame</p>
-                    <div class="card-footer">
-                        <div class="card-price">220 &#960;<small>&asymp; $37.40</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/dumbbells/600/400" alt="Dumbbells" loading="lazy">
-                    <span class="card-badge">Fitness</span>
-                </div>
-                <div class="card-body">
-                    <h3>Adjustable Dumbbell Set</h3>
-                    <p class="card-desc">2-24kg per hand, quick-lock</p>
-                    <div class="card-footer">
-                        <div class="card-price">350 &#960;<small>&asymp; $59.50</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/roadbike/600/400" alt="Road Bicycle" loading="lazy">
-                    <span class="card-badge">Premium</span>
-                </div>
-                <div class="card-body">
-                    <h3>Carbon Road Bicycle</h3>
-                    <p class="card-desc">Shimano 105, 8.2kg ultra-light</p>
-                    <div class="card-footer">
-                        <div class="card-price">4,200 &#960;<small>&asymp; $714.00</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/yogamat/600/400" alt="Yoga Mat" loading="lazy">
-                    <span class="card-badge">Eco</span>
-                </div>
-                <div class="card-body">
-                    <h3>Premium Yoga Mat</h3>
-                    <p class="card-desc">6mm, natural rubber, non-slip</p>
-                    <div class="card-footer">
-                        <div class="card-price">42 &#960;<small>&asymp; $7.14</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/tent2p/600/400" alt="Camping Tent" loading="lazy">
-                    <span class="card-badge">Camping</span>
-                </div>
-                <div class="card-body">
-                    <h3>2-Person Camping Tent</h3>
-                    <p class="card-desc">4-season, aluminum poles, 2.1kg</p>
-                    <div class="card-footer">
-                        <div class="card-price">280 &#960;<small>&asymp; $47.60</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/football/600/400" alt="Football" loading="lazy">
-                    <span class="card-badge">Official</span>
-                </div>
-                <div class="card-body">
-                    <h3>FIFA Pro Match Football</h3>
-                    <p class="card-desc">Thermal-bonded, size 5</p>
-                    <div class="card-footer">
-                        <div class="card-price">55 &#960;<small>&asymp; $9.35</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/excavatorsection/600/400" alt="Excavator" loading="lazy"><span class="card-badge">Heavy Duty</span></div><div class="card-body"><h3>Komatsu PC200 Excavator</h3><p class="card-desc">20-ton excavator for roads, quarries, and construction</p><div class="card-footer"><div class="card-price">64,800 &#960;<small>&asymp; $11.02K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/forkliftsection/600/400" alt="Forklift" loading="lazy"><span class="card-badge">Warehouse</span></div><div class="card-body"><h3>Toyota 3 Ton Forklift</h3><p class="card-desc">Warehouse and port loading equipment for distribution hubs</p><div class="card-footer"><div class="card-price">14,800 &#960;<small>&asymp; $2.52K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/tractorsection/600/400" alt="Tractor" loading="lazy"><span class="card-badge">Agriculture</span></div><div class="card-body"><h3>John Deere 5075E Tractor</h3><p class="card-desc">Farm tractor for cultivation, towing, and land prep</p><div class="card-footer"><div class="card-price">23,500 &#960;<small>&asymp; $4.00K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/ricesection/600/400" alt="Rice Mill" loading="lazy"><span class="card-badge">Factory</span></div><div class="card-body"><h3>Rice Milling Machine Line</h3><p class="card-desc">Processing line for cooperatives and export businesses</p><div class="card-footer"><div class="card-price">13,700 &#960;<small>&asymp; $2.33K</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
         </div>
     </section>
 
     <!-- Food & Groceries Section -->
     <section class="section" id="food">
         <div class="section-header">
-            <h2 data-i18n="explore.foodGroceries">Food & Groceries</h2>
+            <h2>Bulk Commodity Products</h2>
             <a href="index.html">View All &rarr;</a>
         </div>
         <div class="product-grid">
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/coffeebeans/600/400" alt="Coffee Beans" loading="lazy">
-                    <span class="card-badge">Organic</span>
-                </div>
-                <div class="card-body">
-                    <h3>Organic Coffee Beans 1kg</h3>
-                    <p class="card-desc">Single-origin Ethiopian Yirgacheffe</p>
-                    <div class="card-footer">
-                        <div class="card-price">28 &#960;<small>&asymp; $4.76</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/honeygift/600/400" alt="Honey" loading="lazy">
-                    <span class="card-badge">Gift</span>
-                </div>
-                <div class="card-body">
-                    <h3>Premium Honey Gift Box</h3>
-                    <p class="card-desc">3x 500g, raw wildflower + manuka</p>
-                    <div class="card-footer">
-                        <div class="card-price">65 &#960;<small>&asymp; $11.05</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/spicebox/600/400" alt="Spice Kit" loading="lazy">
-                    <span class="card-badge">New</span>
-                </div>
-                <div class="card-body">
-                    <h3>Spice Collection Kit</h3>
-                    <p class="card-desc">24 organic East African spices</p>
-                    <div class="card-footer">
-                        <div class="card-price">45 &#960;<small>&asymp; $7.65</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/teabox/600/400" alt="Tea Collection" loading="lazy">
-                    <span class="card-badge">Premium</span>
-                </div>
-                <div class="card-body">
-                    <h3>Kenyan Tea Sampler</h3>
-                    <p class="card-desc">12 varieties, loose leaf, wooden box</p>
-                    <div class="card-footer">
-                        <div class="card-price">38 &#960;<small>&asymp; $6.46</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/driedfruit/600/400" alt="Dried Fruits" loading="lazy">
-                    <span class="card-badge">Healthy</span>
-                </div>
-                <div class="card-body">
-                    <h3>Mixed Dried Fruit Pack</h3>
-                    <p class="card-desc">500g, mango, pineapple, coconut</p>
-                    <div class="card-footer">
-                        <div class="card-price">18 &#960;<small>&asymp; $3.06</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-img">
-                    <img src="https://picsum.photos/seed/macadamia/600/400" alt="Macadamia" loading="lazy">
-                    <span class="card-badge">Local</span>
-                </div>
-                <div class="card-body">
-                    <h3>Roasted Macadamia Nuts</h3>
-                    <p class="card-desc">400g, lightly salted, Kenyan grown</p>
-                    <div class="card-footer">
-                        <div class="card-price">22 &#960;<small>&asymp; $3.74</small></div>
-                        <button class="btn-buy">&#960; Pay Now</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/basmatisection/600/400" alt="Basmati Rice" loading="lazy"><span class="card-badge">Commodity</span></div><div class="card-body"><h3>Premium Basmati Rice 25kg Bulk</h3><p class="card-desc">Wholesale rice bag for retailers and foodservice operators</p><div class="card-footer"><div class="card-price">32 &#960;<small>&asymp; $5.44</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/coffeesection/600/400" alt="Coffee Sack" loading="lazy"><span class="card-badge">Export</span></div><div class="card-body"><h3>Brazilian Arabica Coffee 30kg Sack</h3><p class="card-desc">Commercial coffee sack for cafés and distributors</p><div class="card-footer"><div class="card-price">48 &#960;<small>&asymp; $8.16</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/oilsection/600/400" alt="Sunflower Oil" loading="lazy"><span class="card-badge">Wholesale</span></div><div class="card-body"><h3>Refined Sunflower Oil 20L Pack</h3><p class="card-desc">Commercial oil pack for restaurants and grocery supply</p><div class="card-footer"><div class="card-price">22 &#960;<small>&asymp; $3.74</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
+            <div class="card"><div class="card-img"><img src="https://picsum.photos/seed/sugarsection/600/400" alt="Sugar Bag" loading="lazy"><span class="card-badge">Factory Supply</span></div><div class="card-body"><h3>Industrial Sugar 50kg Bag</h3><p class="card-desc">Bakery and beverage manufacturing stock bag</p><div class="card-footer"><div class="card-price">16 &#960;<small>&asymp; $2.72</small></div><button class="btn-buy">&#960; Pay Now</button></div></div></div>
         </div>
     </section>
 
@@ -1187,10 +794,10 @@
             <h2>Open All Services in Browser</h2>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">All Services</h3><p class="card-desc" style="margin-bottom:12px">Open complete services portal.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Hotels</h3><p class="card-desc" style="margin-bottom:12px">Book and pay hotels with Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/hotels')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Homes</h3><p class="card-desc" style="margin-bottom:12px">Browse homes and rentals.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/homes')">Open</button></div>
-            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Bills</h3><p class="card-desc" style="margin-bottom:12px">Pay utility bills in Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('/services/bills')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">All Services</h3><p class="card-desc" style="margin-bottom:12px">Open complete services portal.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://omendapipaysglobel.online/services')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Hotels</h3><p class="card-desc" style="margin-bottom:12px">Book and pay hotels with Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://omendapipaysglobel.online/services/hotels')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Homes</h3><p class="card-desc" style="margin-bottom:12px">Browse homes and rentals.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://omendapipaysglobel.online/services/homes')">Open</button></div>
+            <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Bills</h3><p class="card-desc" style="margin-bottom:12px">Pay utility bills in Pi.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('https://omendapipaysglobel.online/services/bills')">Open</button></div>
             <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Transport</h3><p class="card-desc" style="margin-bottom:12px">Open ride and transport services.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('transport.html')">Open</button></div>
             <div class="card" style="padding:16px"><h3 style="margin-bottom:8px">Map</h3><p class="card-desc" style="margin-bottom:12px">View Pi locations on map.</p><button class="btn-buy" style="width:100%" onclick="openServiceBrowser('map.html')">Open</button></div>
         </div>
@@ -1214,22 +821,33 @@
             </div>
             <div class="footer-col">
                 <h4 data-i18n="nav.services">Services</h4>
-                <a href="/services" target="_blank" data-i18n="footer.allServices">All Services</a>
-                <a href="/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
-                <a href="/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
-                <a href="/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="https://omendapipaysglobel.online/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="https://omendapipaysglobel.online/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="https://omendapipaysglobel.online/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
                 <a href="transport.html" data-i18n="nav.transport">Transport</a>
             </div>
             <div class="footer-col">
                 <h4 data-i18n="footer.resources">Resources</h4>
-                <a href="n2 .html" data-i18n="footer.mobileView">Mobile View</a>
+                <a href="n2%20.html" data-i18n="footer.mobileView">Mobile View</a>
                 <a href="form.html" data-i18n="footer.kycVerification">KYC Verification</a>
-                <a href="submit success full.html" data-i18n="footer.submissionStatus">Submission Status</a>
+                <a href="submit%20success%20full.html" data-i18n="footer.submissionStatus">Submission Status</a>
             </div>
             <div class="footer-col">
                 <h4 data-i18n="footer.legal">Legal</h4>
                 <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
                 <a href="terms-of-service.html" data-i18n="footer.termsOfService">Terms of Service</a>
+            </div>
+            <div class="footer-col">
+                <h4>Business Address</h4>
+                <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:10px;">
+                    Omenda Pi Pays Global<br>
+                    Block A, Nyerere Road<br>
+                    Dodoma, Dodoma 41101<br>
+                    Tanzania
+                </p>
+                <a href="mailto:support@omendapipaysglobel.online">support@omendapipaysglobel.online</a>
+                <a href="https://omendapipaysglobel.online" target="_blank" rel="noopener noreferrer">omendapipaysglobel.online</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -1239,37 +857,120 @@
         </div>
     </footer>
 
+    <nav class="phone-bottom-nav" aria-label="Mobile bottom navigation">
+        <a href="index.html"><span class="icon">&#8962;</span><span>Home</span></a>
+        <a href="new.html" class="active"><span class="icon">&#9825;</span><span>Favorites</span></a>
+        <a href="Submit.html"><span class="icon">&#65291;</span><span>Sell</span></a>
+        <a href="social.html"><span class="icon">&#9993;</span><span>Chat</span></a>
+        <a href="form.html"><span class="icon">&#9711;</span><span>Profile</span></a>
+    </nav>
+
     <script>
         // Pi SDK Auth
         let piUser = null;
-        const isPiBrowser = typeof window.Pi !== 'undefined';
-        if (isPiBrowser) Pi.init({ version: "2.0", sandbox: false });
+        const isPiBrowser = /PiBrowser/i.test(navigator.userAgent || '');
+        let piInitialized = false;
 
-        async function piConnect() {
-            if (!isPiBrowser) { alert('Please open this app in Pi Browser'); return; }
-            try {
-                const auth = await Pi.authenticate(['username', 'payments'], function(p) { console.log('Incomplete:', p); });
-                piUser = auth.user;
-                document.getElementById('pi-user-badge').style.display = 'inline-flex';
-                document.getElementById('pi-username').textContent = '@' + piUser.username;
-                document.getElementById('pi-connect-btn').textContent = 'Connected \u2713';
-                document.getElementById('pi-connect-btn').disabled = true;
-                document.getElementById('pi-connect-btn').style.opacity = '0.6';
-            } catch (err) { console.error('Pi auth error:', err); }
+        function hasPiSdk() {
+            return typeof window.Pi !== 'undefined';
         }
 
-        // Auto-login in Pi Browser
-        if (isPiBrowser) piConnect();
+        function setConnectedState(user) {
+            if (!user || !user.username) {
+                return;
+            }
+            piUser = user;
+            sessionStorage.setItem('pi_username', user.username);
+            document.getElementById('pi-user-badge').style.display = 'inline-flex';
+            document.getElementById('pi-username').textContent = '@' + user.username;
+            document.getElementById('pi-connect-btn').textContent = 'Connected \u2713';
+            document.getElementById('pi-connect-btn').disabled = true;
+            document.getElementById('pi-connect-btn').style.opacity = '0.6';
+        }
+
+        function restoreConnectedState() {
+            var savedUsername = sessionStorage.getItem('pi_username');
+            if (savedUsername && !piUser) {
+                setConnectedState({ username: savedUsername });
+            }
+        }
+
+        async function waitForPiSdk(timeoutMs) {
+            if (hasPiSdk()) {
+                return;
+            }
+            if (!isPiBrowser) {
+                throw new Error('Open this app in Pi Browser.');
+            }
+
+            var start = Date.now();
+            while (!hasPiSdk() && Date.now() - start < timeoutMs) {
+                await new Promise(function(resolve) { setTimeout(resolve, 120); });
+            }
+
+            if (!hasPiSdk()) {
+                throw new Error('Pi SDK not ready. Reload in Pi Browser.');
+            }
+        }
+
+        function usePiSandbox() {
+            return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+        }
+
+        async function ensurePiInitialized() {
+            if (piInitialized) {
+                return;
+            }
+
+            await waitForPiSdk(10000);
+            const initResult = window.Pi.init({ version: "2.0", sandbox: usePiSandbox() });
+            if (initResult && typeof initResult.then === 'function') {
+                await initResult;
+            }
+            piInitialized = true;
+        }
+
+        async function piConnect(silent) {
+            if (!isPiBrowser) {
+                if (!silent) {
+                    alert('Please open this app in Pi Browser');
+                }
+                return;
+            }
+            try {
+                await ensurePiInitialized();
+                const auth = await window.Pi.authenticate(['username', 'payments'], function(p) { console.log('Incomplete:', p); });
+                if (auth && auth.user) {
+                    setConnectedState(auth.user);
+                }
+            } catch (err) {
+                if (!silent) {
+                    alert('Pi login failed: ' + (err.message || 'Unknown error'));
+                }
+                console.error('Pi auth error:', err);
+            }
+        }
+
+        restoreConnectedState();
+        if (isPiBrowser) {
+            piConnect(true);
+        }
 
         function piPay(amount, productName) {
             if (!isPiBrowser) { alert('Open in Pi Browser to pay'); return; }
             if (!piUser) { alert('Connect your Pi wallet first'); return; }
-            Pi.createPayment({ amount: amount, memo: 'Purchase: ' + productName, metadata: { product: productName } }, {
-                onReadyForServerApproval: function(id) { console.log('Approved:', id); },
-                onReadyForServerCompletion: function(id, txid) { alert('\u2705 Payment successful! TX: ' + txid); },
-                onCancel: function() { alert('Payment cancelled'); },
-                onError: function(e) { alert('Payment error: ' + (e.message || 'Error')); }
-            });
+            ensurePiInitialized()
+                .then(function() {
+                    Pi.createPayment({ amount: amount, memo: 'Purchase: ' + productName, metadata: { product: productName } }, {
+                        onReadyForServerApproval: function(id) { console.log('Approved:', id); },
+                        onReadyForServerCompletion: function(id, txid) { alert('\u2705 Payment successful! TX: ' + txid); },
+                        onCancel: function() { alert('Payment cancelled'); },
+                        onError: function(e) { alert('Payment error: ' + (e.message || 'Error')); }
+                    });
+                })
+                .catch(function(err) {
+                    alert('Pi SDK initialization failed: ' + (err.message || 'Unknown error'));
+                });
         }
 
         // Pi SDK — Share
@@ -1323,6 +1024,46 @@
             if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
         }
 
+        const STD_PI_RATE = 0.17;
+        const GCV_PI_RATE = 314159;
+
+        function toGcvPi(standardPiPrice) {
+            return (standardPiPrice * STD_PI_RATE) / GCV_PI_RATE;
+        }
+
+        function formatPi(piAmount) {
+            if (piAmount >= 1) {
+                return piAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+            }
+
+            return piAmount.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+        }
+
+        function convertAllCardPricesToGcv() {
+            document.querySelectorAll('.card-price').forEach(function(priceEl) {
+                var rawText = '';
+
+                for (var i = 0; i < priceEl.childNodes.length; i += 1) {
+                    if (priceEl.childNodes[i].nodeType === Node.TEXT_NODE) {
+                        rawText += priceEl.childNodes[i].textContent;
+                    }
+                }
+
+                var standardPi = parseFloat(rawText.replace(/[^0-9.]/g, ''));
+                if (!Number.isFinite(standardPi)) {
+                    return;
+                }
+
+                var gcvPi = toGcvPi(standardPi);
+                priceEl.dataset.piAmount = gcvPi;
+                priceEl.innerHTML = formatPi(gcvPi) + ' &#960;<small>&asymp; ' + (window.OmendaGcv ? OmendaGcv.formatUsd(gcvPi) : '$' + (gcvPi * GCV_PI_RATE).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })) + '</small>';
+            });
+
+            if (window.OmendaGcv) {
+                OmendaGcv.setMode('gcv');
+            }
+        }
+
         /* ── Marketplace Overview Carousel JS ── */
         (function() {
             var idx = 0, total = 7, timer;
@@ -1352,12 +1093,14 @@
 
         // Add click handlers to all Pay Now buttons + inject share buttons
         document.addEventListener('DOMContentLoaded', function() {
+            convertAllCardPricesToGcv();
+
             document.querySelectorAll('.btn-buy').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     var card = btn.closest('.card');
                     var name = card.querySelector('h3').textContent;
-                    var priceText = card.querySelector('.card-price').textContent;
-                    var price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+                    var priceEl = card.querySelector('.card-price');
+                    var price = parseFloat(priceEl.dataset.piAmount || '0');
                     piPay(price, name);
                 });
                 // Add share button next to each Pay Now button

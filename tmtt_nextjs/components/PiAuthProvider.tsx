@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { PiSdkBase } from "pi-sdk-js";
 
 interface PiUser {
   uid: string;
@@ -49,19 +50,23 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
   const [isPiBrowser, setIsPiBrowser] = useState(false);
   const isSandboxMode = process.env.NEXT_PUBLIC_PI_SANDBOX === "true";
 
-  // Detect Pi Browser & init SDK
+  // Detect Pi Browser & explicitly init SDK before any other Pi calls
   useEffect(() => {
     const inPiBrowser = typeof window !== "undefined" && !!window.Pi;
     setIsPiBrowser(inPiBrowser);
 
-    if (inPiBrowser && window.Pi) {
-      window.Pi.init({ version: "2.0", sandbox: isSandboxMode });
+    if (inPiBrowser) {
+      try {
+        window.Pi.init({ version: "2.0", sandbox: isSandboxMode });
+      } catch {
+        // Pi.init may throw if already initialized; safe to continue.
+      }
       setSdkReady(true);
     }
   }, [isSandboxMode]);
 
   const authenticateWithScopes = useCallback(async (scopes: string[]) => {
-    if (!window.Pi) {
+    if (typeof window === "undefined" || !window.Pi) {
       setError("Please open this app in Pi Browser");
       return false;
     }
@@ -70,18 +75,28 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const authResult = await window.Pi.authenticate(
-        scopes,
-        function onIncompletePaymentFound(payment: unknown) {
-          console.log("Incomplete payment found:", payment);
-        }
-      );
+      // Ensure Pi.init() is called before authenticate (required by Pi SDK)
+      try {
+        window.Pi.init({ version: "2.0", sandbox: isSandboxMode });
+      } catch {
+        // Already initialized; safe to continue.
+      }
+
+      const sdk = new PiSdkBase();
+      await sdk.connect();
+
+      const accessToken = PiSdkBase.accessToken;
+      const sdkUser = PiSdkBase.user as { uid?: string; username?: string } | null;
+
+      if (!accessToken || !sdkUser) {
+        throw new Error("Pi connection returned no user");
+      }
 
       // Verify token on our server
       const verifyRes = await fetch("/api/auth/pi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accessToken: authResult.accessToken }),
+        body: JSON.stringify({ accessToken }),
       });
 
       if (!verifyRes.ok) {

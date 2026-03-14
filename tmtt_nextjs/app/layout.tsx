@@ -20,8 +20,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Omenda Pi Pays | Decentralized Services",
-  description: "Rent hotels, buy homes, pay bills — all with Pi cryptocurrency",
+  metadataBase: new URL("https://omendapipaysglobel.online"),
+  title: "Omenda Pi Pays Global | Pi Marketplace & Services",
+  description: "Buy, sell, and pay for services using Pi cryptocurrency. Omenda Pi Pays Global supports hotels, homes, bills, transport, and social commerce.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Omenda Pi Pays Global | Pi Marketplace & Services",
+    description: "Buy, sell, and pay for services using Pi cryptocurrency.",
+    url: "https://omendapipaysglobel.online",
+    siteName: "Omenda Pi Pays Global",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Omenda Pi Pays Global",
+    description: "Buy, sell, and pay with Pi cryptocurrency.",
+  },
 };
 
 export default function RootLayout({

@@ -1,0 +1,7 @@
+Contact: mailto:abuse@omendapipaysglobel.online
+Contact: mailto:support@omendapipaysglobel.online
+Expires: 2027-03-14T23:59:59Z
+Preferred-Languages: en, sw
+Policy: https://omendapipaysglobel.online/security.html
+Acknowledgments: https://omendapipaysglobel.online/about.html
+Canonical: https://omendapipaysglobel.online/.well-known/security.txt

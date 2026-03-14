@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' https://*.minepi.com https://minepi.com"
+        }
+      ]
+    },
+    {
       "source": "/validation-key.txt",
       "headers": [
         {

@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scam Report | Omenda Pi Pays</title>
+    <title>Report a Scam | Omenda Pi Pays Global Safety Centre</title>
+    <meta name="description" content="Report scams, fraud, or suspicious listings on Omenda Pi Pays Global. We take user safety seriously and investigate all reports.">
+    <meta name="robots" content="index, follow">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://omendapipaysglobel.online/scam-report.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://omendapipaysglobel.online/scam-report.html">
+    <meta property="og:title" content="Report a Scam | Omenda Pi Pays Global Safety Centre">
+    <meta property="og:description" content="Report scams, fraud, or suspicious listings on Omenda Pi Pays Global.">
+    <meta property="og:site_name" content="Omenda Pi Pays Global">
+    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
     <style>
         :root {
             --bg: #09090b;
@@ -163,7 +173,6 @@
     <div class="wrap">
         <div class="top">
             <a href="index.html">Back to Marketplace</a>
-            <a href="admin-login.html">Admin Login</a>
         </div>
 
         <h1 class="title">Report Scam Activity</h1>
@@ -226,7 +235,7 @@
 
         <section class="card">
             <h2 style="font-size:1rem;margin-bottom:8px">Recent Reports</h2>
-            <p class="small" style="margin-bottom:8px">Stored locally in this browser (`omenda_scam_reports`).</p>
+            <p class="small" style="margin-bottom:8px">Recent entries from this browser cache (for quick reference).</p>
             <div style="overflow:auto">
                 <table>
                     <thead>
@@ -240,6 +249,14 @@
                     <tbody id="reports-tbody"></tbody>
                 </table>
             </div>
+        </section>
+
+        <section class="card">
+            <h2 style="font-size:1rem;margin-bottom:8px">Business Contact</h2>
+            <p class="small">Omenda Pi Pays Global</p>
+            <p class="small">Block A, Nyerere Road, Dodoma, Dodoma, Tanzania, Postal 41101</p>
+            <p class="small">Email: support@omendapipaysglobel.online</p>
+            <p class="small">Website: <a href="https://omendapipaysglobel.online" target="_blank" rel="noopener">omendapipaysglobel.online</a></p>
         </section>
     </div>
 
@@ -293,8 +310,12 @@
 
             document.getElementById("clear-btn").addEventListener("click", clearForm);
 
-            form.addEventListener("submit", function (e) {
+            form.addEventListener("submit", async function (e) {
                 e.preventDefault();
+
+                var submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Submitting...";
 
                 var report = {
                     reporter: document.getElementById("reporter").value.trim(),
@@ -310,15 +331,42 @@
 
                 if (!report.suspect || !report.type || !report.incidentDate || !report.details) {
                     showMsg("Please fill all required fields.", "err");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Submit Scam Report";
                     return;
                 }
 
-                var items = getReports();
-                items.push(report);
-                saveReports(items);
-                showMsg("Scam report submitted successfully. Admin will review.", "ok");
-                form.reset();
-                renderReports();
+                try {
+                    var res = await fetch("/api/safety/scam-reports", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(report)
+                    });
+
+                    var data = await res.json();
+                    if (!res.ok || !data.ok) {
+                        throw new Error(data.error || "Submission failed");
+                    }
+
+                    report.caseId = data.caseId || "N/A";
+                    var items = getReports();
+                    items.push(report);
+                    saveReports(items);
+                    showMsg("Scam report submitted. Case ID: " + report.caseId, "ok");
+                    form.reset();
+                    renderReports();
+                } catch (err) {
+                    // Fallback: keep local record even if network/API fails
+                    var items = getReports();
+                    report.caseId = "LOCAL-" + Date.now();
+                    items.push(report);
+                    saveReports(items);
+                    showMsg("Saved locally (offline fallback). Case ID: " + report.caseId, "err");
+                    renderReports();
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Submit Scam Report";
+                }
             });
 
             renderReports();

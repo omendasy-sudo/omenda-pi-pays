@@ -1,3 +1,8 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "frame-ancestors 'self' https://*.minepi.com https://minepi.com"
+
 [[redirects]]
   from = "/validation-key.txt"
   to = "/validation-key.txt"

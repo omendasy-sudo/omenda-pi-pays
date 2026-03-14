@@ -1,0 +1,7 @@
+omenda-pi-pays/backend/.env
+tmtt_nextjs/.env.local
+tmtt_nextjs/.env.production.local
+tmtt_nextjs/.env.testnet.local
+tmtt_nextjs/.env.mainnet.local
+tmtt_nextjs/.next/
+node_modules/

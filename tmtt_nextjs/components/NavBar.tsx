@@ -49,14 +49,6 @@ export function NavBar() {
           <Link href="/services/transport" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
             {t("transport.title")}
           </Link>
-          {connected && user?.role === "admin" && (
-            <Link href="/sandbox" className="rounded-lg px-3 py-2 text-sm font-medium text-amber-300 transition-colors hover:bg-amber-500/10 hover:text-amber-200">
-              Sandbox
-            </Link>
-          )}
-          <Link href="/admin" className="rounded-lg px-3 py-2 text-sm font-medium text-violet-400 transition-colors hover:bg-violet-500/10 hover:text-violet-300">
-            {t("nav.admin")}
-          </Link>
         </div>
         <div className="flex items-center gap-3">
           <button

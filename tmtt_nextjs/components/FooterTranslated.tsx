@@ -38,9 +38,20 @@ export function FooterTranslated() {
           <div>
             <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-zinc-500">{t("footer.legal")}</h4>
             <div className="space-y-2">
-              <span className="block text-sm text-zinc-600">{t("footer.privacyPolicy")}</span>
-              <span className="block text-sm text-zinc-600">{t("footer.termsOfService")}</span>
-              <span className="block text-sm text-zinc-600">{t("footer.kycPolicy")}</span>
+              <a href="/privacy-policy.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.privacyPolicy")}</a>
+              <a href="/terms-of-service.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.termsOfService")}</a>
+              <a href="/form.html" className="block text-sm text-zinc-400 hover:text-white">{t("footer.kycPolicy")}</a>
+            </div>
+            <div className="mt-4 text-xs leading-6 text-zinc-500">
+              Omenda Pi Pays Global
+              <br />
+              Block A, Nyerere Road
+              <br />
+              Dodoma, Dodoma 41101, Tanzania
+              <br />
+              <a href="mailto:support@omendapipaysglobel.online" className="text-zinc-400 hover:text-white">
+                support@omendapipaysglobel.online
+              </a>
             </div>
           </div>
         </div>

@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-    <title>Pi SDK Sandbox | Omenda Pi Pays</title>
+    <title>Pi SDK Demo | Omenda Pi Pays Global</title>
+    <meta name="description" content="Try the Pi Network SDK integration on Omenda Pi Pays Global. Demonstrates Pi authentication and payment flows.">
+    <meta name="robots" content="index, follow">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://omendapipaysglobel.online/omenda.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://omendapipaysglobel.online/omenda.html">
+    <meta property="og:title" content="Pi SDK Demo | Omenda Pi Pays Global">
+    <meta property="og:description" content="Try the Pi Network SDK integration on Omenda Pi Pays Global.">
+    <meta property="og:site_name" content="Omenda Pi Pays Global">
+    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -289,7 +298,6 @@
             <a href="social.html" data-i18n="nav.social">Social</a>
             <a href="/services" target="_blank" data-i18n="nav.services">Services</a>
             <a href="transport.html" data-i18n="nav.transport">Transport</a>
-            <a href="pi-converter.html">Pi Converter</a>
         </nav>
         <span id="pi-username" style="color:#f5a623;font-weight:600;font-size:0.8rem;display:none"></span>
         <a href="/services" target="_blank" class="pi-connect-btn" style="background:transparent;border:1px solid var(--border);color:var(--text-primary);text-decoration:none;display:inline-flex;align-items:center;justify-content:center">All Services</a>
@@ -533,8 +541,10 @@
 
     <script>
         // ── State ──
-        var sandboxMode = true;
+        var sandboxMode = /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
         var piUser = null;
+        var piInitialized = false;
+        var _piInitPromise = null;
 
         // ── Console Logger ──
         function logMsg(type, msg) {
@@ -572,68 +582,124 @@
         }
 
         // ── 1. Pi.init ──
-        function initSDK() {
-            try {
-                Pi.init({ version: '2.0', sandbox: sandboxMode });
-                logMsg('success', 'Pi.init({ version: "2.0", sandbox: ' + sandboxMode + ' }) — OK');
-            } catch (e) {
-                logMsg('error', 'Pi.init failed: ' + e.message);
+        function hasPiSdk() {
+            return typeof window.Pi !== 'undefined';
+        }
+
+        function waitForPiSdk(timeoutMs) {
+            if (hasPiSdk()) {
+                return Promise.resolve();
             }
+
+            return new Promise(function(resolve, reject) {
+                var step = 120;
+                var elapsed = 0;
+                var timer = setInterval(function() {
+                    if (hasPiSdk()) {
+                        clearInterval(timer);
+                        resolve();
+                        return;
+                    }
+                    elapsed += step;
+                    if (elapsed >= timeoutMs) {
+                        clearInterval(timer);
+                        reject(new Error('Pi SDK not ready. Open this page in Pi Browser and retry.'));
+                    }
+                }, step);
+            });
+        }
+
+        function ensurePiInitialized(forceReinit) {
+            if (forceReinit) {
+                piInitialized = false;
+                _piInitPromise = null;
+            }
+
+            if (piInitialized) {
+                return Promise.resolve();
+            }
+
+            if (!_piInitPromise) {
+                _piInitPromise = waitForPiSdk(10000)
+                    .then(function() {
+                        var initResult = window.Pi.init({ version: '2.0', sandbox: sandboxMode });
+                        if (initResult && typeof initResult.then === 'function') {
+                            return initResult;
+                        }
+                    })
+                    .then(function() {
+                        piInitialized = true;
+                    });
+            }
+
+            return _piInitPromise;
+        }
+
+        function initSDK() {
+            return ensurePiInitialized(true)
+                .then(function() {
+                    logMsg('success', 'Pi.init({ version: "2.0", sandbox: ' + sandboxMode + ' }) — OK');
+                })
+                .catch(function(e) {
+                    logMsg('error', 'Pi.init failed: ' + e.message);
+                    throw e;
+                });
         }
 
         function toggleSandbox() {
             sandboxMode = !sandboxMode;
+            piInitialized = false;
+            _piInitPromise = null;
             var btn = document.getElementById('btn-sandbox-toggle');
             btn.textContent = '\u{1F3AF} Sandbox: ' + (sandboxMode ? 'ON' : 'OFF');
             logMsg('info', 'Sandbox mode toggled to: ' + sandboxMode);
         }
 
         function reinitSDK() {
-            initSDK();
-            checkSDK();
+            initSDK()
+                .then(function() { checkSDK(); })
+                .catch(function() { checkSDK(); });
         }
 
         // ── 2. Pi.authenticate ──
         function testAuth() {
-            if (typeof window.Pi === 'undefined') {
-                logMsg('error', 'Pi SDK not available. Open in Pi Browser.');
-                return;
-            }
             logMsg('info', 'Calling Pi.authenticate([\"username\",\"payments\"])...');
-            Pi.authenticate(['username', 'payments'], {
-                onIncompletePaymentFound: function(payment) {
-                    logMsg('warn', 'Incomplete payment found: ' + JSON.stringify(payment));
-                }
-            }).then(function(auth) {
-                piUser = auth.user;
-                logMsg('success', 'Authenticated! User: @' + auth.user.username);
-                logMsg('info', 'UID: ' + auth.user.uid);
-                logMsg('info', 'Access Token: ' + auth.accessToken.substring(0, 20) + '...');
+            return ensurePiInitialized()
+                .then(function() {
+                    return window.Pi.authenticate(['username', 'payments'], {
+                        onIncompletePaymentFound: function(payment) {
+                            logMsg('warn', 'Incomplete payment found: ' + JSON.stringify(payment));
+                        }
+                    });
+                })
+                .then(function(auth) {
+                    piUser = auth.user;
+                    logMsg('success', 'Authenticated! User: @' + auth.user.username);
+                    logMsg('info', 'UID: ' + auth.user.uid);
+                    logMsg('info', 'Access Token: ' + auth.accessToken.substring(0, 20) + '...');
 
-                // Update UI
-                document.getElementById('pi-username').textContent = '@' + auth.user.username;
-                document.getElementById('pi-username').style.display = 'inline';
-                document.getElementById('pi-connect-btn').textContent = 'Connected';
-                document.getElementById('pi-connect-btn').classList.add('connected');
-                
-                // User panel
-                document.getElementById('user-panel').classList.add('visible');
-                document.getElementById('info-username').textContent = '@' + auth.user.username;
-                document.getElementById('info-uid').textContent = auth.user.uid;
-                document.getElementById('info-token').textContent = auth.accessToken.substring(0, 30) + '...';
+                    // Update UI
+                    document.getElementById('pi-username').textContent = '@' + auth.user.username;
+                    document.getElementById('pi-username').style.display = 'inline';
+                    document.getElementById('pi-connect-btn').textContent = 'Connected';
+                    document.getElementById('pi-connect-btn').classList.add('connected');
 
-                sessionStorage.setItem('piUser', JSON.stringify(auth.user));
-            }).catch(function(e) {
-                logMsg('error', 'Authentication failed: ' + (e.message || JSON.stringify(e)));
-            });
+                    // User panel
+                    document.getElementById('user-panel').classList.add('visible');
+                    document.getElementById('info-username').textContent = '@' + auth.user.username;
+                    document.getElementById('info-uid').textContent = auth.user.uid;
+                    document.getElementById('info-token').textContent = auth.accessToken.substring(0, 30) + '...';
+
+                    sessionStorage.setItem('piUser', JSON.stringify(auth.user));
+                })
+                .catch(function(e) {
+                    logMsg('error', 'Authentication failed: ' + (e.message || JSON.stringify(e)));
+                    throw e;
+                });
         }
 
         // ── 3. Pi.createPayment ──
         function testPayment() {
-            if (typeof window.Pi === 'undefined') {
-                logMsg('error', 'Pi SDK not available.');
-                return;
-            }
             var amountStr = document.getElementById('pay-amount').value;
             var amount = parseFloat(amountStr);
             if (isNaN(amount) || amount <= 0) {
@@ -644,33 +710,39 @@
             
             logMsg('info', 'Creating payment: ' + amount + ' Pi — "' + memo + '"');
 
-            Pi.createPayment({
-                amount: amount,
-                memo: memo,
-                metadata: { sandbox: true, timestamp: Date.now() }
-            }, {
-                onReadyForServerApproval: function(paymentId) {
-                    logMsg('info', 'Payment ready for server approval. ID: ' + paymentId);
-                    logMsg('warn', '[Sandbox] Simulating server approval...');
-                    // In production: POST to your server /api/payments/approve
-                    setTimeout(function() {
-                        logMsg('success', 'Server approval simulated for: ' + paymentId);
-                    }, 1000);
-                },
-                onReadyForServerCompletion: function(paymentId, txid) {
-                    logMsg('info', 'Payment ready for server completion. TxID: ' + txid);
-                    logMsg('warn', '[Sandbox] Simulating server completion...');
-                    setTimeout(function() {
-                        logMsg('success', 'Payment completed! TxID: ' + txid);
-                    }, 1000);
-                },
-                onCancel: function(paymentId) {
-                    logMsg('warn', 'Payment cancelled by user. ID: ' + paymentId);
-                },
-                onError: function(error, payment) {
-                    logMsg('error', 'Payment error: ' + (error.message || JSON.stringify(error)));
-                }
-            });
+            ensurePiInitialized()
+                .then(function() {
+                    return window.Pi.createPayment({
+                        amount: amount,
+                        memo: memo,
+                        metadata: { sandbox: sandboxMode, timestamp: Date.now() }
+                    }, {
+                        onReadyForServerApproval: function(paymentId) {
+                            logMsg('info', 'Payment ready for server approval. ID: ' + paymentId);
+                            logMsg('warn', '[Sandbox] Simulating server approval...');
+                            // In production: POST to your server /api/payments/approve
+                            setTimeout(function() {
+                                logMsg('success', 'Server approval simulated for: ' + paymentId);
+                            }, 1000);
+                        },
+                        onReadyForServerCompletion: function(paymentId, txid) {
+                            logMsg('info', 'Payment ready for server completion. TxID: ' + txid);
+                            logMsg('warn', '[Sandbox] Simulating server completion...');
+                            setTimeout(function() {
+                                logMsg('success', 'Payment completed! TxID: ' + txid);
+                            }, 1000);
+                        },
+                        onCancel: function(paymentId) {
+                            logMsg('warn', 'Payment cancelled by user. ID: ' + paymentId);
+                        },
+                        onError: function(error, payment) {
+                            logMsg('error', 'Payment error: ' + (error.message || JSON.stringify(error)));
+                        }
+                    });
+                })
+                .catch(function(e) {
+                    logMsg('error', 'Payment failed: ' + (e.message || JSON.stringify(e)));
+                });
         }
 
         // ── 4. Pi.openShareDialog ──
@@ -818,7 +890,7 @@
         }
 
         // ── Init on page load ──
-        (function() {
+        (async function() {
             // Restore session
             var u = sessionStorage.getItem('piUser');
             if (u) {
@@ -838,18 +910,20 @@
             // Init SDK
             logMsg('info', 'Initializing Pi SDK Sandbox...');
             if (typeof window.Pi !== 'undefined') {
-                initSDK();
+                await initSDK();
                 // Auto-login in Pi Browser
                 if (!piUser) {
                     logMsg('info', 'Auto-authenticating with Pi Browser...');
-                    testAuth();
+                    await testAuth();
                 }
             } else {
                 logMsg('warn', 'Pi SDK not loaded — some features require Pi Browser.');
             }
             checkSDK();
             logMsg('info', 'Ready. Test any method above.');
-        })();
+        })().catch(function(e) {
+            logMsg('error', 'Startup initialization failed: ' + (e.message || JSON.stringify(e)));
+        });
     </script>
     <script src="clear-button.js"></script>
 </body>

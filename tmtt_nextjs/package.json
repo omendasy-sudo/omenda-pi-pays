@@ -4,14 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:testnet": "next dev --env-file .env.testnet",
+    "dev:mainnet": "next dev --env-file .env.mainnet",
     "build": "next build",
+    "build:testnet": "next build --env-file .env.testnet",
+    "build:mainnet": "next build --env-file .env.mainnet",
     "start": "next start",
+    "start:testnet": "next start --env-file .env.testnet",
+    "start:mainnet": "next start --env-file .env.mainnet",
     "lint": "eslint"
   },
   "dependencies": {
+    "@stellar/stellar-sdk": "^13.1.0",
     "next": "16.1.6",
     "pi-sdk-js": "^2.0.0",
     "pi-sdk-nextjs": "^2.0.0",
+    "pi-sdk-react": "^2.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

@@ -1,7 +1,7 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePiConnection, usePiPurchase } from 'pi-sdk-react';
-import { PaymentData } from 'pi-sdk-js';
+import type { PaymentData } from 'pi-sdk-js';
 
 const defaultPaymentData: PaymentData = {
   amount: 0.01,
@@ -13,18 +13,25 @@ export interface PiButtonProps {
   paymentData?: PaymentData;
   onConnected?: () => void;
   children?: React.ReactNode;
+  className?: string;
 }
 
-export function PiButton({ paymentData = defaultPaymentData, onConnected, children }: PiButtonProps) {
+export function PiButton({ paymentData = defaultPaymentData, onConnected, children, className }: PiButtonProps) {
   const { connected } = usePiConnection();
   const purchase = usePiPurchase(paymentData);
 
-  React.useEffect(() => {
-    if (connected && onConnected) onConnected();
+  useEffect(() => {
+    if (connected) onConnected?.();
   }, [connected, onConnected]);
 
   return (
-    <button disabled={!connected} onClick={purchase}>
+    <button
+      type="button"
+      disabled={!connected}
+      onClick={purchase}
+      className={className}
+      aria-disabled={!connected}
+    >
       {children || 'Buy with Pi'}
     </button>
   );

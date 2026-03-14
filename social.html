@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Feed | Omenda Pi Pays</title>
+    <title>Community Feed | Omenda Pi Pays Global</title>
+    <meta name="description" content="Connect with Pi Network pioneers on Omenda Pi Pays Global. Share products, chat, and discover the community marketplace.">
+    <meta name="robots" content="index, follow">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://omendapipaysglobel.online/social.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://omendapipaysglobel.online/social.html">
+    <meta property="og:title" content="Community Feed | Omenda Pi Pays Global">
+    <meta property="og:description" content="Connect with Pi Network pioneers on Omenda Pi Pays Global marketplace.">
+    <meta property="og:site_name" content="Omenda Pi Pays Global">
+    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -414,7 +424,7 @@
 
     <!-- Navigation -->
     <nav>
-        <div class="logo"><img src="logo.png/logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div>
+        <div class="logo"><img src="logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div>
         <div class="nav-center">
             <a href="index.html" data-i18n="nav.marketplace">Marketplace</a>
             <a href="new.html" data-i18n="nav.explore">Explore</a>
@@ -422,7 +432,7 @@
             <a href="social.html" class="active" data-i18n="nav.social">Social</a>
             <a href="form.html" data-i18n="nav.register">Register</a>
             <a href="Submit.html" data-i18n="nav.sell">Sell</a>
-            <a href="/services" target="_blank" data-i18n="nav.services">Services</a>
+            <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="nav.services">Services</a>
             <a href="transport.html" data-i18n="nav.transport">Transport</a>
         </div>
         <div class="nav-right">
@@ -430,7 +440,7 @@
                 <span class="dot"></span>
                 <span id="pi-username"></span>
             </div>
-            <a href="/services" target="_blank" class="btn-primary" style="background:transparent;border:1px solid var(--border);color:var(--text-primary);text-decoration:none">All Services</a>
+            <a href="https://omendapipaysglobel.online/services" target="_blank" class="btn-primary" style="background:transparent;border:1px solid var(--border);color:var(--text-primary);text-decoration:none">All Services</a>
             <button class="btn-primary" id="pi-connect-btn" onclick="piConnect()" data-i18n="nav.connectPi">Connect Pi</button>
         </div>
     </nav>
@@ -581,22 +591,33 @@
             </div>
             <div class="footer-col">
                 <h4 data-i18n="nav.services">Services</h4>
-                <a href="/services" target="_blank" data-i18n="footer.allServices">All Services</a>
-                <a href="/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
-                <a href="/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
-                <a href="/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
+                <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="footer.allServices">All Services</a>
+                <a href="https://omendapipaysglobel.online/services/hotels" target="_blank" data-i18n="footer.rentHotel">Rent Hotel</a>
+                <a href="https://omendapipaysglobel.online/services/homes" target="_blank" data-i18n="footer.buyHome">Buy Home</a>
+                <a href="https://omendapipaysglobel.online/services/bills" target="_blank" data-i18n="footer.payBills">Pay Bills</a>
                 <a href="transport.html" data-i18n="nav.transport">Transport</a>
             </div>
             <div class="footer-col">
                 <h4 data-i18n="footer.community">Community</h4>
                 <a href="social.html" data-i18n="nav.social">Social Feed</a>
                 <a href="map.html" data-i18n="footer.globalMap">Global Map</a>
-                <a href="n2 .html" data-i18n="footer.mobileView">Mobile View</a>
+                <a href="n2%20.html" data-i18n="footer.mobileView">Mobile View</a>
             </div>
             <div class="footer-col">
                 <h4 data-i18n="footer.legal">Legal</h4>
                 <a href="privacy-policy.html" data-i18n="footer.privacyPolicy">Privacy Policy</a>
                 <a href="terms-of-service.html" data-i18n="footer.termsOfService">Terms of Service</a>
+            </div>
+            <div class="footer-col">
+                <h4>Business Address</h4>
+                <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:10px;">
+                    Omenda Pi Pays Global<br>
+                    Block A, Nyerere Road<br>
+                    Dodoma, Dodoma 41101<br>
+                    Tanzania
+                </p>
+                <a href="mailto:support@omendapipaysglobel.online">support@omendapipaysglobel.online</a>
+                <a href="https://omendapipaysglobel.online" target="_blank" rel="noopener noreferrer">omendapipaysglobel.online</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -607,17 +628,68 @@
     <script>
     // ── Pi SDK Auth ──
     let piUser = null;
-    const isPiBrowser = typeof window.Pi !== 'undefined';
+    const isPiBrowser = /PiBrowser/i.test(navigator.userAgent || '');
+    let piInitialized = false;
 
-    async function piConnect() {
-        if (!isPiBrowser) { alert('Please open in Pi Browser'); return; }
+    function hasPiSdk() {
+        return typeof window.Pi !== 'undefined';
+    }
+
+    async function waitForPiSdk(timeoutMs) {
+        if (hasPiSdk()) {
+            return;
+        }
+        if (!isPiBrowser) {
+            throw new Error('Open this app in Pi Browser.');
+        }
+
+        var start = Date.now();
+        while (!hasPiSdk() && Date.now() - start < timeoutMs) {
+            await new Promise(function(resolve) { setTimeout(resolve, 120); });
+        }
+
+        if (!hasPiSdk()) {
+            throw new Error('Pi SDK not ready. Reload in Pi Browser.');
+        }
+    }
+
+    function usePiSandbox() {
+        return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+    }
+
+    async function ensurePiInitialized() {
+        if (piInitialized) {
+            return;
+        }
+
+        await waitForPiSdk(10000);
+        const initResult = window.Pi.init({ version:'2.0', sandbox: usePiSandbox() });
+        if (initResult && typeof initResult.then === 'function') {
+            await initResult;
+        }
+        piInitialized = true;
+    }
+
+    async function piConnect(silent) {
+        if (!isPiBrowser) {
+            if (!silent) {
+                alert('Please open in Pi Browser');
+            }
+            return;
+        }
         try {
+            await ensurePiInitialized();
             const auth = await window.Pi.authenticate(['username','payments'], function(p){ console.log('Incomplete payment',p); });
             piUser = { uid: auth.user.uid, username: auth.user.username };
             sessionStorage.setItem('pi_uid', piUser.uid);
             sessionStorage.setItem('pi_username', piUser.username);
             onAuth();
-        } catch(e) { console.error('Auth failed', e); }
+        } catch(e) {
+            if (!silent) {
+                alert('Pi login failed: ' + (e.message || 'Unknown error'));
+            }
+            console.error('Auth failed', e);
+        }
     }
 
     function onAuth() {
@@ -633,10 +705,8 @@
         if(uid && user){
             piUser = { uid, username: user };
             onAuth();
-        } else if(isPiBrowser){ piConnect(); }
+        } else if(isPiBrowser){ piConnect(true); }
     })();
-
-    if(isPiBrowser){ window.Pi.init({ version:'2.0', sandbox: true }); }
 
     // ── Sample Data ──
     const samplePosts = [
