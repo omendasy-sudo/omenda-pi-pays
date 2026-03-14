@@ -1,5 +1,10 @@
 RewriteEngine On
 
+<IfModule mod_headers.c>
+	Header always unset X-Frame-Options
+	Header always set Content-Security-Policy "frame-ancestors 'self' https://*.minepi.com https://minepi.com"
+</IfModule>
+
 # Never rewrite the Pi domain verification file
 RewriteRule ^validation-key\.txt$ - [L]
 

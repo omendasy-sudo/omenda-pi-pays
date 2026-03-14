@@ -42,6 +42,19 @@ git pull origin main
 bash ./deploy-nextjs.sh
 ```
 
+## Post-deploy verification
+
+After every deploy, confirm the live site can be embedded in Pi Browser:
+
+```bash
+curl -I https://omendapipaysglobel.online/
+```
+
+Expected result:
+
+- `Content-Security-Policy: frame-ancestors 'self' https://*.minepi.com https://minepi.com`
+- no `X-Frame-Options` header at all
+
 ## Notes
 
 - `tmtt_nextjs/package.json` now uses `scripts/next-with-env.mjs` for env-specific commands because the installed Next.js CLI here does not support `--env-file`.
