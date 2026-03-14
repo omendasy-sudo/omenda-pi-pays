@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:testnet": "next dev --env-file .env.testnet",
-    "dev:mainnet": "next dev --env-file .env.mainnet",
+    "dev:testnet": "node ./scripts/next-with-env.mjs .env.testnet dev",
+    "dev:mainnet": "node ./scripts/next-with-env.mjs .env.mainnet dev",
     "build": "next build",
-    "build:testnet": "next build --env-file .env.testnet",
-    "build:mainnet": "next build --env-file .env.mainnet",
+    "build:testnet": "node ./scripts/next-with-env.mjs .env.testnet build",
+    "build:mainnet": "node ./scripts/next-with-env.mjs .env.mainnet build",
     "start": "next start",
-    "start:testnet": "next start --env-file .env.testnet",
-    "start:mainnet": "next start --env-file .env.mainnet",
+    "start:testnet": "node ./scripts/next-with-env.mjs .env.testnet start",
+    "start:mainnet": "node ./scripts/next-with-env.mjs .env.mainnet start",
     "lint": "eslint"
   },
   "dependencies": {
