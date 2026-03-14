@@ -8,6 +8,73 @@
 
   var THEME_KEY = "omenda_theme";
 
+  function isLocalDevelopment() {
+    return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+  }
+
+  function hasDesktopPreviewBypass() {
+    return new URLSearchParams(window.location.search).get("desktopPreview") === "1";
+  }
+
+  function isPhoneUserAgent() {
+    var ua = navigator.userAgent || "";
+    return /iPhone|iPod|Android.+Mobile|Windows Phone|BlackBerry|Opera Mini|IEMobile|Mobile Safari|PiBrowser/i.test(ua);
+  }
+
+  function renderPhoneOnlyNotice() {
+    var message = document.createElement("div");
+    message.style.cssText = [
+      "min-height:100vh",
+      "display:flex",
+      "align-items:center",
+      "justify-content:center",
+      "padding:24px",
+      "background:radial-gradient(circle at top right, rgba(124,58,237,0.18), transparent 32%), radial-gradient(circle at bottom left, rgba(245,166,35,0.14), transparent 28%), #09090b",
+      "color:#fafafa",
+      "font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif"
+    ].join(";") + ";";
+
+    message.innerHTML = [
+      '<div style="max-width:520px;width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.35)">',
+      '<div style="font-size:42px;margin-bottom:14px">📱</div>',
+      '<h1 style="margin:0 0 12px;font-size:28px;line-height:1.15">Phone Only Access</h1>',
+      '<p style="margin:0 0 18px;color:#d4d4d8;line-height:1.6">Omenda Pi Pays is currently available only on mobile phones. Open this site from your phone or inside Pi Browser to continue.</p>',
+      '<p style="margin:0;color:#a1a1aa;font-size:14px">Desktop browsers are blocked for regular users on this site.</p>',
+      "</div>"
+    ].join("");
+
+    document.body.innerHTML = "";
+    document.body.style.margin = "0";
+    document.body.appendChild(message);
+  }
+
+  function applyPhoneOnlyGate() {
+    if (isLocalDevelopment() || hasDesktopPreviewBypass() || isPhoneUserAgent()) {
+      return false;
+    }
+
+    var style = document.createElement("style");
+    style.textContent = "body{display:none !important;}";
+    document.head.appendChild(style);
+
+    function showNotice() {
+      renderPhoneOnlyNotice();
+      style.remove();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", showNotice, { once: true });
+    } else {
+      showNotice();
+    }
+
+    return true;
+  }
+
+  if (typeof window !== "undefined" && applyPhoneOnlyGate()) {
+    return;
+  }
+
   function getTheme() {
     return localStorage.getItem(THEME_KEY) || "dark";
   }
