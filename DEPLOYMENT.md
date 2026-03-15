@@ -44,6 +44,8 @@ git pull origin main
 bash ./deploy-nextjs.sh
 ```
 
+`deploy-nextjs.sh` now also installs `nginx-validation-key.conf` into `/etc/nginx/sites-available/omendapipays`, refreshes the enabled symlink, then reloads nginx. This prevents stale server headers like `X-Frame-Options: SAMEORIGIN` from lingering after app updates.
+
 ## Post-deploy verification
 
 After every deploy, confirm the live site can be embedded in Pi Browser:
