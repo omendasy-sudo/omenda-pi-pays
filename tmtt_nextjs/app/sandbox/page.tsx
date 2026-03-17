@@ -25,6 +25,7 @@ export default function SandboxPage() {
   const [memo, setMemo] = useState("Test payment – Omenda Pi Pays");
 
   // A2U state
+  const [a2uUid, setA2uUid] = useState("");
   const [a2uAmount, setA2uAmount] = useState("0.01");
   const [a2uMemo, setA2uMemo] = useState("App-to-User payment – Omenda Pi Pays");
   const [a2uSending, setA2uSending] = useState(false);
@@ -48,8 +49,15 @@ export default function SandboxPage() {
     };
   }, []);
 
+  // Resolve the recipient UID: use manual input or connected user
+  const recipientUid = a2uUid.trim() || user?.uid || "";
+  const recipientLabel = user && !a2uUid.trim() ? `@${user.username}` : recipientUid.slice(0, 12) + "…";
+
   const sendA2U = useCallback(async () => {
-    if (!user) return;
+    if (!recipientUid) {
+      setMessage({ type: "error", text: "Enter a recipient Pi UID" });
+      return;
+    }
     const parsed = parseFloat(a2uAmount);
     if (isNaN(parsed) || parsed <= 0 || parsed > 1000) {
       setMessage({ type: "error", text: "Enter a valid amount (0.01 – 1000 Pi)" });
@@ -64,7 +72,7 @@ export default function SandboxPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          uid: user.uid,
+          uid: recipientUid,
           amount: parsed,
           memo: a2uMemo || "App-to-User payment",
           metadata: { source: "sandbox", ts: Date.now() },
@@ -112,7 +120,7 @@ export default function SandboxPage() {
     } finally {
       setA2uSending(false);
     }
-  }, [user, a2uAmount, a2uMemo]);
+  }, [recipientUid, a2uAmount, a2uMemo]);
 
   const parsedAmount = parseFloat(amount);
   const validAmount = !isNaN(parsedAmount) && parsedAmount > 0 && parsedAmount <= 100;
@@ -269,23 +277,24 @@ export default function SandboxPage() {
               App → User Payment
             </h2>
             <p className="mb-4 text-xs text-slate-400">
-              The app sends Pi to the connected user (A2U).
+              The app sends Pi to a user (A2U). Enter a UID or connect to auto-fill.
             </p>
 
-            {!connected || !user ? (
-              <div className="rounded-xl bg-amber-50 p-4 text-center text-sm text-amber-700">
-                Connect your Pi account first to receive an A2U payment.
-              </div>
-            ) : (
-              <>
-                <div className="mb-4 rounded-xl bg-violet-50 p-3">
-                  <p className="text-xs text-violet-600">
-                    <strong>Recipient:</strong> @{user.username}
+                <label className="mb-1 block text-xs font-semibold text-slate-500">
+                  Recipient UID
+                </label>
+                <input
+                  type="text"
+                  value={a2uUid || (user?.uid ?? "")}
+                  onChange={(e) => setA2uUid(e.target.value)}
+                  className="mb-4 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  placeholder="Paste Pi user UID here"
+                />
+                {connected && user && !a2uUid.trim() && (
+                  <p className="-mt-3 mb-4 text-[0.625rem] text-emerald-600">
+                    Auto-filled from connected account @{user.username}
                   </p>
-                  <p className="text-[0.625rem] font-mono text-violet-400">
-                    {user.uid}
-                  </p>
-                </div>
+                )}
 
                 <label className="mb-1 block text-xs font-semibold text-slate-500">
                   Amount (Pi)
@@ -315,7 +324,7 @@ export default function SandboxPage() {
 
                 <button
                   onClick={sendA2U}
-                  disabled={a2uSending || a2uPolling || !validA2uAmount}
+                  disabled={a2uSending || a2uPolling || !validA2uAmount || !recipientUid}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3.5 text-base font-extrabold text-white shadow-lg transition-all hover:from-amber-400 hover:to-orange-400 disabled:opacity-50"
                 >
                   {a2uSending ? (
@@ -353,7 +362,7 @@ export default function SandboxPage() {
                   ) : (
                     <>
                       <span className="text-xl">π</span>
-                      Send {validA2uAmount ? parsedA2uAmount : "–"} Pi to @{user.username}
+                      Send {validA2uAmount ? parsedA2uAmount : "–"} Pi to {recipientLabel}
                     </>
                   )}
                 </button>
@@ -363,8 +372,11 @@ export default function SandboxPage() {
                     Enter a valid amount between 0.01 and 1000 Pi
                   </p>
                 )}
-              </>
-            )}
+                {!recipientUid && (
+                  <p className="mt-2 text-center text-xs text-red-500">
+                    Enter a recipient Pi UID or connect your account
+                  </p>
+                )}
           </div>
         )}
 
