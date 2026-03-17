@@ -21,53 +21,53 @@ type MarketProduct = {
 const allCategories = ["All", "Electronics", "Fashion", "Home & Garden", "Cars", "Hotels", "Properties", "Transport", "Bills"];
 
 const marketProducts: MarketProduct[] = [
-  // Electronics
-  { id: "e1", title: "17 PRO MAX Smartphone", price: "π45.00", priceHigh: "98.00", stat: "100+ Heats", image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop", tag: "Most Popular", tagColor: "from-rose-500/80 to-rose-600/80", category: "Electronics" },
-  { id: "e2", title: "DELL Latitude x360 7320", price: "π3,300.00", stat: "50+ sold", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=400&auto=format&fit=crop"], category: "Electronics" },
-  { id: "e3", title: "MacBook Air M3 2024", price: "π3,900.00", stat: "120+ views", image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=400&auto=format&fit=crop"], category: "Electronics" },
-  { id: "e4", title: "Smart Watch Ultra", price: "π3.50", priceHigh: "8.00", stat: "1100+", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop", tag: "Most Wished", tagColor: "from-violet-500/80 to-violet-600/80", category: "Electronics" },
-  { id: "e5", title: "Wireless Earbuds Pro", price: "π89.00", stat: "200+ sold", image: "https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?q=80&w=400&auto=format&fit=crop"], category: "Electronics" },
-  { id: "e6", title: "4K Monitor 27\"", price: "π780.00", stat: "15+ sold", image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585792180666-f7347c490ee2?q=80&w=400&auto=format&fit=crop"], category: "Electronics" },
+  // Electronics (GCV: 1π = $314,159)
+  { id: "e1", title: "17 PRO MAX Smartphone", price: "π0.003", priceHigh: "0.005", stat: "100+ Heats", image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop", tag: "Most Popular", tagColor: "from-rose-500/80 to-rose-600/80", category: "Electronics" },
+  { id: "e2", title: "DELL Latitude x360 7320", price: "π0.004", stat: "50+ sold", image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=400&auto=format&fit=crop"], category: "Electronics" },
+  { id: "e3", title: "MacBook Air M3 2024", price: "π0.004", stat: "120+ views", image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=400&auto=format&fit=crop"], category: "Electronics" },
+  { id: "e4", title: "Smart Watch Ultra", price: "π0.001", priceHigh: "0.002", stat: "1100+", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop", tag: "Most Wished", tagColor: "from-violet-500/80 to-violet-600/80", category: "Electronics" },
+  { id: "e5", title: "Wireless Earbuds Pro", price: "π0.0005", stat: "200+ sold", image: "https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?q=80&w=400&auto=format&fit=crop"], category: "Electronics" },
+  { id: "e6", title: "4K Monitor 27\"", price: "π0.002", stat: "15+ sold", image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585792180666-f7347c490ee2?q=80&w=400&auto=format&fit=crop"], category: "Electronics" },
   // Fashion
-  { id: "f1", title: "Leather Crossbody Bag", price: "π95.00", stat: "40+ sold", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=400&auto=format&fit=crop"], tag: "New Releases", tagColor: "from-amber-500/80 to-amber-600/80", category: "Fashion" },
-  { id: "f2", title: "Running Sneakers", price: "π120.00", stat: "85+ sold", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=400&auto=format&fit=crop"], category: "Fashion" },
-  { id: "f3", title: "Sunglasses UV400", price: "π35.00", stat: "60+ sold", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=400&auto=format&fit=crop", category: "Fashion" },
-  { id: "f4", title: "Leather Belt Set", price: "π36.59", priceHigh: "50.28", stat: "6 Pieces (MOQ)", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop", category: "Fashion" },
-  { id: "f5", title: "Fashion T-Shirts Bundle", price: "π10.00", stat: "1 Piece (MOQ)", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop", category: "Fashion" },
+  { id: "f1", title: "Leather Crossbody Bag", price: "π0.0003", stat: "40+ sold", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=400&auto=format&fit=crop"], tag: "New Releases", tagColor: "from-amber-500/80 to-amber-600/80", category: "Fashion" },
+  { id: "f2", title: "Running Sneakers", price: "π0.0004", stat: "85+ sold", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=400&auto=format&fit=crop"], category: "Fashion" },
+  { id: "f3", title: "Sunglasses UV400", price: "π0.0001", stat: "60+ sold", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=400&auto=format&fit=crop", category: "Fashion" },
+  { id: "f4", title: "Leather Belt Set", price: "π0.0001", priceHigh: "0.0002", stat: "6 Pieces (MOQ)", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop", category: "Fashion" },
+  { id: "f5", title: "Fashion T-Shirts Bundle", price: "π0.00003", stat: "1 Piece (MOQ)", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop", category: "Fashion" },
   // Home & Garden
-  { id: "hg1", title: "Premium Hair Dryer Kit", price: "π125.00", stat: "New", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
-  { id: "hg2", title: "7-Layer Shoe Rack", price: "π150.00", stat: "Popular", image: "https://images.unsplash.com/photo-1616628182509-6f8046f8cb07?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
-  { id: "hg3", title: "Portable Blender", price: "π215.00", stat: "25+ sold", image: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
-  { id: "hg4", title: "LED Desk Lamp", price: "π45.00", stat: "Fast seller", image: "https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
-  { id: "hg5", title: "Garden Spray Nozzle", price: "π0.08", priceHigh: "0.17", stat: "", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
-  { id: "hg6", title: "Premium Bedding Set", price: "π11.00", priceHigh: "22.00", stat: "", image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
+  { id: "hg1", title: "Premium Hair Dryer Kit", price: "π0.0004", stat: "New", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
+  { id: "hg2", title: "7-Layer Shoe Rack", price: "π0.0002", stat: "Popular", image: "https://images.unsplash.com/photo-1616628182509-6f8046f8cb07?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
+  { id: "hg3", title: "Portable Blender", price: "π0.0003", stat: "25+ sold", image: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
+  { id: "hg4", title: "LED Desk Lamp", price: "π0.0001", stat: "Fast seller", image: "https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
+  { id: "hg5", title: "Garden Spray Nozzle", price: "π0.000003", priceHigh: "0.00001", stat: "", image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
+  { id: "hg6", title: "Premium Bedding Set", price: "π0.00004", priceHigh: "0.00008", stat: "", image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=400&auto=format&fit=crop", category: "Home & Garden" },
   // Cars
-  { id: "c1", title: "Mercedes-Benz GLE 350", price: "π500,000.00", stat: "Premium", image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop"], tag: "Movers & Shakers", tagColor: "from-emerald-500/80 to-emerald-600/80", category: "Cars" },
-  { id: "c2", title: "Toyota Camry SE 2018", price: "π150,000.00", stat: "Clean title", image: "https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop", category: "Cars" },
-  { id: "c3", title: "Range Rover Evoque 2019", price: "π355,000.00", stat: "Automatic", image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop"], category: "Cars" },
-  { id: "c4", title: "Honda Civic 2021", price: "π180,000.00", stat: "Low mileage", image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop", category: "Cars" },
+  { id: "c1", title: "Mercedes-Benz GLE 350", price: "π0.19", stat: "Premium", image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop"], tag: "Movers & Shakers", tagColor: "from-emerald-500/80 to-emerald-600/80", category: "Cars" },
+  { id: "c2", title: "Toyota Camry SE 2018", price: "π0.08", stat: "Clean title", image: "https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop", category: "Cars" },
+  { id: "c3", title: "Range Rover Evoque 2019", price: "π0.17", stat: "Automatic", image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop", images: ["https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop"], category: "Cars" },
+  { id: "c4", title: "Honda Civic 2021", price: "π0.09", stat: "Low mileage", image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop", category: "Cars" },
 ];
 
 const transportServices = [
-  { id: "tr1", icon: "🚗", name: "Economy Ride", price: "3-8 π", desc: "Affordable everyday rides", badge: "Popular" },
-  { id: "tr2", icon: "🚙", name: "Comfort Plus", price: "8-15 π", desc: "Spacious SUVs, premium interiors" },
-  { id: "tr3", icon: "🏎️", name: "Luxury", price: "15-30 π", desc: "Executive cars for VIP transport", badge: "Premium" },
-  { id: "tr4", icon: "🚕", name: "City Taxi", price: "3-10 π", desc: "Licensed metered taxis", badge: "Popular" },
-  { id: "tr5", icon: "✈️🚕", name: "Airport Transfer", price: "8-20 π", desc: "Reliable airport pickup & drop" },
-  { id: "tr6", icon: "🏍️", name: "Boda / Motorbike", price: "1-4 π", desc: "Quick motorcycle rides" },
-  { id: "tr7", icon: "🛺", name: "Tuk-Tuk", price: "2-5 π", desc: "Short city trips", badge: "New" },
-  { id: "tr8", icon: "👨‍✈️", name: "Daily Driver", price: "20-35 π/day", desc: "Personal driver for the day" },
-  { id: "tr9", icon: "📦", name: "Express Delivery", price: "2-5 π", desc: "Same-day delivery, under 2 hrs", badge: "Popular" },
-  { id: "tr10", icon: "🚛", name: "Heavy Cargo", price: "10-30 π", desc: "Furniture & large items" },
+  { id: "tr1", icon: "🚗", name: "Economy Ride", price: "0.00001-0.00003 π", desc: "Affordable everyday rides", badge: "Popular" },
+  { id: "tr2", icon: "🚙", name: "Comfort Plus", price: "0.00003-0.00005 π", desc: "Spacious SUVs, premium interiors" },
+  { id: "tr3", icon: "🏎️", name: "Luxury", price: "0.00005-0.0001 π", desc: "Executive cars for VIP transport", badge: "Premium" },
+  { id: "tr4", icon: "🚕", name: "City Taxi", price: "0.00001-0.00003 π", desc: "Licensed metered taxis", badge: "Popular" },
+  { id: "tr5", icon: "✈️🚕", name: "Airport Transfer", price: "0.00003-0.00007 π", desc: "Reliable airport pickup & drop" },
+  { id: "tr6", icon: "🏍️", name: "Boda / Motorbike", price: "0.000003-0.00001 π", desc: "Quick motorcycle rides" },
+  { id: "tr7", icon: "🛺", name: "Tuk-Tuk", price: "0.000006-0.00002 π", desc: "Short city trips", badge: "New" },
+  { id: "tr8", icon: "👨‍✈️", name: "Daily Driver", price: "0.00006-0.0001 π/day", desc: "Personal driver for the day" },
+  { id: "tr9", icon: "📦", name: "Express Delivery", price: "0.000006-0.00002 π", desc: "Same-day delivery, under 2 hrs", badge: "Popular" },
+  { id: "tr10", icon: "🚛", name: "Heavy Cargo", price: "0.00003-0.0001 π", desc: "Furniture & large items" },
 ];
 
 const flights = [
-  { id: "fl1", airline: "Kenya Airways", icon: "🇰🇪", from: "NBO", to: "DXB", price: "85 π", duration: "5h 20m" },
-  { id: "fl2", airline: "Ethiopian Airlines", icon: "🇪🇹", from: "ADD", to: "LHR", price: "120 π", duration: "8h 15m" },
-  { id: "fl3", airline: "Emirates", icon: "🇦🇪", from: "DXB", to: "JFK", price: "180 π", duration: "13h 40m" },
-  { id: "fl4", airline: "RwandAir", icon: "🇷🇼", from: "NBO", to: "EBB", price: "25 π", duration: "1h 05m" },
-  { id: "fl5", airline: "Qatar Airways", icon: "🇶🇦", from: "NBO", to: "NRT", price: "210 π", duration: "18h 30m" },
-  { id: "fl6", airline: "Turkish Airlines", icon: "🇹🇷", from: "DAR", to: "CDG", price: "145 π", duration: "12h 45m" },
+  { id: "fl1", airline: "Kenya Airways", icon: "🇰🇪", from: "NBO", to: "DXB", price: "0.002 π", duration: "5h 20m" },
+  { id: "fl2", airline: "Ethiopian Airlines", icon: "🇪🇹", from: "ADD", to: "LHR", price: "0.003 π", duration: "8h 15m" },
+  { id: "fl3", airline: "Emirates", icon: "🇦🇪", from: "DXB", to: "JFK", price: "0.004 π", duration: "13h 40m" },
+  { id: "fl4", airline: "RwandAir", icon: "🇷🇼", from: "NBO", to: "EBB", price: "0.0005 π", duration: "1h 05m" },
+  { id: "fl5", airline: "Qatar Airways", icon: "🇶🇦", from: "NBO", to: "NRT", price: "0.005 π", duration: "18h 30m" },
+  { id: "fl6", airline: "Turkish Airlines", icon: "🇹🇷", from: "DAR", to: "CDG", price: "0.004 π", duration: "12h 45m" },
 ];
 
 /* ── Image Carousel ── */
