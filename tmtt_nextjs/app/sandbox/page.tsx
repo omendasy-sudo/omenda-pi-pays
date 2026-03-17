@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { usePiAuth } from "@/components/PiAuthProvider";
 import { PiPayButton } from "@/components/PiPayButton";
 import { useTranslation } from "@/lib/i18n";
@@ -12,13 +12,25 @@ type TxRecord = {
   txid?: string;
   status: "success" | "error" | "cancelled";
   time: string;
+  direction: "u2a" | "a2u";
 };
 
 export default function SandboxPage() {
   const { user, connected, connect, isPiBrowser } = usePiAuth();
   const { t } = useTranslation();
+  const [tab, setTab] = useState<"u2a" | "a2u">("u2a");
+
+  // U2A state
   const [amount, setAmount] = useState("0.01");
   const [memo, setMemo] = useState("Test payment – Omenda Pi Pays");
+
+  // A2U state
+  const [a2uAmount, setA2uAmount] = useState("0.01");
+  const [a2uMemo, setA2uMemo] = useState("App-to-User payment – Omenda Pi Pays");
+  const [a2uSending, setA2uSending] = useState(false);
+  const [a2uPolling, setA2uPolling] = useState(false);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   const [txHistory, setTxHistory] = useState<TxRecord[]>([]);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -29,8 +41,84 @@ export default function SandboxPage() {
     ]);
   }
 
+  // Clear poll interval on unmount
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);
+
+  const sendA2U = useCallback(async () => {
+    if (!user) return;
+    const parsed = parseFloat(a2uAmount);
+    if (isNaN(parsed) || parsed <= 0 || parsed > 1000) {
+      setMessage({ type: "error", text: "Enter a valid amount (0.01 – 1000 Pi)" });
+      return;
+    }
+
+    setA2uSending(true);
+    setMessage(null);
+
+    try {
+      const res = await fetch("/api/pi_payment/a2u", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          uid: user.uid,
+          amount: parsed,
+          memo: a2uMemo || "App-to-User payment",
+          metadata: { source: "sandbox", ts: Date.now() },
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "A2U payment failed");
+      }
+
+      setMessage({ type: "success", text: `A2U payment created! ID: ${data.paymentId} — waiting for blockchain…` });
+
+      // Poll for completion
+      setA2uPolling(true);
+      let attempts = 0;
+      pollRef.current = setInterval(async () => {
+        attempts++;
+        try {
+          const statusRes = await fetch(`/api/pi_payment/a2u?paymentId=${data.paymentId}`);
+          const statusData = await statusRes.json();
+
+          if (statusData.status?.developer_completed || statusData.auto_completed) {
+            if (pollRef.current) clearInterval(pollRef.current);
+            setA2uPolling(false);
+            const txid = statusData.transaction?.txid || statusData.txid || "";
+            setMessage({ type: "success", text: `A2U payment completed! TxID: ${txid}` });
+            addTx({ amount: parsed, memo: a2uMemo, txid, status: "success", direction: "a2u" });
+          } else if (attempts >= 30) {
+            // Stop after ~60s
+            if (pollRef.current) clearInterval(pollRef.current);
+            setA2uPolling(false);
+            setMessage({ type: "error", text: "A2U payment timed out waiting for blockchain. Check later." });
+            addTx({ amount: parsed, memo: a2uMemo, status: "error", direction: "a2u" });
+          }
+        } catch {
+          // keep polling
+        }
+      }, 2000);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "A2U payment failed";
+      setMessage({ type: "error", text: msg });
+      addTx({ amount: parsed, memo: a2uMemo, status: "error", direction: "a2u" });
+    } finally {
+      setA2uSending(false);
+    }
+  }, [user, a2uAmount, a2uMemo]);
+
   const parsedAmount = parseFloat(amount);
   const validAmount = !isNaN(parsedAmount) && parsedAmount > 0 && parsedAmount <= 100;
+
+  const parsedA2uAmount = parseFloat(a2uAmount);
+  const validA2uAmount = !isNaN(parsedA2uAmount) && parsedA2uAmount > 0 && parsedA2uAmount <= 1000;
 
   return (
     <main className="min-h-screen bg-[#f5f5f5] px-4 py-8">
@@ -44,8 +132,32 @@ export default function SandboxPage() {
             Process a Transaction
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Send a User-to-App payment to confirm your setup is complete.
+            Test User-to-App and App-to-User payments.
           </p>
+        </div>
+
+        {/* Tab Switcher */}
+        <div className="mb-4 flex rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
+          <button
+            onClick={() => setTab("u2a")}
+            className={`flex-1 rounded-xl py-2.5 text-sm font-bold transition-all ${
+              tab === "u2a"
+                ? "bg-violet-600 text-white shadow"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            U2A (User → App)
+          </button>
+          <button
+            onClick={() => setTab("a2u")}
+            className={`flex-1 rounded-xl py-2.5 text-sm font-bold transition-all ${
+              tab === "a2u"
+                ? "bg-amber-500 text-white shadow"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+          >
+            A2U (App → User)
+          </button>
         </div>
 
         {/* Connection Status */}
@@ -68,6 +180,11 @@ export default function SandboxPage() {
                   </span>
                 )}
               </p>
+              {connected && user && (
+                <p className="mt-1 text-[0.625rem] font-mono text-slate-400">
+                  UID: {user.uid}
+                </p>
+              )}
             </div>
             {!connected && (
               <button
@@ -85,59 +202,171 @@ export default function SandboxPage() {
           )}
         </div>
 
-        {/* Payment Form */}
-        <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="mb-4 text-sm font-bold text-slate-700">Payment Details</h2>
-
-          <label className="mb-1 block text-xs font-semibold text-slate-500">
-            Amount (Pi)
-          </label>
-          <input
-            type="number"
-            min="0.01"
-            max="100"
-            step="0.01"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="mb-4 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-lg font-bold text-slate-900 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
-            placeholder="0.01"
-          />
-
-          <label className="mb-1 block text-xs font-semibold text-slate-500">
-            Memo
-          </label>
-          <input
-            type="text"
-            value={memo}
-            onChange={(e) => setMemo(e.target.value)}
-            maxLength={100}
-            className="mb-5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
-            placeholder="Payment memo"
-          />
-
-          {/* Pay Button */}
-          <PiPayButton
-            amount={validAmount ? parsedAmount : 0.01}
-            memo={memo || "Test payment"}
-            metadata={{ source: "sandbox", ts: Date.now() }}
-            onSuccess={(txid) => {
-              setMessage({ type: "success", text: `Payment successful! TxID: ${txid}` });
-              addTx({ amount: parsedAmount, memo, txid, status: "success" });
-            }}
-            onError={(error) => {
-              setMessage({ type: "error", text: error });
-              addTx({ amount: parsedAmount, memo, status: "error" });
-            }}
-            disabled={!validAmount}
-            className="w-full"
-          />
-
-          {!validAmount && (
-            <p className="mt-2 text-center text-xs text-red-500">
-              Enter a valid amount between 0.01 and 100 Pi
+        {/* ===== U2A SECTION ===== */}
+        {tab === "u2a" && (
+          <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="mb-1 text-sm font-bold text-slate-700">
+              User → App Payment
+            </h2>
+            <p className="mb-4 text-xs text-slate-400">
+              The user sends Pi to the app (U2A).
             </p>
-          )}
-        </div>
+
+            <label className="mb-1 block text-xs font-semibold text-slate-500">
+              Amount (Pi)
+            </label>
+            <input
+              type="number"
+              min="0.01"
+              max="100"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="mb-4 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-lg font-bold text-slate-900 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+              placeholder="0.01"
+            />
+
+            <label className="mb-1 block text-xs font-semibold text-slate-500">
+              Memo
+            </label>
+            <input
+              type="text"
+              value={memo}
+              onChange={(e) => setMemo(e.target.value)}
+              maxLength={100}
+              className="mb-5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100"
+              placeholder="Payment memo"
+            />
+
+            <PiPayButton
+              amount={validAmount ? parsedAmount : 0.01}
+              memo={memo || "Test payment"}
+              metadata={{ source: "sandbox", ts: Date.now() }}
+              onSuccess={(txid) => {
+                setMessage({ type: "success", text: `U2A payment successful! TxID: ${txid}` });
+                addTx({ amount: parsedAmount, memo, txid, status: "success", direction: "u2a" });
+              }}
+              onError={(error) => {
+                setMessage({ type: "error", text: error });
+                addTx({ amount: parsedAmount, memo, status: "error", direction: "u2a" });
+              }}
+              disabled={!validAmount}
+              className="w-full"
+            />
+
+            {!validAmount && (
+              <p className="mt-2 text-center text-xs text-red-500">
+                Enter a valid amount between 0.01 and 100 Pi
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* ===== A2U SECTION ===== */}
+        {tab === "a2u" && (
+          <div className="mb-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <h2 className="mb-1 text-sm font-bold text-slate-700">
+              App → User Payment
+            </h2>
+            <p className="mb-4 text-xs text-slate-400">
+              The app sends Pi to the connected user (A2U).
+            </p>
+
+            {!connected || !user ? (
+              <div className="rounded-xl bg-amber-50 p-4 text-center text-sm text-amber-700">
+                Connect your Pi account first to receive an A2U payment.
+              </div>
+            ) : (
+              <>
+                <div className="mb-4 rounded-xl bg-violet-50 p-3">
+                  <p className="text-xs text-violet-600">
+                    <strong>Recipient:</strong> @{user.username}
+                  </p>
+                  <p className="text-[0.625rem] font-mono text-violet-400">
+                    {user.uid}
+                  </p>
+                </div>
+
+                <label className="mb-1 block text-xs font-semibold text-slate-500">
+                  Amount (Pi)
+                </label>
+                <input
+                  type="number"
+                  min="0.01"
+                  max="1000"
+                  step="0.01"
+                  value={a2uAmount}
+                  onChange={(e) => setA2uAmount(e.target.value)}
+                  className="mb-4 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-lg font-bold text-slate-900 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  placeholder="0.01"
+                />
+
+                <label className="mb-1 block text-xs font-semibold text-slate-500">
+                  Memo
+                </label>
+                <input
+                  type="text"
+                  value={a2uMemo}
+                  onChange={(e) => setA2uMemo(e.target.value)}
+                  maxLength={100}
+                  className="mb-5 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  placeholder="Payment memo"
+                />
+
+                <button
+                  onClick={sendA2U}
+                  disabled={a2uSending || a2uPolling || !validA2uAmount}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3.5 text-base font-extrabold text-white shadow-lg transition-all hover:from-amber-400 hover:to-orange-400 disabled:opacity-50"
+                >
+                  {a2uSending ? (
+                    <>
+                      <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12" cy="12" r="10"
+                          stroke="currentColor" strokeWidth="4" fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        />
+                      </svg>
+                      Creating Payment…
+                    </>
+                  ) : a2uPolling ? (
+                    <>
+                      <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12" cy="12" r="10"
+                          stroke="currentColor" strokeWidth="4" fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        />
+                      </svg>
+                      Waiting for Blockchain…
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-xl">π</span>
+                      Send {validA2uAmount ? parsedA2uAmount : "–"} Pi to @{user.username}
+                    </>
+                  )}
+                </button>
+
+                {!validA2uAmount && (
+                  <p className="mt-2 text-center text-xs text-red-500">
+                    Enter a valid amount between 0.01 and 1000 Pi
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        )}
 
         {/* Status Message */}
         {message && (
@@ -186,7 +415,15 @@ export default function SandboxPage() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-800">
-                      {tx.status === "success" ? "✅" : "❌"} {tx.amount} π
+                      {tx.status === "success" ? "✅" : "❌"}{" "}
+                      <span className={`mr-1 rounded px-1.5 py-0.5 text-[0.6rem] font-bold ${
+                        tx.direction === "a2u"
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-violet-100 text-violet-700"
+                      }`}>
+                        {tx.direction === "a2u" ? "A2U" : "U2A"}
+                      </span>
+                      {tx.amount} π
                     </span>
                     <span className="text-[0.625rem] text-slate-400">{tx.time}</span>
                   </div>
@@ -213,10 +450,10 @@ export default function SandboxPage() {
               <span>2.</span> Connect your Pi account
             </li>
             <li className="flex items-center gap-2">
-              <span>3.</span> Set amount &amp; tap &quot;Pay&quot;
+              <span>3.</span> <strong>U2A:</strong> Set amount &amp; tap &quot;Pay&quot; — user sends Pi to app
             </li>
             <li className="flex items-center gap-2">
-              <span>4.</span> Approve the payment in Pi Browser
+              <span>4.</span> <strong>A2U:</strong> Switch to A2U tab &amp; tap &quot;Send&quot; — app sends Pi to user
             </li>
             <li className="flex items-center gap-2">
               <span>5.</span> Transaction completes &amp; shows success ✅
