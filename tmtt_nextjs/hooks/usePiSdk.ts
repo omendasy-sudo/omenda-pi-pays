@@ -2,73 +2,45 @@
 
 import { useCallback } from "react";
 
-type PiScope = "username" | "payments" | "wallet_address";
-type NativeFeature = "inline_media" | "request_permission" | "ad_network";
-type AdType = "interstitial" | "rewarded";
-
-type PaymentData = {
-  amount: number;
-  memo: string;
-  metadata: Record<string, unknown>;
-};
-
-type PaymentDto = {
-  identifier: string;
-  user_uid: string;
-  amount: number;
-  memo: string;
-  metadata: Record<string, unknown>;
-  status?: {
-    developer_approved: boolean;
-    transaction_verified: boolean;
-    developer_completed: boolean;
-    cancelled: boolean;
-    user_cancelled: boolean;
-  };
-};
-
-type PaymentCallbacks = {
-  onReadyForServerApproval: (paymentId: string) => void;
-  onReadyForServerCompletion: (paymentId: string, txid: string) => void;
-  onCancel: (paymentId: string) => void;
-  onError: (error: Error, payment?: PaymentDto) => void;
-};
-
+/**
+ * React hook wrapping all window.Pi SDK methods per the official Pi Network SDK reference.
+ * Types come from the global declarations in pi-sdk.d.ts.
+ */
 export function usePiSdk() {
   const hasPi = typeof window !== "undefined" && !!window.Pi;
 
   const init = useCallback(
     (sandbox = false) => {
-      if (!hasPi) {
-        throw new Error("Pi SDK not available. Open in Pi Browser.");
-      }
+      if (!hasPi) throw new Error("Pi SDK not available. Open in Pi Browser.");
       window.Pi.init({ version: "2.0", sandbox });
     },
     [hasPi]
   );
 
+  /* ─── Authentication ─── */
+
   const authenticate = useCallback(
     async (
       scopes: PiScope[],
-      onIncompletePaymentFound?: (payment: PaymentDto) => void
-    ): Promise<{ accessToken: string; user: { uid: string; username: string } }> => {
-      if (!hasPi) {
-        throw new Error("Pi SDK not available. Open in Pi Browser.");
-      }
+      onIncompletePaymentFound?: (payment: PiPaymentDto) => void
+    ): Promise<PiAuthResult> => {
+      if (!hasPi) throw new Error("Pi SDK not available. Open in Pi Browser.");
       return window.Pi.authenticate(scopes, onIncompletePaymentFound);
     },
     [hasPi]
   );
 
+  /* ─── Payments ─── */
+
   const createPayment = useCallback(
-    (paymentData: PaymentData, callbacks: PaymentCallbacks) => {
-      if (!hasPi) {
-        throw new Error("Pi SDK not available. Open in Pi Browser.");
-      }
+    (paymentData: PiPaymentData, callbacks: PiPaymentCallbacks) => {
+      if (!hasPi) throw new Error("Pi SDK not available. Open in Pi Browser.");
       window.Pi.createPayment(paymentData, callbacks);
     },
     [hasPi]
   );
+
+  /* ─── Share & Social ─── */
 
   const openShareDialog = useCallback(
     (title: string, message: string) => {
@@ -86,6 +58,8 @@ export function usePiSdk() {
     [hasPi]
   );
 
+  /* ─── Clipboard ─── */
+
   const copyText = useCallback(
     (text: string) => {
       if (hasPi) {
@@ -97,27 +71,24 @@ export function usePiSdk() {
     [hasPi]
   );
 
+  /* ─── URL & Browser ─── */
+
   const openUrlInSystemBrowser = useCallback(
     async (url: string): Promise<void> => {
-      if (!/^https?:\/\//i.test(url)) {
-        throw new Error("Failed to open URL");
-      }
-
+      if (!/^https?:\/\//i.test(url)) throw new Error("Failed to open URL");
       if (hasPi && window.Pi.openUrlInSystemBrowser) {
         await window.Pi.openUrlInSystemBrowser(url);
         return;
       }
-
-      // Browser fallback for non-Pi environments.
       const ref = window.open(url, "_blank", "noopener,noreferrer");
-      if (!ref) {
-        throw new Error("Failed to open URL");
-      }
+      if (!ref) throw new Error("Failed to open URL");
     },
     [hasPi]
   );
 
-  const getNativeFeatures = useCallback(async (): Promise<NativeFeature[]> => {
+  /* ─── Native Features & Permissions ─── */
+
+  const getNativeFeatures = useCallback(async (): Promise<PiNativeFeature[]> => {
     if (!hasPi || !window.Pi.nativeFeaturesList) return [];
     return window.Pi.nativeFeaturesList();
   }, [hasPi]);
@@ -130,20 +101,44 @@ export function usePiSdk() {
     [hasPi]
   );
 
-  const requestAd = useCallback(async (adType: AdType = "interstitial") => {
-    if (!hasPi || !window.Pi.Ads) return;
-    return window.Pi.Ads.requestAd(adType);
+  /* ─── QR Code Scanner ─── */
+
+  const scanQrCode = useCallback(async (): Promise<string | null> => {
+    if (!hasPi || !window.Pi.scanQrCode) return null;
+    return window.Pi.scanQrCode();
   }, [hasPi]);
 
-  const showAd = useCallback(async (adType: AdType = "interstitial") => {
-    if (!hasPi || !window.Pi.Ads) return false;
-    const ready = await window.Pi.Ads.isAdReady(adType);
-    if (ready && ready.ready) {
-      await window.Pi.Ads.showAd(adType);
-      return true;
-    }
-    return false;
-  }, [hasPi]);
+  /* ─── Ads (interstitial / rewarded) ─── */
+
+  const requestAd = useCallback(
+    async (adType: "interstitial" | "rewarded" = "interstitial") => {
+      if (!hasPi || !window.Pi.Ads) return;
+      return window.Pi.Ads.requestAd(adType);
+    },
+    [hasPi]
+  );
+
+  const isAdReady = useCallback(
+    async (adType: "interstitial" | "rewarded" = "interstitial"): Promise<boolean> => {
+      if (!hasPi || !window.Pi.Ads) return false;
+      const result = await window.Pi.Ads.isAdReady(adType);
+      return result?.ready ?? false;
+    },
+    [hasPi]
+  );
+
+  const showAd = useCallback(
+    async (adType: "interstitial" | "rewarded" = "interstitial"): Promise<boolean> => {
+      if (!hasPi || !window.Pi.Ads) return false;
+      const ready = await window.Pi.Ads.isAdReady(adType);
+      if (ready?.ready) {
+        await window.Pi.Ads.showAd(adType);
+        return true;
+      }
+      return false;
+    },
+    [hasPi]
+  );
 
   return {
     hasPi,
@@ -156,7 +151,9 @@ export function usePiSdk() {
     openUrlInSystemBrowser,
     getNativeFeatures,
     requestPermission,
+    scanQrCode,
     requestAd,
+    isAdReady,
     showAd,
   };
 }

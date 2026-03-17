@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
-import { PiSdkBase } from "pi-sdk-js";
 
 interface PiUser {
   uid: string;
@@ -73,10 +72,9 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
       if (cancelled || !hasPi) return;
       setIsPiBrowser(true);
       try {
-        window.Pi!.init({ version: "2.0", sandbox: isSandboxMode });
+        window.Pi.init({ version: "2.0", sandbox: isSandboxMode });
       } catch (e) {
         const msg = e instanceof Error ? e.message.toLowerCase() : "";
-        // Only continue if SDK was already initialized — any other error means init failed.
         if (!msg.includes("already") && !msg.includes("initialized")) {
           setError("Pi SDK init failed. Please reload in Pi Browser.");
           return;
@@ -88,7 +86,42 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
     return () => { cancelled = true; };
   }, [isSandboxMode]);
 
-  const authenticateWithScopes = useCallback(async (scopes: string[]) => {
+  /**
+   * Handle incomplete payments found during Pi.authenticate().
+   * Per SDK docs, the app MUST handle these before new payments can be created.
+   */
+  const handleIncompletePayment = useCallback(async (payment: PiPaymentDto) => {
+    try {
+      // If not yet approved by our server, approve it
+      if (!payment.status.developer_approved) {
+        await fetch("/api/pi_payment/approve", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentId: payment.identifier }),
+        });
+      }
+
+      // If blockchain transaction exists but not completed on our server, complete it
+      if (payment.transaction && !payment.status.developer_completed) {
+        await fetch("/api/pi_payment/complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            paymentId: payment.identifier,
+            txid: payment.transaction.txid,
+          }),
+        });
+      }
+    } catch (err) {
+      console.error("[Pi] Failed to handle incomplete payment:", err);
+    }
+  }, []);
+
+  /**
+   * Authenticate using window.Pi.authenticate() directly per official SDK docs.
+   * Scopes: ["username"] for login, ["username", "payments"] for payment authorization.
+   */
+  const authenticateWithScopes = useCallback(async (scopes: PiScope[]) => {
     if (typeof window === "undefined" || !window.Pi) {
       setError("Please open this app in Pi Browser");
       return false;
@@ -98,21 +131,18 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      const sdk = new PiSdkBase();
-      await sdk.connect();
+      // Official SDK: Pi.authenticate(scopes, onIncompletePaymentFound)
+      const authResult = await window.Pi.authenticate(scopes, handleIncompletePayment);
 
-      const accessToken = PiSdkBase.accessToken;
-      const sdkUser = PiSdkBase.user as { uid?: string; username?: string } | null;
-
-      if (!accessToken || !sdkUser) {
-        throw new Error("Pi connection returned no user");
+      if (!authResult.accessToken || !authResult.user) {
+        throw new Error("Pi authentication returned no user");
       }
 
       // Verify token on our server
       const verifyRes = await fetch("/api/auth/pi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accessToken }),
+        body: JSON.stringify({ accessToken: authResult.accessToken }),
       });
 
       if (!verifyRes.ok) {
@@ -126,8 +156,7 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
       sessionStorage.setItem("pi_username", verifiedUser.username);
       sessionStorage.setItem("pi_role", verifiedUser.role || "user");
 
-      const hasPaymentsScope = scopes.includes("payments");
-      if (hasPaymentsScope) {
+      if (scopes.includes("payments")) {
         setPaymentAuthorized(true);
         sessionStorage.setItem("pi_payments_authorized", "true");
       }
@@ -140,22 +169,16 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [handleIncompletePayment]);
 
   const connect = useCallback(async () => {
-    // Login-only flow: do not request payment permissions here.
     await authenticateWithScopes(["username"]);
   }, [authenticateWithScopes]);
 
   const authorizePayments = useCallback(async () => {
-    if (paymentAuthorized) {
-      return;
-    }
-
+    if (paymentAuthorized) return;
     const ok = await authenticateWithScopes(["username", "payments"]);
-    if (!ok) {
-      throw new Error("Payment authorization failed");
-    }
+    if (!ok) throw new Error("Payment authorization failed");
   }, [authenticateWithScopes, paymentAuthorized]);
 
   const sandboxLogin = useCallback(async () => {
@@ -203,7 +226,6 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
         setUser({ uid: savedUid, username: savedUsername, role: savedRole || "user" });
         setPaymentAuthorized(savedPaymentAuth);
       } else {
-        // Auto-login: authenticate automatically when in Pi Browser
         connect();
       }
     }
@@ -216,9 +238,7 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
     sessionStorage.removeItem("pi_role");
     sessionStorage.removeItem("pi_payments_authorized");
     setPaymentAuthorized(false);
-    fetch("/api/auth/pi/logout", { method: "POST" }).catch(() => {
-      // Ignore logout sync errors; local session is already cleared.
-    });
+    fetch("/api/auth/pi/logout", { method: "POST" }).catch(() => {});
   }, []);
 
   return (

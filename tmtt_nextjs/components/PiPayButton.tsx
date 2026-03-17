@@ -1,7 +1,7 @@
 "use client";
 
+import { useState } from "react";
 import { usePiAuth } from "./PiAuthProvider";
-import { PiSdkBase } from "pi-sdk-js";
 
 interface PiPayButtonProps {
   amount: number;
@@ -25,6 +25,7 @@ export function PiPayButton({
   disabled = false,
 }: PiPayButtonProps) {
   const { connected, paymentAuthorized, connect, authorizePayments, isPiBrowser } = usePiAuth();
+  const [paying, setPaying] = useState(false);
 
   async function handlePayment() {
     if (typeof window === "undefined" || !window.Pi) {
@@ -44,26 +45,71 @@ export function PiPayButton({
       }
     }
 
-    // PiSdkBase.createPayment posts approve/complete/cancel/error
-    // to /api/pi_payment/* automatically (auto-detected in Next.js).
-    const sdk = new PiSdkBase();
-    sdk.onConnection = () => {
-      sdk.createPayment({ amount, memo, metadata });
-    };
+    setPaying(true);
 
-    // Patch completion callback so the UI can react
-    const origComplete = PiSdkBase.onReadyForServerCompletion.bind(PiSdkBase);
-    PiSdkBase.onReadyForServerCompletion = async (paymentId: string, txid: string) => {
-      await origComplete(paymentId, txid);
-      onSuccess?.(txid);
-      PiSdkBase.onReadyForServerCompletion = origComplete;
-    };
+    // Use window.Pi.createPayment() directly per official SDK docs
+    window.Pi.createPayment(
+      { amount, memo, metadata },
+      {
+        // Step 1: SDK sends paymentId — our server must approve it via Pi Platform API
+        onReadyForServerApproval: async (paymentId: string) => {
+          try {
+            const res = await fetch("/api/pi_payment/approve", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentId }),
+            });
+            if (!res.ok) {
+              onError?.("Payment approval failed on server");
+              setPaying(false);
+            }
+          } catch {
+            onError?.("Network error during payment approval");
+            setPaying(false);
+          }
+        },
 
-    if (!PiSdkBase.connected) {
-      await sdk.connect();
-    } else {
-      sdk.createPayment({ amount, memo, metadata });
-    }
+        // Step 2: Blockchain transaction complete — our server must complete it
+        onReadyForServerCompletion: async (paymentId: string, txid: string) => {
+          try {
+            const res = await fetch("/api/pi_payment/complete", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentId, txid }),
+            });
+            if (!res.ok) {
+              onError?.("Payment completion failed on server");
+            } else {
+              onSuccess?.(txid);
+            }
+          } catch {
+            onError?.("Network error during payment completion");
+          } finally {
+            setPaying(false);
+          }
+        },
+
+        // User cancelled the payment
+        onCancel: async (paymentId: string) => {
+          try {
+            await fetch("/api/pi_payment/cancel", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentId }),
+            });
+          } catch {
+            // silent
+          }
+          setPaying(false);
+        },
+
+        // Payment error
+        onError: (error: Error) => {
+          onError?.(error.message || "Payment failed");
+          setPaying(false);
+        },
+      }
+    );
   }
 
   const baseClass =
@@ -72,12 +118,19 @@ export function PiPayButton({
   return (
     <button
       onClick={handlePayment}
-      disabled={disabled}
+      disabled={disabled || paying}
       className={`${baseClass} ${className}`}
     >
       {children || (
         <span className="flex items-center gap-2">
-          π {isPiBrowser ? `Pay ${amount} Pi` : "Open in Pi Browser"}
+          {paying ? (
+            <>
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-black/30 border-t-black" />
+              Processing…
+            </>
+          ) : (
+            <>π {isPiBrowser ? `Pay ${amount} Pi` : "Open in Pi Browser"}</>
+          )}
         </span>
       )}
     </button>
