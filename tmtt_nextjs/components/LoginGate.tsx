@@ -1,9 +1,19 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { usePiAuth } from "./PiAuthProvider";
+
+// Pages that bypass the login gate
+const PUBLIC_PATHS = ["/sandbox"];
 
 export function LoginGate({ children }: { children: React.ReactNode }) {
   const { user, connected, loading, error, connect, isPiBrowser, isSandboxMode, sandboxLogin } = usePiAuth();
+  const pathname = usePathname();
+
+  // Bypass gate for public pages
+  if (PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
+    return <>{children}</>;
+  }
 
   // Already authenticated — show content
   if (connected && user) return <>{children}</>;
