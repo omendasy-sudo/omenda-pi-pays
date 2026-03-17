@@ -26,6 +26,7 @@ export default function SandboxPage() {
 
   // A2U state
   const [a2uUid, setA2uUid] = useState("");
+  const [a2uUidTouched, setA2uUidTouched] = useState(false);
   const [a2uAmount, setA2uAmount] = useState("0.01");
   const [a2uMemo, setA2uMemo] = useState("App-to-User payment – Omenda Pi Pays");
   const [a2uSending, setA2uSending] = useState(false);
@@ -49,9 +50,9 @@ export default function SandboxPage() {
     };
   }, []);
 
-  // Resolve the recipient UID: use manual input or connected user
-  const recipientUid = a2uUid.trim() || user?.uid || "";
-  const recipientLabel = user && !a2uUid.trim() ? `@${user.username}` : recipientUid.slice(0, 12) + "…";
+  // Resolve the recipient UID: use manual input if user typed something, else connected user
+  const recipientUid = a2uUidTouched ? a2uUid.trim() : (a2uUid.trim() || user?.uid || "");
+  const recipientLabel = user && !a2uUidTouched && !a2uUid.trim() ? `@${user.username}` : (recipientUid ? recipientUid.slice(0, 12) + "…" : "");
 
   const sendA2U = useCallback(async () => {
     if (!recipientUid) {
@@ -281,18 +282,28 @@ export default function SandboxPage() {
             </p>
 
                 <label className="mb-1 block text-xs font-semibold text-slate-500">
-                  Recipient UID
+                  Recipient Pi UID
                 </label>
                 <input
                   type="text"
-                  value={a2uUid || (user?.uid ?? "")}
-                  onChange={(e) => setA2uUid(e.target.value)}
-                  className="mb-4 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
-                  placeholder="Paste Pi user UID here"
+                  value={a2uUid}
+                  onChange={(e) => { setA2uUid(e.target.value); setA2uUidTouched(true); }}
+                  onFocus={() => setA2uUidTouched(true)}
+                  className="mb-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                  placeholder={user?.uid ? `e.g. ${user.uid}` : "Paste Pi user UID here"}
                 />
-                {connected && user && !a2uUid.trim() && (
-                  <p className="-mt-3 mb-4 text-[0.625rem] text-emerald-600">
-                    Auto-filled from connected account @{user.username}
+                {connected && user && (
+                  <button
+                    type="button"
+                    onClick={() => { setA2uUid(user.uid); setA2uUidTouched(true); }}
+                    className="mb-3 text-[0.625rem] font-semibold text-amber-600 underline hover:text-amber-700"
+                  >
+                    Use my UID (@{user.username})
+                  </button>
+                )}
+                {!connected && (
+                  <p className="mb-3 text-[0.625rem] text-slate-400">
+                    Paste the Pi UID of the user you want to send Pi to
                   </p>
                 )}
 
