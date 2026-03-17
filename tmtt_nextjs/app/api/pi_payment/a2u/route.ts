@@ -42,7 +42,7 @@ async function sendDirectToWallet(
         amount,
       })
     )
-    .addMemo(StellarSdk.Memo.text(memo.substring(0, 28)))
+    .addMemo(StellarSdk.Memo.text(Buffer.from(memo).subarray(0, 28).toString("utf8").replace(/\uFFFD$/, "")))
     .setTimeout(180)
     .build();
 
