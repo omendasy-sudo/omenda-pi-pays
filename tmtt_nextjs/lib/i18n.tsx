@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from "react";
 
 const LANG_KEY = "omenda_lang";
 
@@ -929,12 +929,23 @@ export function useTranslation() {
 export function LangSelector() {
   const { lang, setLang } = useTranslation();
   const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const [pos, setPos] = useState({ top: 0, right: 0 });
   const current = languages[lang] || languages.en;
 
+  const toggle = useCallback(() => {
+    if (!open && btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 6, right: window.innerWidth - r.right });
+    }
+    setOpen((v) => !v);
+  }, [open]);
+
   return (
-    <div className="relative">
+    <>
       <button
-        onClick={() => setOpen(!open)}
+        ref={btnRef}
+        onClick={toggle}
         className="flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-zinc-400 transition-all hover:border-white/[0.16] hover:text-white"
       >
         <span>{current.flag}</span>
@@ -943,8 +954,11 @@ export function LangSelector() {
       </button>
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full z-50 mt-2 max-h-80 w-44 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#111114] p-1.5 shadow-2xl">
+          <div className="fixed inset-0 z-[999]" onClick={() => setOpen(false)} />
+          <div
+            className="fixed z-[1000] max-h-80 w-48 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#111114] p-1.5 shadow-2xl"
+            style={{ top: pos.top, right: pos.right }}
+          >
             {Object.entries(languages).map(([code, l]) => (
               <button
                 key={code}
@@ -963,6 +977,6 @@ export function LangSelector() {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }
