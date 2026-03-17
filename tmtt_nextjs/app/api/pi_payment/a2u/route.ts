@@ -183,12 +183,6 @@ export async function POST(req: NextRequest) {
 
     // === Direct wallet address transfer (no Pi Platform API) ===
     if (resolvedWallet && typeof resolvedWallet === "string") {
-      if (resolvedWallet.length !== 56 || !resolvedWallet.startsWith("G")) {
-        return NextResponse.json(
-          { error: "Invalid wallet address format" },
-          { status: 400 }
-        );
-      }
 
       try {
         const txid = await sendDirectToWallet(

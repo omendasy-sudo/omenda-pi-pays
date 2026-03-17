@@ -52,8 +52,8 @@ export default function SandboxPage() {
 
   const sendA2U = useCallback(async () => {
     if (a2uSendMode === "wallet") {
-      if (!recipientWallet || recipientWallet.length !== 56 || !recipientWallet.startsWith("G")) {
-        setMessage({ type: "error", text: "Enter a valid Pi wallet address (starts with G, 56 characters)" });
+      if (!recipientWallet || recipientWallet.length < 20) {
+        setMessage({ type: "error", text: "Enter a valid Pi wallet address" });
         return;
       }
     } else {
@@ -325,10 +325,10 @@ export default function SandboxPage() {
                       value={a2uWallet}
                       onChange={(e) => setA2uWallet(e.target.value)}
                       className="mb-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
-                      placeholder="GABC…XYZ (56-character Stellar public key)"
+                      placeholder="Paste Pi wallet address"
                     />
                     <p className="mb-3 text-[0.625rem] text-slate-400">
-                      Paste the Pi wallet address (starts with G, 56 characters)
+                      Paste the recipient's Pi wallet address
                     </p>
                   </>
                 )}
