@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ProductOverview } from "@/components/ProductOverview";
 
 type Step = "trustline" | "mint" | "domain" | "balances";
 
@@ -262,6 +263,9 @@ export default function TokensPage() {
           Secret keys are sent only to your own server — never stored or logged.
         </p>
       </div>
+
+      {/* ── Product Overview ── */}
+      <ProductOverview />
     </main>
   );
 }

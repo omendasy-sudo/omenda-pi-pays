@@ -10,82 +10,56 @@ import { useGcv } from "./GcvProvider";
 
 export function NavBar() {
   const { user, connected } = usePiAuth();
-  const { openShareDialog } = usePiSdk();
+  usePiSdk();
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { mode, toggleMode } = useGcv();
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#09090b]/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
-          OMENDA <span className="text-amber-400">PI PAYS</span>
-        </Link>
-        <div className="hidden items-center gap-1 sm:flex">
-          <Link href="/" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("nav.home")}
-          </Link>
-          <a href="/index.html" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("nav.marketplace")}
-          </a>
-          <Link href="/map" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("nav.map")}
-          </Link>
-          <Link href="/social" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("nav.social")}
-          </Link>
-          <Link href="/services" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("nav.services")}
-          </Link>
-          <Link href="/services/hotels" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("nav.hotels")}
-          </Link>
-          <Link href="/services/homes" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("nav.homes")}
-          </Link>
-          <Link href="/services/bills" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("nav.bills")}
-          </Link>
-          <Link href="/services/transport" className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white">
-            {t("transport.title")}
-          </Link>
+    <nav className="sticky top-0 z-50 border-b border-slate-200 bg-[#1a1a2e] shadow-sm">
+      {/* Header cover with logo */}
+      <div className="mx-auto flex h-14 max-w-2xl items-center justify-between px-4">
+        {/* Left: back arrow */}
+        <button type="button" className="text-slate-300 hover:text-white" aria-label="Go back">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+
+        {/* Center: logo + branding */}
+        <div className="flex items-center gap-2">
+          <img src="/logo.png" alt="Omenda Pi Pays" className="h-9 w-9 rounded-full object-cover shadow" />
+          <span className="text-base font-bold text-white">Omenda Pi Pays</span>
         </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={toggleMode}
-            className={`rounded-lg border px-3 py-2 text-xs font-bold tracking-wide transition-colors ${
-              mode === "gcv"
-                ? "border-amber-500/40 bg-amber-500/15 text-amber-400 hover:bg-amber-500/25"
-                : "border-white/[0.06] text-zinc-400 hover:bg-white/[0.06] hover:text-white"
-            }`}
-            title={mode === "gcv" ? "GCV Mode: $314,159/π — Click for Standard" : "Standard: $0.17/π — Click for GCV"}
-            aria-label="Toggle GCV price mode"
-          >
-            {mode === "gcv" ? "GCV" : "STD"}
-          </button>
-          <button
-            onClick={toggleTheme}
-            className="rounded-lg border border-white/[0.06] px-2 py-2 text-lg transition-colors hover:bg-white/[0.06]"
-            title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            aria-label="Toggle color mode"
-          >
-            {theme === "light" ? "☀️" : "🌙"}
-          </button>
-          <LangSelector />
-          <button
-            onClick={() => openShareDialog("Omenda Pi Pays", "Check out Omenda Pi Pays — the marketplace & services platform powered by Pi Network!")}
-            className="hidden rounded-lg border border-white/[0.06] px-2 py-2 text-sm text-zinc-400 transition-colors hover:bg-white/[0.06] hover:text-white sm:flex"
-            title={t("nav.shareApp")}
-          >
-            📤
-          </button>
+
+        {/* Right: dropdown + user */}
+        <div className="flex items-center gap-2">
           {connected && user && (
-            <div className="hidden items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-4 py-1.5 text-sm font-semibold text-amber-400 sm:flex">
-              <span className="h-2 w-2 rounded-full bg-green-500" />
-              @{user.username}
-            </div>
+            <span className="hidden text-xs font-semibold text-amber-400 sm:inline">@{user.username}</span>
           )}
-          <PiConnectButton />
+          <button type="button" className="text-slate-400 hover:text-white" aria-label="Menu">
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop nav links */}
+      <div className="hidden border-t border-white/10 sm:block">
+        <div className="mx-auto flex max-w-2xl items-center gap-1 overflow-x-auto px-4 py-1">
+          <Link href="/" className="rounded-lg px-3 py-1.5 text-xs font-semibold text-sky-300 hover:bg-white/10">{t("nav.home")}</Link>
+          <Link href="/" className="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/10">{t("nav.services")}</Link>
+          <Link href="/map" className="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/10">{t("nav.map")}</Link>
+          <Link href="/social" className="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/10">{t("nav.social")}</Link>
+          <div className="ml-auto flex items-center gap-2">
+            <button
+              onClick={toggleMode}
+              className={`rounded-md px-2 py-1 text-[10px] font-bold ${mode === "gcv" ? "bg-amber-500/20 text-amber-400" : "bg-white/10 text-slate-400"}`}
+              title={mode === "gcv" ? "GCV Mode: $314,159/π" : "Standard: $0.17/π"}
+            >{mode === "gcv" ? "GCV" : "STD"}</button>
+            <button onClick={toggleTheme} className="text-sm" aria-label="Toggle theme">
+              {theme === "light" ? "☀️" : "🌙"}
+            </button>
+            <LangSelector />
+            <PiConnectButton />
+          </div>
         </div>
       </div>
     </nav>

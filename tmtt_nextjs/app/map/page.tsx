@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { ProductOverview } from "@/components/ProductOverview";
 
 // Map data: global pioneers, businesses & services
 const mapData = [
@@ -165,7 +166,7 @@ export default function MapPage() {
       attributionControl: false,
     });
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
       subdomains: "abcd",
       maxZoom: 19,
     }).addTo(map);
@@ -269,45 +270,45 @@ export default function MapPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#f5f5f5]">
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4 px-6 pt-8 pb-5">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
             Global{" "}
-            <span className="bg-gradient-to-r from-amber-400 to-yellow-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-orange-500 to-amber-400 bg-clip-text text-transparent">
               Pioneer Map
             </span>
           </h1>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-slate-500">
             Discover pioneers, businesses &amp; services accepting Pi worldwide
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <div className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-xs">
+          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-            <strong className="text-white">12,480</strong>
-            <span className="text-zinc-400">Pioneers</span>
+            <strong className="text-slate-800">12,480</strong>
+            <span className="text-slate-500">Pioneers</span>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-xs">
+          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            <strong className="text-white">3,240</strong>
-            <span className="text-zinc-400">Businesses</span>
+            <strong className="text-slate-800">3,240</strong>
+            <span className="text-slate-500">Businesses</span>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-xs">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-violet-500" />
-            <strong className="text-white">890</strong>
-            <span className="text-zinc-400">Services</span>
+          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-orange-500" />
+            <strong className="text-slate-800">890</strong>
+            <span className="text-slate-500">Services</span>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-xs">
+          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-cyan-500" />
-            <strong className="text-white">2,400</strong>
-            <span className="text-zinc-400">Transport</span>
+            <strong className="text-slate-800">2,400</strong>
+            <span className="text-slate-500">Transport</span>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-xs">
+          <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-pink-500" />
-            <strong className="text-white">4,800</strong>
-            <span className="text-zinc-400">Social</span>
+            <strong className="text-slate-800">4,800</strong>
+            <span className="text-slate-500">Social</span>
           </div>
         </div>
       </div>
@@ -320,13 +321,13 @@ export default function MapPage() {
             onClick={() => setActiveFilter(f.key)}
             className={`flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold transition-all ${
               activeFilter === f.key
-                ? "border-violet-500 bg-violet-600 text-white"
-                : "border-white/[0.06] bg-white/[0.03] text-zinc-400 hover:border-white/[0.12] hover:text-white"
+                ? "border-orange-500 bg-orange-500 text-white shadow-sm"
+                : "border-slate-200 bg-white text-slate-600 hover:border-orange-300 hover:text-slate-800 shadow-sm"
             }`}
           >
             {f.icon} {f.label}
             {f.key in counts && (
-              <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px]">
+              <span className="rounded-full bg-orange-100 text-orange-600 px-2 py-0.5 text-[10px]">
                 {counts[f.key as keyof typeof counts]}
               </span>
             )}
@@ -335,37 +336,37 @@ export default function MapPage() {
       </div>
 
       {/* Map + Sidebar */}
-      <div className="mx-6 mb-6 flex overflow-hidden rounded-2xl border border-white/[0.06]" style={{ minHeight: 500 }}>
+      <div className="mx-6 mb-6 flex overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm" style={{ minHeight: 500 }}>
         {/* Map */}
-        <div ref={mapRef} className="flex-1" style={{ minHeight: 500, background: "#0a0a0f" }}>
+        <div ref={mapRef} className="flex-1" style={{ minHeight: 500, background: "#e8e8e8" }}>
           {!leafletLoaded && (
-            <div className="flex h-full items-center justify-center text-zinc-500">
+            <div className="flex h-full items-center justify-center text-slate-400">
               Loading map...
             </div>
           )}
         </div>
 
         {/* Sidebar */}
-        <div className="hidden w-[380px] flex-col border-l border-white/[0.06] bg-[#111114] md:flex">
-          <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
-            <h3 className="text-sm font-bold">Nearby</h3>
-            <span className="text-xs text-zinc-500">{filtered.length} results</span>
+        <div className="hidden w-[380px] flex-col border-l border-slate-200 bg-white md:flex">
+          <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+            <h3 className="text-sm font-bold text-slate-800">Nearby</h3>
+            <span className="text-xs text-slate-500">{filtered.length} results</span>
           </div>
           <div className="px-5 pt-4">
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500">🔍</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">🔍</span>
               <input
                 type="text"
                 placeholder="Search by name, city..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-lg border border-white/[0.06] bg-white/[0.03] py-2.5 pl-9 pr-3 text-xs text-white outline-none placeholder:text-zinc-600 focus:border-violet-500"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-xs text-slate-800 outline-none placeholder:text-slate-400 focus:border-orange-500"
               />
             </div>
           </div>
           <div className="flex-1 overflow-y-auto p-3">
             {filtered.length === 0 ? (
-              <div className="py-8 text-center text-xs text-zinc-600">No results found</div>
+              <div className="py-8 text-center text-xs text-slate-400">No results found</div>
             ) : (
               filtered.map((d) => (
                 <button
@@ -373,12 +374,12 @@ export default function MapPage() {
                   onClick={() => focusMarker(d.id)}
                   className={`mb-1 w-full rounded-lg border p-3.5 text-left transition-all ${
                     selectedId === d.id
-                      ? "border-violet-500 bg-white/[0.04]"
-                      : "border-transparent hover:border-white/[0.06] hover:bg-white/[0.03]"
+                      ? "border-orange-500 bg-orange-50"
+                      : "border-transparent hover:border-slate-200 hover:bg-slate-50"
                   }`}
                 >
                   <div className="mb-1 flex items-start justify-between gap-2">
-                    <h4 className="text-sm font-bold leading-snug">{d.name}</h4>
+                    <h4 className="text-sm font-bold leading-snug text-slate-800">{d.name}</h4>
                     <span
                       className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
                         d.category === "transport"
@@ -395,8 +396,8 @@ export default function MapPage() {
                       {catLabels[d.category] || typeLabels[d.type]}
                     </span>
                   </div>
-                  <p className="mb-2 text-xs leading-relaxed text-zinc-400">{d.desc}</p>
-                  <div className="flex flex-wrap gap-3 text-[11px] text-zinc-500">
+                  <p className="mb-2 text-xs leading-relaxed text-slate-500">{d.desc}</p>
+                  <div className="flex flex-wrap gap-3 text-[11px] text-slate-400">
                     <span>📍 {d.city}</span>
                     <span>👤 {d.users.toLocaleString()}</span>
                     <span>🔄 {d.txns.toLocaleString()} txns</span>
@@ -413,29 +414,32 @@ export default function MapPage() {
         {regions.map((r) => (
           <div
             key={r.name}
-            className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 transition-colors hover:border-white/[0.12]"
+            className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6 transition-colors hover:border-orange-300"
           >
-            <h3 className="text-base font-bold">
+            <h3 className="text-base font-bold text-slate-800">
               {r.flag} {r.name}
             </h3>
-            <p className="mb-4 text-xs text-zinc-400">{r.sub}</p>
+            <p className="mb-4 text-xs text-slate-500">{r.sub}</p>
             <div className="flex gap-5">
               <div>
-                <div className="text-lg font-extrabold text-amber-400">{r.pioneers.toLocaleString()}</div>
-                <div className="text-[11px] text-zinc-500">Pioneers</div>
+                <div className="text-lg font-extrabold text-orange-500">{r.pioneers.toLocaleString()}</div>
+                <div className="text-[11px] text-slate-500">Pioneers</div>
               </div>
               <div>
-                <div className="text-lg font-extrabold text-violet-400">{r.biz.toLocaleString()}</div>
-                <div className="text-[11px] text-zinc-500">Businesses</div>
+                <div className="text-lg font-extrabold text-orange-400">{r.biz.toLocaleString()}</div>
+                <div className="text-[11px] text-slate-500">Businesses</div>
               </div>
               <div>
-                <div className="text-lg font-extrabold text-green-400">{r.svc.toLocaleString()}</div>
-                <div className="text-[11px] text-zinc-500">Services</div>
+                <div className="text-lg font-extrabold text-green-500">{r.svc.toLocaleString()}</div>
+                <div className="text-[11px] text-slate-500">Services</div>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* ── Product Overview ── */}
+      <ProductOverview />
     </div>
   );
 }

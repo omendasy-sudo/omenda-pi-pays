@@ -5,8 +5,15 @@ const api = axios.create({
 });
 
 export const authWithPi = (payload) => api.post('/auth/pi', payload);
-export const setAuthToken = (token) => { api.defaults.headers.common['Authorization'] = `Bearer ${token}`; };
-export const restoreAuth = () => { /* session restore hook */ };
+export const setAuthToken = (token) => {
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+};
+export const restoreAuth = () => {
+  const token = window.localStorage.getItem('omenda_auth_token');
+  if (token) {
+    setAuthToken(token);
+  }
+};
 export const fetchProducts = () => api.get('/products');
 export const fetchMe = () => api.get('/auth/me');
 

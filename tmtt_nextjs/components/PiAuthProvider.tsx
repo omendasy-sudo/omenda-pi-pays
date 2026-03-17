@@ -41,6 +41,21 @@ export function usePiAuth() {
   return useContext(PiAuthContext);
 }
 
+/** Poll for window.Pi to be injected by Pi Browser WebView (up to timeoutMs). */
+async function waitForWindowPi(timeoutMs = 10000): Promise<boolean> {
+  if (typeof window === "undefined") return false;
+  if (window.Pi) return true;
+  return new Promise((resolve) => {
+    const deadline = Date.now() + timeoutMs;
+    const check = () => {
+      if (window.Pi) { resolve(true); return; }
+      if (Date.now() >= deadline) { resolve(false); return; }
+      setTimeout(check, 100);
+    };
+    check();
+  });
+}
+
 export function PiAuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<PiUser | null>(null);
   const [loading, setLoading] = useState(false);
@@ -50,19 +65,27 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
   const [isPiBrowser, setIsPiBrowser] = useState(false);
   const isSandboxMode = process.env.NEXT_PUBLIC_PI_SANDBOX === "true";
 
-  // Detect Pi Browser & explicitly init SDK before any other Pi calls
+  // Wait for window.Pi, call Pi.init(), then mark SDK ready.
   useEffect(() => {
-    const inPiBrowser = typeof window !== "undefined" && !!window.Pi;
-    setIsPiBrowser(inPiBrowser);
-
-    if (inPiBrowser) {
+    let cancelled = false;
+    async function initSdk() {
+      const hasPi = await waitForWindowPi(10000);
+      if (cancelled || !hasPi) return;
+      setIsPiBrowser(true);
       try {
-        window.Pi.init({ version: "2.0", sandbox: isSandboxMode });
-      } catch {
-        // Pi.init may throw if already initialized; safe to continue.
+        window.Pi!.init({ version: "2.0", sandbox: isSandboxMode });
+      } catch (e) {
+        const msg = e instanceof Error ? e.message.toLowerCase() : "";
+        // Only continue if SDK was already initialized — any other error means init failed.
+        if (!msg.includes("already") && !msg.includes("initialized")) {
+          setError("Pi SDK init failed. Please reload in Pi Browser.");
+          return;
+        }
       }
-      setSdkReady(true);
+      if (!cancelled) setSdkReady(true);
     }
+    initSdk();
+    return () => { cancelled = true; };
   }, [isSandboxMode]);
 
   const authenticateWithScopes = useCallback(async (scopes: string[]) => {
@@ -75,13 +98,6 @@ export function PiAuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
 
     try {
-      // Ensure Pi.init() is called before authenticate (required by Pi SDK)
-      try {
-        window.Pi.init({ version: "2.0", sandbox: isSandboxMode });
-      } catch {
-        // Already initialized; safe to continue.
-      }
-
       const sdk = new PiSdkBase();
       await sdk.connect();
 

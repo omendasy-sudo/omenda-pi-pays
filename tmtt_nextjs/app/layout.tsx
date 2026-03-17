@@ -7,6 +7,8 @@ import { I18nProvider } from "@/lib/i18n";
 import { FooterTranslated } from "@/components/FooterTranslated";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { GcvProvider } from "@/components/GcvProvider";
+import { LoginGate } from "@/components/LoginGate";
+import { BottomNav } from "@/components/BottomNav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,9 +48,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="light" suppressHydrationWarning>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <Script src="https://sdk.minepi.com/pi-sdk.js" strategy="beforeInteractive" />
+        {/* Initialize Pi SDK as early as possible — before React hydration */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var sb=${process.env.NEXT_PUBLIC_PI_SANDBOX === "true" ? "true" : "false"};function tryInit(n){if(!n)return;if(window.Pi){try{window.Pi.init({version:"2.0",sandbox:sb});}catch(e){}return;}setTimeout(function(){tryInit(n-1);},100);}tryInit(100);})();` }} />
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem("omenda_theme")||"dark";document.documentElement.className=t;}catch(e){}})();` }} />
       </head>
       <body
@@ -58,9 +63,14 @@ export default function RootLayout({
         <GcvProvider>
         <PiAuthProvider>
         <I18nProvider>
+        <LoginGate>
         <NavBar />
+        <div className="pb-20 md:pb-0">
         {children}
         <FooterTranslated />
+        </div>
+        <BottomNav />
+        </LoginGate>
         </I18nProvider>
         </PiAuthProvider>
         </GcvProvider>

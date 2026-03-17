@@ -72,10 +72,51 @@ html.light ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
 @media (max-width: 768px) {
   body {
     font-size: 15px;
+    -webkit-text-size-adjust: 100%;
   }
 
   button,
   a[role="button"] {
     min-height: 44px;
+  }
+}
+
+/* ── Bottom Nav safe area for all phones ── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Ensure touch targets are accessible on all screen sizes */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+/* Small phones (iPhone SE, Galaxy A series, etc.) */
+@media (max-width: 375px) {
+  body {
+    font-size: 13px;
+  }
+}
+
+/* Large phones / phablets */
+@media (min-width: 390px) and (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+/* Landscape phone orientation */
+@media (max-height: 500px) and (orientation: landscape) {
+  nav[class*="fixed bottom"] {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  nav[class*="fixed bottom"] svg {
+    height: 20px;
+    width: 20px;
   }
 }

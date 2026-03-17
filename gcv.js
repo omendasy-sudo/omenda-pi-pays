@@ -41,6 +41,56 @@
     setMode(getMode() === "standard" ? "gcv" : "standard");
   }
 
+  function normalizeInternalLink(anchor) {
+    if (!anchor) return;
+    var rawHref = anchor.getAttribute("href");
+    if (!rawHref || rawHref.charAt(0) === "#") return;
+
+    // Keep special schemes untouched.
+    if (/^(mailto:|tel:|sms:|whatsapp:|javascript:|pi:)/i.test(rawHref)) return;
+
+    var parsed;
+    try {
+      parsed = new URL(rawHref, window.location.href);
+    } catch (_e) {
+      return;
+    }
+
+    var isHttp = parsed.protocol === "http:" || parsed.protocol === "https:";
+    if (!isHttp) return;
+
+    // Force same-origin links to open in-app (same tab) for Pi Browser UX.
+    if (parsed.origin === window.location.origin) {
+      anchor.setAttribute("href", parsed.pathname + parsed.search + parsed.hash);
+      if (anchor.getAttribute("target") === "_blank") {
+        anchor.removeAttribute("target");
+      }
+      var rel = anchor.getAttribute("rel") || "";
+      if (/\bnoopener\b|\bnoreferrer\b/i.test(rel)) {
+        anchor.removeAttribute("rel");
+      }
+    }
+  }
+
+  function normalizeAllLinks() {
+    var links = document.querySelectorAll("a[href]");
+    for (var i = 0; i < links.length; i++) {
+      normalizeInternalLink(links[i]);
+    }
+  }
+
+  function installLinkNormalizer() {
+    normalizeAllLinks();
+
+    document.addEventListener("click", function (event) {
+      var target = event.target;
+      if (!target) return;
+      var link = target.closest ? target.closest("a[href]") : null;
+      if (!link) return;
+      normalizeInternalLink(link);
+    });
+  }
+
   // ── Update toggle button appearance ──
   function applyMode(mode) {
     var btn = document.getElementById("gcv-toggle-btn");
@@ -163,6 +213,7 @@
 
   // ── Init ──
   function init() {
+    installLinkNormalizer();
     injectToggle();
     applyMode(getMode());
     updateAllPrices();

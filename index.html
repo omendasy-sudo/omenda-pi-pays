@@ -669,16 +669,25 @@
         // Pi SDK Initialization & Authentication
         let piUser = null;
         let piAccessToken = null;
-        const isPiBrowser = /PiBrowser/i.test(navigator.userAgent || '');
+        const isPiBrowser = /PiBrowser|Pi Browser/i.test(navigator.userAgent || '');
         let piInitialized = false;
 
         function hasPiSdk() {
-            return typeof window.Pi !== 'undefined';
+            return typeof window !== 'undefined' && typeof window.Pi !== 'undefined';
         }
 
         function isPiEnvironment() {
             return isPiBrowser || hasPiSdk();
         }
+
+        // Attempt init immediately if Pi is already injected (Pi Browser loads it early)
+        (function tryEarlyInit() {
+            if (!hasPiSdk()) return;
+            try {
+                window.Pi.init({ version: '2.0', sandbox: /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname) });
+                piInitialized = true;
+            } catch (e) { piInitialized = true; }
+        })();
 
         function setConnectedState(user, accessToken) {
             if (!user || !user.username) {
@@ -736,10 +745,23 @@
             }
 
             await waitForPiSdk(10000);
-            const initResult = window.Pi.init({ version: "2.0", sandbox: usePiSandbox() });
-            if (initResult && typeof initResult.then === 'function') {
-                await initResult;
+
+            try {
+                const initResult = window.Pi.init({ version: "2.0", sandbox: usePiSandbox() });
+                if (initResult && typeof initResult.then === 'function') {
+                    await initResult;
+                }
+            } catch (initErr) {
+                // Some Pi Browser versions throw if init() is called after it already
+                // ran internally. Treat those as success; rethrow everything else.
+                var msg = initErr && initErr.message ? initErr.message.toLowerCase() : '';
+                if (!msg.includes('already') && !msg.includes('initialized')) {
+                    throw initErr;
+                }
             }
+
+            // Give Pi SDK a tick to settle before any authenticate() call.
+            await new Promise(function(resolve) { setTimeout(resolve, 200); });
             piInitialized = true;
         }
 
@@ -751,10 +773,22 @@
             });
         }
 
+        function showPiError(msg) {
+            // Show error in toast (non-blocking) instead of native alert (which Pi Browser renders on top of blocked pages)
+            var toast = document.getElementById('toast');
+            if (toast) {
+                toast.textContent = msg;
+                toast.classList.add('show');
+                setTimeout(function() { toast.classList.remove('show'); toast.textContent = ''; }, 4000);
+            } else {
+                console.error('[Pi]', msg);
+            }
+        }
+
         async function piConnect(silent) {
             if (!isPiEnvironment()) {
                 if (!silent) {
-                    alert('Please open this app in Pi Browser to connect your wallet.');
+                    showPiError('Please open this app in Pi Browser to connect your wallet.');
                 }
                 return;
             }
@@ -762,14 +796,22 @@
             try {
                 await ensurePiInitialized();
                 const auth = await window.Pi.authenticate(['username', 'payments'], function(payment) {
-                    console.log('Incomplete payment:', payment);
+                    console.log('[Pi] Incomplete payment found:', payment);
+                    // Relay incomplete payment to server for resolution
+                    fetch('/api/pi_payment/incomplete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ payment: payment })
+                    }).catch(function() {});
                 });
                 if (auth && auth.user) {
                     setConnectedState(auth.user, auth.accessToken);
                 }
             } catch (err) {
+                var msg = err && err.message ? err.message : 'Pi login failed';
+                console.error('[Pi] auth error:', msg);
                 if (!silent) {
-                    alert('Pi login failed: ' + (err.message || 'Unknown error'));
+                    showPiError('Pi login failed: ' + msg);
                 }
                 throw err;
             }

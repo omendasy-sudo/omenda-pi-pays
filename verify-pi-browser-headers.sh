@@ -13,6 +13,7 @@ echo "$headers"
 
 if echo "$headers" | grep -qi '^X-Frame-Options:'; then
   echo "ERROR: X-Frame-Options is still being sent. Pi Browser will block the page." >&2
+  echo "Hint: run 'sudo nginx -T | grep -ni X-Frame-Options' on the VPS and remove the matching directive from the active config." >&2
   exit 1
 fi
 

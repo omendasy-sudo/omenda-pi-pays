@@ -59,6 +59,39 @@ Expected result:
 - `Content-Security-Policy: frame-ancestors 'self' https://*.minepi.com https://minepi.com`
 - no `X-Frame-Options` header at all
 
+## Quick Nginx Fix (Pi Browser)
+
+If Pi Browser still shows `ERR_BLOCKED_BY_RESPONSE`, run this on the VPS:
+
+```bash
+cd /var/www/omendapipays
+bash ./fix-pi-browser-nginx.sh
+```
+
+The script installs the repo nginx config, disables the default site, reloads nginx, and validates live headers.
+
+If the site is still blocked in Pi Browser:
+
+```bash
+sudo nginx -T | grep -ni X-Frame-Options
+```
+
+Remove any matching `add_header X-Frame-Options ...` directive from the active nginx config or any included snippet, then run:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+bash ./verify-pi-browser-headers.sh
+```
+
+Also make sure the default nginx site is disabled so your domain is served by the repo-managed config:
+
+```bash
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
 ## Notes
 
 - `tmtt_nextjs/package.json` now uses `scripts/next-with-env.mjs` for env-specific commands because the installed Next.js CLI here does not support `--env-file`.

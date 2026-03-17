@@ -1,0 +1,8 @@
+# Query: nginx co
+
+2 results - 1 file
+
+setup-ssl.sh:
+   66:   echo "ERROR: nginx config file not found at $FULL_CONF_SRC" >&2
+  114: echo "==> Testing nginx config..."
+  

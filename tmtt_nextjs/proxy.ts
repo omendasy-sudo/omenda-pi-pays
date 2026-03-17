@@ -6,7 +6,7 @@ function isLocalHost(hostname: string) {
 }
 
 function isPhoneUserAgent(userAgent: string) {
-  return /iPhone|iPod|Android.+Mobile|Windows Phone|BlackBerry|Opera Mini|IEMobile|Mobile Safari|PiBrowser/i.test(userAgent);
+  return /PiBrowser|Pi Browser|iPhone|iPad|iPod|Android|Windows Phone|BlackBerry|Opera Mini|IEMobile|Mobile|wv/i.test(userAgent);
 }
 
 export function proxy(request: NextRequest) {
