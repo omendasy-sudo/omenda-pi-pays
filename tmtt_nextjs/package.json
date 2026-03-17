@@ -17,9 +17,6 @@
   "dependencies": {
     "@stellar/stellar-sdk": "^13.1.0",
     "next": "16.1.6",
-    "pi-sdk-js": "^2.0.0",
-    "pi-sdk-nextjs": "^2.0.0",
-    "pi-sdk-react": "^2.0.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

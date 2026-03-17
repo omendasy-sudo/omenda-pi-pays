@@ -1,15 +1,82 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as StellarSdk from "@stellar/stellar-sdk";
 
 const PI_API = "https://api.minepi.com/v2";
 
+// Pi blockchain Horizon servers
+const PI_HORIZON_MAINNET = "https://api.mainnet.minepi.com";
+const PI_HORIZON_TESTNET = "https://api.testnet.minepi.com";
+
+function getHorizonUrl() {
+  return process.env.NEXT_PUBLIC_PI_SANDBOX === "true"
+    ? PI_HORIZON_TESTNET
+    : PI_HORIZON_MAINNET;
+}
+
 /**
- * POST – Create an App-to-User (A2U) payment.
+ * Build, sign, and submit a Stellar payment transaction to the Pi blockchain.
+ * Follows the same flow as the PHP SDK's submitPayment method.
+ */
+async function submitPaymentToBlockchain(
+  paymentId: string,
+  apiKey: string,
+  walletPrivateSeed: string
+): Promise<string> {
+  // 1. Get payment details from Pi API to find recipient address and amount
+  const paymentRes = await fetch(`${PI_API}/payments/${paymentId}`, {
+    headers: { Authorization: `Key ${apiKey}` },
+  });
+  if (!paymentRes.ok) {
+    throw new Error(`Failed to get payment details: ${paymentRes.status}`);
+  }
+  const payment = await paymentRes.json();
+  const toAddress = payment.to_address;
+  const amount = String(payment.amount);
+
+  if (!toAddress) {
+    throw new Error("Payment has no recipient address (to_address)");
+  }
+
+  // 2. Build and submit the Stellar transaction
+  const horizonUrl = getHorizonUrl();
+  const server = new StellarSdk.Horizon.Server(horizonUrl, { allowHttp: false });
+  const keypair = StellarSdk.Keypair.fromSecret(walletPrivateSeed);
+  const sourceAccount = await server.loadAccount(keypair.publicKey());
+
+  const networkPassphrase = process.env.NEXT_PUBLIC_PI_SANDBOX === "true"
+    ? "Pi Testnet"
+    : "Pi Network";
+
+  const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
+    fee: StellarSdk.BASE_FEE,
+    networkPassphrase,
+  })
+    .addOperation(
+      StellarSdk.Operation.payment({
+        destination: toAddress,
+        asset: StellarSdk.Asset.native(),
+        amount,
+      })
+    )
+    .addMemo(StellarSdk.Memo.text(paymentId.substring(0, 28)))
+    .setTimeout(180)
+    .build();
+
+  transaction.sign(keypair);
+
+  const result = await server.submitTransaction(transaction);
+  // The transaction hash is the txid
+  return result.hash;
+}
+
+/**
+ * POST – Full A2U (App-to-User) payment flow.
  * Body: { uid, amount, memo, metadata? }
  *
- * Flow:
+ * Flow (per official Pi SDK docs):
  * 1. Create payment via Pi Platform API
- * 2. Approve the payment server-side
- * 3. Return payment info (blockchain tx is processed by Pi Network)
+ * 2. Submit the payment to the Pi Blockchain (Stellar tx)
+ * 3. Complete the payment via Pi Platform API
  */
 export async function POST(req: NextRequest) {
   const apiKey = process.env.PI_API_KEY;
@@ -17,6 +84,15 @@ export async function POST(req: NextRequest) {
     console.error("[Pi][a2u] PI_API_KEY is not configured.");
     return NextResponse.json(
       { error: "Pi API key not configured on server." },
+      { status: 503 }
+    );
+  }
+
+  const walletSeed = process.env.PI_WALLET_PRIVATE_SEED;
+  if (!walletSeed) {
+    console.error("[Pi][a2u] PI_WALLET_PRIVATE_SEED is not configured.");
+    return NextResponse.json(
+      { error: "Wallet private seed not configured on server." },
       { status: 503 }
     );
   }
@@ -33,6 +109,34 @@ export async function POST(req: NextRequest) {
         { error: "amount must be between 0.01 and 1000" },
         { status: 400 }
       );
+    }
+
+    // Check for incomplete payments first
+    let paymentId: string;
+
+    try {
+      const incompleteRes = await fetch(`${PI_API}/payments/incomplete_server_payments`, {
+        headers: { Authorization: `Key ${apiKey}` },
+      });
+      if (incompleteRes.ok) {
+        const incomplete = await incompleteRes.json();
+        if (incomplete.incomplete_server_payments?.length > 0) {
+          // Cancel all incomplete payments before creating a new one
+          for (const p of incomplete.incomplete_server_payments) {
+            try {
+              await fetch(`${PI_API}/payments/${p.identifier}/cancel`, {
+                method: "POST",
+                headers: { Authorization: `Key ${apiKey}` },
+              });
+              console.log(`[Pi][a2u] Cancelled incomplete payment ${p.identifier}`);
+            } catch {
+              // ignore cancel errors
+            }
+          }
+        }
+      }
+    } catch {
+      // ignore incomplete check errors
     }
 
     // Step 1 – Create A2U payment on Pi Platform
@@ -62,32 +166,68 @@ export async function POST(req: NextRequest) {
     }
 
     const payment = await createRes.json();
-    const paymentId = payment.identifier;
+    paymentId = payment.identifier;
+    console.log(`[Pi][a2u] Payment created: ${paymentId}`);
 
-    // Step 2 – Approve the payment server-side
-    const approveRes = await fetch(`${PI_API}/payments/${paymentId}/approve`, {
+    // Step 2 – Submit the payment to the Pi Blockchain
+    let txid: string;
+    try {
+      txid = await submitPaymentToBlockchain(paymentId, apiKey, walletSeed);
+      console.log(`[Pi][a2u] Transaction submitted: ${txid}`);
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      console.error(`[Pi][a2u] Submit failed: ${errMsg}`);
+
+      // Check if error contains a txid (already submitted)
+      try {
+        const parsed = JSON.parse(errMsg);
+        if (parsed.txid) {
+          txid = parsed.txid;
+        } else {
+          return NextResponse.json(
+            { error: "Failed to submit blockchain transaction", paymentId, detail: errMsg },
+            { status: 500 }
+          );
+        }
+      } catch {
+        return NextResponse.json(
+          { error: "Failed to submit blockchain transaction", paymentId, detail: errMsg },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Step 3 – Complete the payment
+    const completeRes = await fetch(`${PI_API}/payments/${paymentId}/complete`, {
       method: "POST",
-      headers: { Authorization: `Key ${apiKey}` },
+      headers: {
+        Authorization: `Key ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ txid }),
     });
 
-    if (!approveRes.ok) {
-      const body = await approveRes.text();
-      console.error(`[Pi][a2u] approve ${approveRes.status}: ${body}`);
+    if (!completeRes.ok) {
+      const body = await completeRes.text();
+      console.error(`[Pi][a2u] complete ${completeRes.status}: ${body}`);
       return NextResponse.json(
-        { error: "Payment created but approval failed", paymentId, detail: body },
-        { status: approveRes.status }
+        { error: "Transaction submitted but completion failed", paymentId, txid, detail: body },
+        { status: completeRes.status }
       );
     }
 
-    // Step 3 – Return payment info. The Pi blockchain will process the tx.
-    // The client should poll GET /api/pi_payment/a2u?paymentId=xxx to check status.
+    const completedPayment = await completeRes.json();
+    console.log(`[Pi][a2u] Payment completed: ${paymentId}, txid: ${txid}`);
+
     return NextResponse.json({
       success: true,
       paymentId,
-      status: "approved",
+      txid,
+      status: "completed",
       amount: parsedAmount,
       memo: memo || "App-to-User payment",
       uid,
+      payment: completedPayment,
     });
   } catch (err) {
     console.error("[Pi][a2u] error:", err);
@@ -96,7 +236,7 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * GET – Check A2U payment status; auto-complete if blockchain tx exists.
+ * GET – Check A2U payment status.
  * Query: ?paymentId=xxx
  */
 export async function GET(req: NextRequest) {
@@ -114,7 +254,6 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Fetch current payment status from Pi Platform
     const statusRes = await fetch(`${PI_API}/payments/${paymentId}`, {
       headers: { Authorization: `Key ${apiKey}` },
     });
@@ -128,30 +267,6 @@ export async function GET(req: NextRequest) {
     }
 
     const payment = await statusRes.json();
-
-    // Auto-complete if blockchain tx exists but developer hasn't completed yet
-    if (
-      payment.transaction?.txid &&
-      !payment.status?.developer_completed
-    ) {
-      const completeRes = await fetch(`${PI_API}/payments/${paymentId}/complete`, {
-        method: "POST",
-        headers: {
-          Authorization: `Key ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ txid: payment.transaction.txid }),
-      });
-
-      if (completeRes.ok) {
-        const completed = await completeRes.json();
-        return NextResponse.json({
-          ...completed,
-          auto_completed: true,
-        });
-      }
-    }
-
     return NextResponse.json(payment);
   } catch (err) {
     console.error("[Pi][a2u] status check error:", err);

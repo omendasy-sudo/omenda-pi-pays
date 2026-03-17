@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { usePiAuth } from "@/components/PiAuthProvider";
 import { PiPayButton } from "@/components/PiPayButton";
 import { useTranslation } from "@/lib/i18n";
@@ -30,8 +30,6 @@ export default function SandboxPage() {
   const [a2uAmount, setA2uAmount] = useState("0.01");
   const [a2uMemo, setA2uMemo] = useState("App-to-User payment – Omenda Pi Pays");
   const [a2uSending, setA2uSending] = useState(false);
-  const [a2uPolling, setA2uPolling] = useState(false);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [txHistory, setTxHistory] = useState<TxRecord[]>([]);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -42,13 +40,6 @@ export default function SandboxPage() {
       ...prev,
     ]);
   }
-
-  // Clear poll interval on unmount
-  useEffect(() => {
-    return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
-    };
-  }, []);
 
   // Resolve the recipient UID: use manual input if user typed something, else connected user
   const recipientUid = a2uUidTouched ? a2uUid.trim() : (a2uUid.trim() || user?.uid || "");
@@ -83,37 +74,13 @@ export default function SandboxPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "A2U payment failed");
+        throw new Error(data.error || data.detail || "A2U payment failed");
       }
 
-      setMessage({ type: "success", text: `A2U payment created! ID: ${data.paymentId} — waiting for blockchain…` });
-
-      // Poll for completion
-      setA2uPolling(true);
-      let attempts = 0;
-      pollRef.current = setInterval(async () => {
-        attempts++;
-        try {
-          const statusRes = await fetch(`/api/pi_payment/a2u?paymentId=${data.paymentId}`);
-          const statusData = await statusRes.json();
-
-          if (statusData.status?.developer_completed || statusData.auto_completed) {
-            if (pollRef.current) clearInterval(pollRef.current);
-            setA2uPolling(false);
-            const txid = statusData.transaction?.txid || statusData.txid || "";
-            setMessage({ type: "success", text: `A2U payment completed! TxID: ${txid}` });
-            addTx({ amount: parsed, memo: a2uMemo, txid, status: "success", direction: "a2u" });
-          } else if (attempts >= 30) {
-            // Stop after ~60s
-            if (pollRef.current) clearInterval(pollRef.current);
-            setA2uPolling(false);
-            setMessage({ type: "error", text: "A2U payment timed out waiting for blockchain. Check later." });
-            addTx({ amount: parsed, memo: a2uMemo, status: "error", direction: "a2u" });
-          }
-        } catch {
-          // keep polling
-        }
-      }, 2000);
+      // Server handles full flow: create → submit → complete
+      const txid = data.txid || "";
+      setMessage({ type: "success", text: `A2U payment completed! TxID: ${txid}` });
+      addTx({ amount: parsed, memo: a2uMemo, txid, status: "success", direction: "a2u" });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "A2U payment failed";
       setMessage({ type: "error", text: msg });
@@ -335,7 +302,7 @@ export default function SandboxPage() {
 
                 <button
                   onClick={sendA2U}
-                  disabled={a2uSending || a2uPolling || !validA2uAmount || !recipientUid}
+                  disabled={a2uSending || !validA2uAmount || !recipientUid}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3.5 text-base font-extrabold text-white shadow-lg transition-all hover:from-amber-400 hover:to-orange-400 disabled:opacity-50"
                 >
                   {a2uSending ? (
@@ -352,23 +319,7 @@ export default function SandboxPage() {
                           d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
                         />
                       </svg>
-                      Creating Payment…
-                    </>
-                  ) : a2uPolling ? (
-                    <>
-                      <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12" cy="12" r="10"
-                          stroke="currentColor" strokeWidth="4" fill="none"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                        />
-                      </svg>
-                      Waiting for Blockchain…
+                      Sending to Blockchain…
                     </>
                   ) : (
                     <>
