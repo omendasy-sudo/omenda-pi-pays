@@ -7,6 +7,9 @@ const PI_API = "https://api.minepi.com/v2";
 const PI_HORIZON_MAINNET = "https://api.mainnet.minepi.com";
 const PI_HORIZON_TESTNET = "https://api.testnet.minepi.com";
 
+// Pi Network requires 100,000 stroops (not Stellar's default 100)
+const PI_BASE_FEE = "100000";
+
 function getHorizonUrl() {
   return process.env.NEXT_PUBLIC_PI_SANDBOX === "true"
     ? PI_HORIZON_TESTNET
@@ -44,7 +47,7 @@ async function sendDirectToWallet(
     : "Pi Network";
 
   const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
-    fee: StellarSdk.BASE_FEE,
+    fee: PI_BASE_FEE,
     networkPassphrase,
   })
     .addOperation(
@@ -108,7 +111,7 @@ async function submitPaymentToBlockchain(
     : "Pi Network";
 
   const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
-    fee: StellarSdk.BASE_FEE,
+    fee: PI_BASE_FEE,
     networkPassphrase,
   })
     .addOperation(
