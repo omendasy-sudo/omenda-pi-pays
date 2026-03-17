@@ -25,8 +25,10 @@ export default function SandboxPage() {
   const [memo, setMemo] = useState("Test payment – Omenda Pi Pays");
 
   // A2U state
+  const [a2uSendMode, setA2uSendMode] = useState<"uid" | "wallet">("uid");
   const [a2uUid, setA2uUid] = useState("");
   const [a2uUidTouched, setA2uUidTouched] = useState(false);
+  const [a2uWallet, setA2uWallet] = useState("");
   const [a2uAmount, setA2uAmount] = useState("0.01");
   const [a2uMemo, setA2uMemo] = useState("App-to-User payment – Omenda Pi Pays");
   const [a2uSending, setA2uSending] = useState(false);
@@ -43,12 +45,22 @@ export default function SandboxPage() {
 
   // Resolve the recipient UID: use manual input if user typed something, else connected user
   const recipientUid = a2uUidTouched ? a2uUid.trim() : (a2uUid.trim() || user?.uid || "");
-  const recipientLabel = user && !a2uUidTouched && !a2uUid.trim() ? `@${user.username}` : (recipientUid ? recipientUid.slice(0, 12) + "…" : "");
+  const recipientWallet = a2uWallet.trim();
+  const recipientLabel = a2uSendMode === "wallet"
+    ? (recipientWallet ? recipientWallet.slice(0, 8) + "…" + recipientWallet.slice(-4) : "")
+    : (user && !a2uUidTouched && !a2uUid.trim() ? `@${user.username}` : (recipientUid ? recipientUid.slice(0, 12) + "…" : ""));
 
   const sendA2U = useCallback(async () => {
-    if (!recipientUid) {
-      setMessage({ type: "error", text: "Enter a recipient Pi UID" });
-      return;
+    if (a2uSendMode === "wallet") {
+      if (!recipientWallet || recipientWallet.length !== 56 || !recipientWallet.startsWith("G")) {
+        setMessage({ type: "error", text: "Enter a valid Pi wallet address (starts with G, 56 characters)" });
+        return;
+      }
+    } else {
+      if (!recipientUid) {
+        setMessage({ type: "error", text: "Enter a recipient Pi UID" });
+        return;
+      }
     }
     const parsed = parseFloat(a2uAmount);
     if (isNaN(parsed) || parsed <= 0 || parsed > 1000) {
@@ -64,7 +76,7 @@ export default function SandboxPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          uid: recipientUid,
+          ...(a2uSendMode === "wallet" ? { walletAddress: recipientWallet } : { uid: recipientUid }),
           amount: parsed,
           memo: a2uMemo || "App-to-User payment",
           metadata: { source: "sandbox", ts: Date.now() },
@@ -88,7 +100,7 @@ export default function SandboxPage() {
     } finally {
       setA2uSending(false);
     }
-  }, [recipientUid, a2uAmount, a2uMemo]);
+  }, [recipientUid, recipientWallet, a2uAmount, a2uMemo, a2uSendMode]);
 
   const parsedAmount = parseFloat(amount);
   const validAmount = !isNaN(parsedAmount) && parsedAmount > 0 && parsedAmount <= 100;
@@ -245,33 +257,79 @@ export default function SandboxPage() {
               App → User Payment
             </h2>
             <p className="mb-4 text-xs text-slate-400">
-              The app sends Pi to a user (A2U). Enter a UID or connect to auto-fill.
+              The app sends Pi to a user (A2U). Choose UID or Wallet Address.
             </p>
 
-                <label className="mb-1 block text-xs font-semibold text-slate-500">
-                  Recipient Pi UID
-                </label>
-                <input
-                  type="text"
-                  value={a2uUid}
-                  onChange={(e) => { setA2uUid(e.target.value); setA2uUidTouched(true); }}
-                  onFocus={() => setA2uUidTouched(true)}
-                  className="mb-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
-                  placeholder={user?.uid ? `e.g. ${user.uid}` : "Paste Pi user UID here"}
-                />
-                {connected && user && (
+                {/* Send Mode Toggle */}
+                <div className="mb-3 flex rounded-xl border border-slate-200 bg-slate-50 p-0.5">
                   <button
                     type="button"
-                    onClick={() => { setA2uUid(user.uid); setA2uUidTouched(true); }}
-                    className="mb-3 text-[0.625rem] font-semibold text-amber-600 underline hover:text-amber-700"
+                    onClick={() => setA2uSendMode("uid")}
+                    className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${
+                      a2uSendMode === "uid"
+                        ? "bg-amber-500 text-white shadow-sm"
+                        : "text-slate-500 hover:text-slate-700"
+                    }`}
                   >
-                    Use my UID (@{user.username})
+                    Pi UID
                   </button>
-                )}
-                {!connected && (
-                  <p className="mb-3 text-[0.625rem] text-slate-400">
-                    Paste the Pi UID of the user you want to send Pi to
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setA2uSendMode("wallet")}
+                    className={`flex-1 rounded-lg py-2 text-xs font-bold transition-all ${
+                      a2uSendMode === "wallet"
+                        ? "bg-amber-500 text-white shadow-sm"
+                        : "text-slate-500 hover:text-slate-700"
+                    }`}
+                  >
+                    Wallet Address
+                  </button>
+                </div>
+
+                {a2uSendMode === "uid" ? (
+                  <>
+                    <label className="mb-1 block text-xs font-semibold text-slate-500">
+                      Recipient Pi UID
+                    </label>
+                    <input
+                      type="text"
+                      value={a2uUid}
+                      onChange={(e) => { setA2uUid(e.target.value); setA2uUidTouched(true); }}
+                      onFocus={() => setA2uUidTouched(true)}
+                      className="mb-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                      placeholder={user?.uid ? `e.g. ${user.uid}` : "Paste Pi user UID here"}
+                    />
+                    {connected && user && (
+                      <button
+                        type="button"
+                        onClick={() => { setA2uUid(user.uid); setA2uUidTouched(true); }}
+                        className="mb-3 text-[0.625rem] font-semibold text-amber-600 underline hover:text-amber-700"
+                      >
+                        Use my UID (@{user.username})
+                      </button>
+                    )}
+                    {!connected && (
+                      <p className="mb-3 text-[0.625rem] text-slate-400">
+                        Paste the Pi UID of the user you want to send Pi to
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <label className="mb-1 block text-xs font-semibold text-slate-500">
+                      Recipient Wallet Address
+                    </label>
+                    <input
+                      type="text"
+                      value={a2uWallet}
+                      onChange={(e) => setA2uWallet(e.target.value)}
+                      className="mb-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono text-slate-700 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
+                      placeholder="GABC…XYZ (56-character Stellar public key)"
+                    />
+                    <p className="mb-3 text-[0.625rem] text-slate-400">
+                      Paste the Pi wallet address (starts with G, 56 characters)
+                    </p>
+                  </>
                 )}
 
                 <label className="mb-1 block text-xs font-semibold text-slate-500">
@@ -302,7 +360,7 @@ export default function SandboxPage() {
 
                 <button
                   onClick={sendA2U}
-                  disabled={a2uSending || !validA2uAmount || !recipientUid}
+                  disabled={a2uSending || !validA2uAmount || (a2uSendMode === "uid" ? !recipientUid : !recipientWallet)}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3.5 text-base font-extrabold text-white shadow-lg transition-all hover:from-amber-400 hover:to-orange-400 disabled:opacity-50"
                 >
                   {a2uSending ? (
@@ -334,9 +392,14 @@ export default function SandboxPage() {
                     Enter a valid amount between 0.01 and 1000 Pi
                   </p>
                 )}
-                {!recipientUid && (
+                {a2uSendMode === "uid" && !recipientUid && (
                   <p className="mt-2 text-center text-xs text-red-500">
                     Enter a recipient Pi UID or connect your account
+                  </p>
+                )}
+                {a2uSendMode === "wallet" && !recipientWallet && (
+                  <p className="mt-2 text-center text-xs text-red-500">
+                    Enter a recipient wallet address
                   </p>
                 )}
           </div>

@@ -14,6 +14,44 @@ function getHorizonUrl() {
 }
 
 /**
+ * Build, sign, and submit a direct Stellar payment (for wallet address mode).
+ */
+async function sendDirectToWallet(
+  destinationAddress: string,
+  amount: string,
+  memo: string,
+  walletPrivateSeed: string
+): Promise<string> {
+  const horizonUrl = getHorizonUrl();
+  const server = new StellarSdk.Horizon.Server(horizonUrl, { allowHttp: false });
+  const keypair = StellarSdk.Keypair.fromSecret(walletPrivateSeed);
+  const sourceAccount = await server.loadAccount(keypair.publicKey());
+
+  const networkPassphrase = process.env.NEXT_PUBLIC_PI_SANDBOX === "true"
+    ? "Pi Testnet"
+    : "Pi Network";
+
+  const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
+    fee: StellarSdk.BASE_FEE,
+    networkPassphrase,
+  })
+    .addOperation(
+      StellarSdk.Operation.payment({
+        destination: destinationAddress,
+        asset: StellarSdk.Asset.native(),
+        amount,
+      })
+    )
+    .addMemo(StellarSdk.Memo.text(memo.substring(0, 28)))
+    .setTimeout(180)
+    .build();
+
+  transaction.sign(keypair);
+  const result = await server.submitTransaction(transaction);
+  return result.hash;
+}
+
+/**
  * Build, sign, and submit a Stellar payment transaction to the Pi blockchain.
  * Follows the same flow as the PHP SDK's submitPayment method.
  */
@@ -71,12 +109,15 @@ async function submitPaymentToBlockchain(
 
 /**
  * POST – Full A2U (App-to-User) payment flow.
- * Body: { uid, amount, memo, metadata? }
+ * Body: { uid, amount, memo, metadata? } OR { walletAddress, amount, memo, metadata? }
  *
- * Flow (per official Pi SDK docs):
+ * Flow with UID (per official Pi SDK docs):
  * 1. Create payment via Pi Platform API
  * 2. Submit the payment to the Pi Blockchain (Stellar tx)
  * 3. Complete the payment via Pi Platform API
+ *
+ * Flow with walletAddress (direct Stellar transfer):
+ * 1. Build and submit a Stellar transaction directly to the wallet
  */
 export async function POST(req: NextRequest) {
   const apiKey = process.env.PI_API_KEY;
@@ -98,10 +139,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { uid, amount, memo, metadata } = await req.json();
+    const { uid, walletAddress, amount, memo, metadata } = await req.json();
 
-    if (!uid || typeof uid !== "string") {
-      return NextResponse.json({ error: "uid is required" }, { status: 400 });
+    if (!uid && !walletAddress) {
+      return NextResponse.json({ error: "uid or walletAddress is required" }, { status: 400 });
     }
     const parsedAmount = Number(amount);
     if (!parsedAmount || parsedAmount <= 0 || parsedAmount > 1000) {
@@ -109,6 +150,48 @@ export async function POST(req: NextRequest) {
         { error: "amount must be between 0.01 and 1000" },
         { status: 400 }
       );
+    }
+
+    // === Direct wallet address transfer (no Pi Platform API) ===
+    if (walletAddress && typeof walletAddress === "string") {
+      if (walletAddress.length !== 56 || !walletAddress.startsWith("G")) {
+        return NextResponse.json(
+          { error: "Invalid wallet address format" },
+          { status: 400 }
+        );
+      }
+
+      try {
+        const txid = await sendDirectToWallet(
+          walletAddress,
+          String(parsedAmount),
+          memo || "Direct transfer",
+          walletSeed
+        );
+        console.log(`[Pi][a2u] Direct wallet transfer completed: ${txid}`);
+
+        return NextResponse.json({
+          success: true,
+          txid,
+          status: "completed",
+          amount: parsedAmount,
+          memo: memo || "Direct transfer",
+          walletAddress,
+          mode: "direct",
+        });
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err);
+        console.error(`[Pi][a2u] Direct transfer failed: ${errMsg}`);
+        return NextResponse.json(
+          { error: "Direct wallet transfer failed", detail: errMsg },
+          { status: 500 }
+        );
+      }
+    }
+
+    // === UID-based A2U via Pi Platform API ===
+    if (!uid || typeof uid !== "string") {
+      return NextResponse.json({ error: "uid is required" }, { status: 400 });
     }
 
     // Check for incomplete payments first
