@@ -177,9 +177,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Auto-detect: if uid looks like a Stellar wallet address, treat as direct wallet transfer
+    const resolvedWallet = walletAddress
+      || (uid && typeof uid === "string" && uid.length === 56 && uid.startsWith("G") ? uid : null);
+
     // === Direct wallet address transfer (no Pi Platform API) ===
-    if (walletAddress && typeof walletAddress === "string") {
-      if (walletAddress.length !== 56 || !walletAddress.startsWith("G")) {
+    if (resolvedWallet && typeof resolvedWallet === "string") {
+      if (resolvedWallet.length !== 56 || !resolvedWallet.startsWith("G")) {
         return NextResponse.json(
           { error: "Invalid wallet address format" },
           { status: 400 }
@@ -188,7 +192,7 @@ export async function POST(req: NextRequest) {
 
       try {
         const txid = await sendDirectToWallet(
-          walletAddress,
+          resolvedWallet,
           String(parsedAmount),
           memo || "Direct transfer",
           walletSeed
@@ -201,7 +205,7 @@ export async function POST(req: NextRequest) {
           status: "completed",
           amount: parsedAmount,
           memo: memo || "Direct transfer",
-          walletAddress,
+          walletAddress: resolvedWallet,
           mode: "direct",
         });
       } catch (err: unknown) {
