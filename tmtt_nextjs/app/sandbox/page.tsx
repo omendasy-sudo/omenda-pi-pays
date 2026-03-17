@@ -86,7 +86,8 @@ export default function SandboxPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || data.detail || "A2U payment failed");
+        const errDetail = data.detail ? ` (${data.detail})` : "";
+        throw new Error((data.error || "A2U payment failed") + errDetail);
       }
 
       // Server handles full flow: create → submit → complete

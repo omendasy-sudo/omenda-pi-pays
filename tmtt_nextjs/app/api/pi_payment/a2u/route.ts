@@ -14,6 +14,18 @@ function getHorizonUrl() {
 }
 
 /**
+ * Truncate a string to fit within maxBytes of UTF-8.
+ */
+function truncateToBytes(str: string, maxBytes: number): string {
+  const buf = Buffer.from(str, "utf8");
+  if (buf.length <= maxBytes) return str;
+  // Walk back from maxBytes to avoid splitting a multi-byte char
+  let end = maxBytes;
+  while (end > 0 && (buf[end] & 0xc0) === 0x80) end--;
+  return buf.subarray(0, end).toString("utf8");
+}
+
+/**
  * Build, sign, and submit a direct Stellar payment (for wallet address mode).
  */
 async function sendDirectToWallet(
@@ -42,13 +54,23 @@ async function sendDirectToWallet(
         amount,
       })
     )
-    .addMemo(StellarSdk.Memo.text(Buffer.from(memo).subarray(0, 28).toString("utf8").replace(/\uFFFD$/, "")))
+    .addMemo(StellarSdk.Memo.text(truncateToBytes(memo, 28)))
     .setTimeout(180)
     .build();
 
   transaction.sign(keypair);
-  const result = await server.submitTransaction(transaction);
-  return result.hash;
+
+  try {
+    const result = await server.submitTransaction(transaction);
+    return result.hash;
+  } catch (err: unknown) {
+    // Extract Horizon error details for debugging
+    const horizonErr = err as { response?: { data?: { extras?: { result_codes?: unknown } } } };
+    if (horizonErr?.response?.data?.extras?.result_codes) {
+      console.error("[Pi][a2u] Horizon result_codes:", JSON.stringify(horizonErr.response.data.extras.result_codes));
+    }
+    throw err;
+  }
 }
 
 /**
@@ -179,11 +201,14 @@ export async function POST(req: NextRequest) {
           walletAddress,
           mode: "direct",
         });
-      } catch (err) {
+      } catch (err: unknown) {
         const errMsg = err instanceof Error ? err.message : String(err);
-        console.error(`[Pi][a2u] Direct transfer failed: ${errMsg}`);
+        const horizonErr = err as { response?: { data?: { extras?: { result_codes?: unknown }; detail?: string } } };
+        const resultCodes = horizonErr?.response?.data?.extras?.result_codes;
+        const detail = resultCodes ? JSON.stringify(resultCodes) : errMsg;
+        console.error(`[Pi][a2u] Direct transfer failed: ${detail}`);
         return NextResponse.json(
-          { error: "Direct wallet transfer failed", detail: errMsg },
+          { error: "Direct wallet transfer failed", detail },
           { status: 500 }
         );
       }
