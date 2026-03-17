@@ -34,21 +34,30 @@ export function PiAdButton({
     setLoading(true);
     try {
       // Step 1: Request ad
-      await requestAd(adType);
+      const reqResult = await requestAd(adType);
+      if (reqResult && reqResult.result !== "AD_LOADED") {
+        onAdError?.(reqResult.result === "AD_NOT_AVAILABLE" ? "No ads available right now" : "Ad failed to load");
+        return;
+      }
 
       // Step 2: Check if ad is ready
-      const ready = await isAdReady(adType);
-      if (!ready) {
+      const readyResult = await isAdReady(adType);
+      if (!readyResult?.ready) {
         onAdError?.("No ads available right now");
         return;
       }
 
       // Step 3: Show the ad
-      const shown = await showAd(adType);
-      if (shown) {
+      const showResult = await showAd(adType);
+      if (!showResult) {
+        onAdError?.("Ad could not be displayed");
+        return;
+      }
+
+      if (showResult.result === "AD_REWARDED" || showResult.result === "AD_CLOSED") {
         onAdComplete?.();
       } else {
-        onAdError?.("Ad could not be displayed");
+        onAdError?.(showResult.result);
       }
     } catch (err) {
       onAdError?.(err instanceof Error ? err.message : "Ad failed");

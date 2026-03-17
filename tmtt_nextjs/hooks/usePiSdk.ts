@@ -111,31 +111,25 @@ export function usePiSdk() {
   /* ─── Ads (interstitial / rewarded) ─── */
 
   const requestAd = useCallback(
-    async (adType: "interstitial" | "rewarded" = "interstitial") => {
-      if (!hasPi || !window.Pi.Ads) return;
+    async (adType: AdType = "interstitial"): Promise<RequestAdResponse | null> => {
+      if (!hasPi || !window.Pi.Ads) return null;
       return window.Pi.Ads.requestAd(adType);
     },
     [hasPi]
   );
 
   const isAdReady = useCallback(
-    async (adType: "interstitial" | "rewarded" = "interstitial"): Promise<boolean> => {
-      if (!hasPi || !window.Pi.Ads) return false;
-      const result = await window.Pi.Ads.isAdReady(adType);
-      return result?.ready ?? false;
+    async (adType: AdType = "interstitial"): Promise<IsAdReadyResponse | null> => {
+      if (!hasPi || !window.Pi.Ads) return null;
+      return window.Pi.Ads.isAdReady(adType);
     },
     [hasPi]
   );
 
   const showAd = useCallback(
-    async (adType: "interstitial" | "rewarded" = "interstitial"): Promise<boolean> => {
-      if (!hasPi || !window.Pi.Ads) return false;
-      const ready = await window.Pi.Ads.isAdReady(adType);
-      if (ready?.ready) {
-        await window.Pi.Ads.showAd(adType);
-        return true;
-      }
-      return false;
+    async (adType: AdType = "interstitial"): Promise<ShowAdResponse | null> => {
+      if (!hasPi || !window.Pi.Ads) return null;
+      return window.Pi.Ads.showAd(adType);
     },
     [hasPi]
   );

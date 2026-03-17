@@ -6,6 +6,12 @@
 declare global {
   type PiScope = "username" | "payments" | "wallet_address";
 
+  type Direction = "user_to_app" | "app_to_user";
+
+  type AppNetwork = "Pi Network" | "Pi Testnet";
+
+  type AdType = "interstitial" | "rewarded";
+
   interface PiAuthResult {
     accessToken: string;
     user: {
@@ -28,9 +34,9 @@ declare global {
     metadata: Record<string, unknown>;
     from_address: string;
     to_address: string;
-    direction: "user_to_app" | "app_to_user";
+    direction: Direction;
     created_at: string;
-    network: string;
+    network: AppNetwork;
     status: {
       developer_approved: boolean;
       transaction_verified: boolean;
@@ -52,14 +58,31 @@ declare global {
     onError: (error: Error, payment?: PiPaymentDto) => void;
   }
 
-  interface PiAdReady {
+  type ShowAdResponse =
+    | {
+        type: "interstitial";
+        result: "AD_CLOSED" | "AD_DISPLAY_ERROR" | "AD_NETWORK_ERROR" | "AD_NOT_AVAILABLE";
+      }
+    | {
+        type: "rewarded";
+        result: "AD_REWARDED" | "AD_CLOSED" | "AD_DISPLAY_ERROR" | "AD_NETWORK_ERROR" | "AD_NOT_AVAILABLE" | "ADS_NOT_SUPPORTED" | "USER_UNAUTHENTICATED";
+        adId?: string;
+      };
+
+  interface IsAdReadyResponse {
+    type: AdType;
     ready: boolean;
   }
 
+  interface RequestAdResponse {
+    type: AdType;
+    result: "AD_LOADED" | "AD_FAILED_TO_LOAD" | "AD_NOT_AVAILABLE";
+  }
+
   interface PiAds {
-    requestAd: (adType: "interstitial" | "rewarded") => Promise<void>;
-    isAdReady: (adType: "interstitial" | "rewarded") => Promise<PiAdReady>;
-    showAd: (adType: "interstitial" | "rewarded") => Promise<void>;
+    requestAd: (adType: AdType) => Promise<RequestAdResponse>;
+    isAdReady: (adType: AdType) => Promise<IsAdReadyResponse>;
+    showAd: (adType: AdType) => Promise<ShowAdResponse>;
   }
 
   type PiNativeFeature =
