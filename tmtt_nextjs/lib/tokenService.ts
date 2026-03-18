@@ -1,7 +1,7 @@
 /**
- * Pi Testnet Token Service
+ * Pi Token Service
  *
- * Wraps the Stellar SDK for Pi Testnet:
+ * Wraps the Stellar SDK for Pi Network (auto-switches testnet / mainnet):
  *  - createTrustline  — Distributor establishes a trustline (registers the token on-chain)
  *  - mintToken        — Issuer sends tokens to Distributor (minting)
  *  - setHomeDomain    — Links your domain to the issuer account so Pi Wallet can verify and list the token
@@ -12,12 +12,16 @@
  *   STELLAR_DISTRIBUTOR_SECRET — Distributor wallet secret key
  *   TOKEN_CODE                 — Token code, e.g. "OMENDA"
  *   NEXT_PUBLIC_APP_URL        — Your domain, e.g. "https://omendapipaysglobel.online"
+ *   NEXT_PUBLIC_PI_SANDBOX     — "true" for testnet, "false" / unset for mainnet
  */
 
 import * as StellarSDK from "@stellar/stellar-sdk";
 
-const HORIZON_URL = "https://api.testnet.minepi.com";
-const NETWORK_PASSPHRASE = "Pi Testnet";
+const isSandbox = process.env.NEXT_PUBLIC_PI_SANDBOX === "true";
+const HORIZON_URL = isSandbox
+  ? "https://api.testnet.minepi.com"
+  : "https://api.mainnet.minepi.com";
+const NETWORK_PASSPHRASE = isSandbox ? "Pi Testnet" : "Pi Network";
 
 function server() {
   return new StellarSDK.Horizon.Server(HORIZON_URL);
@@ -145,7 +149,7 @@ export async function setHomeDomain(
 // ─── Balances ─────────────────────────────────────────────────────────────────
 
 /**
- * Returns the Test-Pi and token balances for an account.
+ * Returns the Pi and token balances for an account.
  */
 export async function getBalances(publicKey: string): Promise<TokenBalances> {
   const s = server();
