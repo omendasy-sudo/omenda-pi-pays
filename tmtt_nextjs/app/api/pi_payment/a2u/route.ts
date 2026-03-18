@@ -46,17 +46,38 @@ async function sendDirectToWallet(
     ? "Pi Testnet"
     : "Pi Network";
 
-  const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
+  // Check if destination account exists on the network
+  let destinationExists = true;
+  try {
+    await server.loadAccount(destinationAddress);
+  } catch {
+    destinationExists = false;
+  }
+
+  const builder = new StellarSdk.TransactionBuilder(sourceAccount, {
     fee: PI_BASE_FEE,
     networkPassphrase,
-  })
-    .addOperation(
+  });
+
+  if (destinationExists) {
+    builder.addOperation(
       StellarSdk.Operation.payment({
         destination: destinationAddress,
         asset: StellarSdk.Asset.native(),
         amount,
       })
-    )
+    );
+  } else {
+    // Account doesn't exist yet — use createAccount to fund it
+    builder.addOperation(
+      StellarSdk.Operation.createAccount({
+        destination: destinationAddress,
+        startingBalance: amount,
+      })
+    );
+  }
+
+  const transaction = builder
     .addMemo(StellarSdk.Memo.text(truncateToBytes(memo, 28)))
     .setTimeout(180)
     .build();
