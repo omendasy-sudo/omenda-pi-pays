@@ -2,6 +2,13 @@
 
 import { useState, useRef } from "react";
 import { hotels, properties, billProviders } from "@/lib/data";
+import { PiPayButton } from "@/components/PiPayButton";
+
+/** Parse price string like "π0.003" or "0.003" into a number */
+function parsePiPrice(price: string): number {
+  const cleaned = price.replace(/[^\d.]/g, "");
+  return parseFloat(cleaned) || 0;
+}
 
 /* ── Product Data ── */
 
@@ -103,8 +110,11 @@ function ImageCarousel({ images, alt }: { images: string[]; alt: string }) {
 /* ── Product Detail Modal ── */
 function ProductDetailModal({ product, onClose }: { product: MarketProduct; onClose: () => void }) {
   const [imgIdx, setImgIdx] = useState(0);
+  const [payStatus, setPayStatus] = useState<"" | "success" | "error">("");
+  const [payMsg, setPayMsg] = useState("");
   const touchX = useRef(0);
   const imgs = product.images;
+  const piAmount = parsePiPrice(product.price);
 
   const next = () => setImgIdx((i) => (i + 1) % imgs.length);
   const prev = () => setImgIdx((i) => (i - 1 + imgs.length) % imgs.length);
@@ -185,11 +195,31 @@ function ProductDetailModal({ product, onClose }: { product: MarketProduct; onCl
             </div>
           </div>
 
+          {/* Payment status */}
+          {payStatus === "success" && (
+            <div className="mt-3 rounded-lg bg-green-50 p-2 text-center text-sm font-semibold text-green-700">
+              ✅ Payment successful! TxID: {payMsg.slice(0, 12)}…
+            </div>
+          )}
+          {payStatus === "error" && (
+            <div className="mt-3 rounded-lg bg-red-50 p-2 text-center text-sm text-red-600">
+              ❌ {payMsg}
+              <button onClick={() => setPayStatus("")} className="ml-2 underline">Dismiss</button>
+            </div>
+          )}
+
           {/* Buy / Order buttons */}
           <div className="mt-4 flex gap-2">
-            <button className="flex-1 rounded-xl bg-orange-500 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600">
-              π Buy Now
-            </button>
+            <PiPayButton
+              amount={piAmount}
+              memo={`Buy ${product.title} – Omenda Pi Pays`}
+              metadata={{ productId: product.id, productTitle: product.title }}
+              onSuccess={(txid) => { setPayStatus("success"); setPayMsg(txid); }}
+              onError={(err) => { setPayStatus("error"); setPayMsg(err); }}
+              className="flex-1 rounded-xl bg-orange-500 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600"
+            >
+              π Buy Now ({product.price})
+            </PiPayButton>
             <button className="flex-1 rounded-xl border border-orange-500 py-3 text-sm font-bold text-orange-600 transition-colors hover:bg-orange-50">
               Add to Cart
             </button>
