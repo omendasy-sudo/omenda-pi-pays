@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nib Product Company</title>
+    <meta name="description" content="Welcome to Nib. Explore our range of products and services for the Congo region.">
+    <meta name="robots" content="index, follow">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="canonical" href="https://omendapipaysglobel.online/form.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://omendapipaysglobel.online/form.html">
+    <meta property="og:title" content="Register Your Business">
+    <meta property="og:description" content="Register your business to start selling and accepting Pi cryptocurrency payments.">
+    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <script src="lang.js"></script>
+    <script src="theme.js"></script>
+    <style>
+        :root {
+            --pi-gold: #f5a623;
+            --pi-gold-light: rgba(245,166,35,0.12);
+            --pi-purple-light: rgba(124,58,237,0.10);
+            --bg-primary: #09090b;
+            --bg-secondary: #111114;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+        html.light {
+            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
+            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
+            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
+            --danger: #dc2626;
+            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
+        }
+        html.light body { background: #fff !important; color: #18181b; }
+        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
+        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
+        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary); color: var(--text-primary);
+            min-height: 100vh; -webkit-font-smoothing: antialiased;
+        }
+
+        /* Nav */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 max(5%,24px); height: 72px;
+            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
+        .logo span { color: var(--pi-gold); }
+        .nav-center { display: flex; gap: 8px; }
+        .nav-center a {
+            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
+        }
+        .nav-center a:hover, .nav-center a.active { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+
+        .quick-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 10px max(5%,24px) 0;
+        }
+        .quick-link {
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center; padding: 56px max(5%,24px) 40px;
+            border-bottom: 1px solid var(--border);
+        }
+        .page-header h1 {
+            font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px;
+        }
+        .page-header p { color: var(--text-secondary); font-size: 1rem; max-width: 480px; margin: 0 auto; }
+
+        /* Form Container */
+        .form-container {
+            max-width: 640px; margin: 0 auto; padding: 40px max(5%,24px) 80px;
+        }
+
+        /* Steps Indicator */
+        .steps {
+            display: flex; gap: 8px; margin-bottom: 40px; align-items: center;
+        }
+        .step {
+            flex: 1; text-align: center;
+        }
+        .step-number {
+            width: 36px; height: 36px; border-radius: 50%; display: inline-flex;
+            align-items: center; justify-content: center; font-size: 0.8125rem; font-weight: 700;
+            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+            transition: all 0.3s; margin-bottom: 8px;
+        }
+        .step.active .step-number { background: var(--pi-purple); border-color: var(--pi-purple); color: #fff; }
+        .step.done .step-number { background: var(--success); border-color: var(--success); color: #fff; }
+        .step-label { font-size: 0.75rem; color: var(--text-muted); display: block; }
+        .step.active .step-label { color: var(--text-primary); }
+        .step-line {
+            flex: 0 0 40px; height: 1px; background: var(--border); margin: 0 4px; margin-bottom: 20px;
+        }
+
+        /* Fieldset */
+        .form-section {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 28px; margin-bottom: 24px;
+        }
+        .form-section-title {
+            font-size: 1rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px;
+        }
+        .form-section-desc {
+            font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 24px;
+        }
+
+        /* Input */
+        .field { margin-bottom: 20px; }
+        .field label {
+            display: block; font-size: 0.8125rem; font-weight: 600;
+            color: var(--text-secondary); margin-bottom: 6px;
+        }
+        .field label .required { color: var(--danger); }
+        .field input, .field select {
+            width: 100%; padding: 12px 16px;
+            background: var(--bg-primary); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--text-primary);
+            font-size: 0.9375rem; outline: none; transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .field input::placeholder { color: var(--text-muted); }
+        .field input:focus, .field select:focus { border-color: var(--pi-purple); }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--border); border-radius: var(--radius-sm);
+            padding: 24px; text-align: center; cursor: pointer;
+            transition: all 0.2s; position: relative;
+        }
+        .file-upload:hover { border-color: var(--pi-purple); background: var(--pi-purple-light); }
+        .file-upload input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer;
+        }
+        .file-upload .upload-icon { font-size: 1.5rem; margin-bottom: 8px; display: block; color: var(--text-muted); }
+        .file-upload .upload-text { font-size: 0.8125rem; color: var(--text-muted); }
+        .file-upload .upload-text strong { color: var(--pi-purple); }
+
+        .help-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; display: block; }
+
+        /* Map */
+        #map {
+            width: 100%; height: 220px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border); margin-bottom: 8px;
+        }
+        .location-status {
+            font-size: 0.8125rem; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* Buttons */
+        .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+        .btn-submit {
+            flex: 1; padding: 14px 24px; background: var(--pi-purple); color: #fff;
+            border: none; border-radius: var(--radius-sm); font-weight: 700;
+            font-size: 0.9375rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-submit:hover { background: #6d28d9; transform: translateY(-1px); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Footer */
+        footer {
+            padding: 32px max(5%,24px); border-top: 1px solid var(--border);
+            text-align: center; font-size: 0.8125rem; color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { padding: 0 16px; }
+            .nav-center { display: none; }
+            .form-container { padding: 24px 16px 60px; }
+            .form-section { padding: 20px; }
+            .steps { gap: 4px; }
+            .step-line { flex: 0 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav>
+        <a href="index.html" style="text-decoration:none;color:inherit">
+            <div class="logo">
+                <img src="nib logo jpg.html/994ed221-1162-476b-84d0-2feec5a29d26.jpg                <Link to="/" className="btn">Home</Link>                <Link to="/" className="btn">Home</Link>                <Link to="/" className="btn">Home</Link>" alt="Nib Logo" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
+                NIB
+            </div>
+        </a>
+        <div class="nav-center">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+            <span id="company-username" style="color:#f5a623;font-weight:600;font-size:0.85rem;display:none"></span>
+            <a href="products.html" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.82rem;text-decoration:none">All Products</a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <img src="nib-logo.jpg" alt="Nib Logo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:16px;">
+        <h1 id="company-title">Nib Congo Product Company</h1>
+        <p id="company-desc">Welcome to Nib. Explore our range of products and services for the Congo region.</p>
+    </div>
+
+    <!-- Product List -->
+    <div class="form-container">
+        <div class="form-section">
+            <h3 class="form-section-title">Featured Products</h3>
+            <p class="form-section-desc">Browse our top products below.</p>
+            <div class="gallery grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
+                <div class="relative">
+                    <img src="product1.jpg" alt="Product 1" class="rounded shadow w-full h-48 object-cover" />
+                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold">Buy</button>
+                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold buy-btn">Buy</button>
+                </div>
+                <div class="relative">
+                    <img src="product2.jpg" alt="Product 2" class="rounded shadow w-full h-48 object-cover" />
+                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold">Buy</button>
+                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold buy-btn">Buy</button>
+                </div>
+                <div class="relative">
+                    <img src="product3.jpg" alt="Product 3" class="rounded shadow w-full h-48 object-cover" />
+                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold">Buy</button>
+                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold buy-btn">Buy</button>
+                </div>
+                <div class="relative">
+                    <img src="product4.jpg" alt="Product 4" class="rounded shadow w-full h-48 object-cover" />
+                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold">Buy</button>
+                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold buy-btn">Buy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 Nib Congo Product Company &mdash; Serving Congo with quality products.
+        <br><span style="display:inline-block;margin-top:8px;color:#71717a">Nib, Kinshasa, Congo | <a href="mailto:support@nib.com" style="color:#71717a;text-decoration:none">support@nib.com</a></span>
+        &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:#71717a;text-decoration:none">Privacy Policy</a>
+        &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:#71717a;text-decoration:none">Terms of Service</a>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Handle form submission with loading state and redirect
+        document.getElementById('businessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            const form = e.target;
+            const formData = new FormData(form);
+
+            btn.textContent = 'Submitting…';
+            btn.disabled = true;
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    window.location.href = 'submit%20success%20full.html';
+                } else {
+                    throw new Error('Submission failed');
+                }
+            })
+            .catch(function() {
+                alert('Submission failed. Please check your connection and try again.');
+                btn.textContent = 'Submit Registration';
+                btn.disabled = false;
+            });
+        });
+    </script>
+    <script>
+        function waitForPiSdk(timeout) {
+            return new Promise(function(resolve, reject) {
+                if (window.Pi) return resolve(window.Pi);
+                var elapsed = 0, interval = 120;
+                var t = setInterval(function() {
+                    if (window.Pi) { clearInterval(t); resolve(window.Pi); return; }
+                    elapsed += interval;
+                    if (elapsed >= timeout) { clearInterval(t); reject(new Error('Pi SDK did not load within ' + timeout + 'ms')); }
+                }, interval);
+            });
+        }
+        var _piInitPromise = null;
+        function usePiSandbox() {
+            return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
+        }
+        function ensurePiInitialized() {
+            if (_piInitPromise) return _piInitPromise;
+            _piInitPromise = waitForPiSdk(10000).then(function() {
+                return Pi.init({ version: '2.0', sandbox: usePiSandbox() });
+            }).catch(function(e) { _piInitPromise = null; return Promise.reject(e); });
+            return _piInitPromise;
+        }
+        var isPiBrowser = /PiBrowser/i.test(navigator.userAgent) || typeof window.Pi !== 'undefined';
+        function setConnectedState(username) {
+            document.getElementById('pi-username').textContent = '@' + username;
+            document.getElementById('pi-username').style.display = 'inline';
+            document.getElementById('pi-connect-btn').textContent = 'Connected';
+            document.getElementById('pi-connect-btn').style.background = '#16a34a';
+        }
+        function restoreConnectedState() {
+            var u = sessionStorage.getItem('piUser');
+            if (u) { var user = JSON.parse(u); setConnectedState(user.username); return true; }
+            return false;
+        }
+        function piConnect(silent) {
+            if (!isPiBrowser) {
+                if (!silent) alert('Please open this app in Pi Browser to connect.');
+                return Promise.resolve(null);
+            }
+            return ensurePiInitialized().then(function() {
+                return Pi.authenticate(['username','payments'], {
+                    onIncompletePaymentFound: function(p) { console.log('Incomplete payment:', p); }
+                });
+            }).then(function(auth) {
+                setConnectedState(auth.user.username);
+                sessionStorage.setItem('piUser', JSON.stringify(auth.user));
+                return auth;
+            }).catch(function(e) { if (!silent) console.error('Pi auth error:', e); });
+        }
+        (function() {
+            if (!restoreConnectedState() && isPiBrowser) piConnect(true);
+        })();
+
+        // Pi SDK — Request camera permission for business photo uploads
+
+        function piRequestPermission(perm) {
+            if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
+        }
+        function piShare(title, message) {
+            if (isPiBrowser && Pi.openShareDialog) Pi.openShareDialog(title, message);
+            else if (navigator.share) navigator.share({ title: title, text: message });
+        }
+        function piCopy(text) {
+            if (isPiBrowser && Pi.copyText) Pi.copyText(text);
+            else if (navigator.clipboard) navigator.clipboard.writeText(text);
+            alert('Copied: ' + text);
+        }
+        function piOpenUrl(url) {
+            if (isPiBrowser && Pi.openUrlInSystemBrowser) Pi.openUrlInSystemBrowser(url);
+            else window.open(url, '_blank');
+        }
+        function piNativeFeatures() {
+            if (isPiBrowser && Pi.nativeFeaturesList) return Pi.nativeFeaturesList();
+            return [];
+        }
+        function piChat(id) {
+            if (isPiBrowser && Pi.openConversation) Pi.openConversation(id);
+        }
+        async function piShowAd() {
+            if (!isPiBrowser || !Pi.Ads) return;
+            try { await Pi.Ads.requestAd('interstitial'); var r = await Pi.Ads.isAdReady('interstitial'); if (r) await Pi.Ads.showAd('interstitial'); } catch(e) {}
+        }
+
+        // Auto-request camera permission when file upload is clicked
+        document.querySelectorAll('input[type="file"]').forEach(function(el) {
+            el.addEventListener('click', function() { piRequestPermission('camera'); });
+        });
+    </script>
+    <script src="clear-button.js"></script>
+</body>
+</html>
+</html>
+<script>
+// Attach event listeners to all Buy buttons
+document.querySelectorAll('.buy-btn').forEach(function(btn, idx) {
+    btn.addEventListener('click', function() {
+        // Example product data, replace with real data as needed
+        const product = {
+            name: 'Product ' + (idx + 1),
+            price_pi: 10 + idx * 5,
+            seller_username: 'demo_seller',
+            category: 'NIB',
+            description: 'Auto-purchase from NIB.html',
+            images: 'product' + (idx + 1) + '.jpg',
+        };
+        // Optionally trigger Pi payment here (if Pi SDK is available)
+        if (window.Pi && typeof Pi.createPayment === 'function') {
+            Pi.createPayment({
+                amount: product.price_pi,
+                memo: 'Buy ' + product.name,
+                metadata: product
+            }, {
+                onReadyForServerApproval: function(paymentId) {},
+                onReadyForServerCompletion: function(paymentId, txid) {
+                    // Post purchase to backend after payment
+                    fetch('backend/add_product.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(product)
+                    });
+                    alert('Purchase complete! TxID: ' + txid);
+                },
+                onCancel: function(paymentId) { alert('Payment cancelled.'); },
+                onError: function(error) { alert('Payment error: ' + error); }
+            });
+        } else {
+            // Fallback: just post to backend
+            fetch('backend/add_product.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
+            }).then(() => alert('Purchase recorded (no Pi payment).'));
+        }
+    });
+});
+</script>

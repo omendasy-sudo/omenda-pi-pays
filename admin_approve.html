@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Product Approval | Omenda Pi Pays</title>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f4f4f5; color: #18181b; }
+    .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 32px; }
+    h2 { font-size: 2rem; font-weight: 700; margin-bottom: 18px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid #eee; text-align: left; }
+    th { background: #f4f4f5; font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .btn-approve { background: #22c55e; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn-approve:hover { background: #16a34a; }
+    .approved { color: #22c55e; font-weight: 700; }
+    .rejected { color: #ef4444; font-weight: 700; }
+    .btn-reject { background: #ef4444; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-left: 8px; }
+    .btn-reject:hover { background: #b91c1c; }
+    .btn-view { background: #3b82f6; color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-left: 8px; }
+    .btn-view:hover { background: #1d4ed8; }
+    .search-bar { margin-bottom: 18px; }
+    .pagination { margin-top: 18px; text-align: center; }
+    .pagination button { margin: 0 4px; padding: 6px 12px; border-radius: 6px; border: 1px solid #ddd; background: #f4f4f5; cursor: pointer; }
+    .pagination button.active { background: #7c3aed; color: #fff; border: none; }
+    .chat-box { position: fixed; bottom: 24px; right: 24px; width: 340px; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.12); display: none; flex-direction: column; z-index: 9999; }
+    .chat-header { background: #7c3aed; color: #fff; padding: 10px 16px; border-radius: 12px 12px 0 0; font-weight: 700; }
+    .chat-messages { flex: 1; padding: 12px; overflow-y: auto; max-height: 220px; }
+    .chat-input { display: flex; border-top: 1px solid #eee; }
+    .chat-input input { flex: 1; border: none; padding: 10px; border-radius: 0 0 0 12px; }
+    .chat-input button { background: #7c3aed; color: #fff; border: none; padding: 10px 18px; border-radius: 0 0 12px 0; font-weight: 600; cursor: pointer; }
+    img { max-width: 80px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+        <nav style="display:flex;gap:16px;padding:18px 0 12px 0;justify-content:center;background:#18181b;border-radius:12px;margin-bottom:24px;">
+          <a href="index.html" style="color:#fafafa;text-decoration:none;font-weight:600;padding:8px 18px;border-radius:8px;background:#7c3aed;">Home</a>
+          <a href="services.html" style="color:#fafafa;text-decoration:none;font-weight:600;padding:8px 18px;border-radius:8px;background:#3b82f6;">Services</a>
+          <a href="map.html" style="color:#fafafa;text-decoration:none;font-weight:600;padding:8px 18px;border-radius:8px;background:#06b6d4;">Map</a>
+          <a href="social.html" style="color:#fafafa;text-decoration:none;font-weight:600;padding:8px 18px;border-radius:8px;background:#f5a623;">Social</a>
+          <a href="NIB.html" style="color:#fafafa;text-decoration:none;font-weight:600;padding:8px 18px;border-radius:8px;background:#ef4444;">NIB</a>
+        </nav>
+      <div id="kyc-section" style="margin-bottom:24px;background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,0.08);max-width:600px">
+        <h3>KYC Approval</h3>
+        <table id="kyc-table" style="width:100%">
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Business</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+  <div class="container">
+    <div id="admin-auth" style="margin-bottom:18px;background:#f3f4f6;padding:12px;border-radius:8px;max-width:400px">
+      <b>Admin Login</b> <input type="password" id="admin-pass" placeholder="Enter admin password" style="padding:6px 12px;border-radius:6px;border:1px solid #ddd;">
+      <button onclick="adminLogin()">Login</button>
+      <span id="admin-auth-status" style="margin-left:12px;color:#ef4444"></span>
+    </div>
+    <div id="audit-log" style="margin-bottom:24px;background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,0.08);max-width:600px">
+      <h3>Audit Log</h3>
+      <ul id="auditLogList" style="max-height:120px;overflow-y:auto"></ul>
+    </div>
+    <h2>Product Approval Dashboard</h2>
+    <div id="seller-chart" style="margin-bottom:24px;background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,0.08);max-width:600px">
+      <h3>Seller Analytics</h3>
+      <canvas id="sellerChartCanvas" height="180"></canvas>
+      <div id="sellerChartLegend" style="margin-top:12px"></div>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search by name or category..." style="padding:8px 12px;width:220px;border-radius:8px;border:1px solid #ddd;">
+      <select id="filter-status" style="padding:8px 12px;border-radius:8px;border:1px solid #ddd;">
+        <option value="">All</option>
+        <option value="0">Pending</option>
+        <option value="1">Approved</option>
+      </select>
+      <button onclick="bulkApprove()" style="margin-left:8px;">Bulk Approve</button>
+      <button onclick="bulkReject()">Bulk Reject</button>
+    </div>
+    <table id="products-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="select-all"></th>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price (Pi)</th>
+          <th>Image</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Products will be loaded here -->
+      </tbody>
+    </table>
+    <div class="pagination" id="pagination"></div>
+  </div>
+  <div class="chat-box" id="chat-box">
+    <div class="chat-header">Chat with Seller <span id="chat-close" style="float:right;cursor:pointer">&times;</span></div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input">
+      <input type="text" id="chat-input" placeholder="Type a message...">
+      <button onclick="sendChat()">Send</button>
+    </div>
+  </div>
+  <script>
+        // --- KYC Approval ---
+        async function fetchKyc() {
+          const res = await fetch('backend/list_kyc.php');
+          return res.json();
+        }
+        function renderKyc(kycList) {
+          const tbody = document.querySelector('#kyc-table tbody');
+          tbody.innerHTML = '';
+          kycList.forEach(k => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${k.id}</td>
+              <td>${k.name}</td>
+              <td>${k.business}</td>
+              <td class="${k.approved == 1 ? 'approved' : k.approved == -1 ? 'rejected' : ''}">${k.approved == 1 ? 'Approved' : k.approved == -1 ? 'Rejected' : 'Pending'}</td>
+              <td>
+                ${k.approved == 1 ? '' : `<button onclick=\"approveKyc(${k.id}, this)\">Approve</button>`}
+                ${k.approved == 1 ? '' : `<button onclick=\"rejectKyc(${k.id}, this)\">Reject</button>`}
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+        async function approveKyc(id, btn) {
+          btn.disabled = true;
+          btn.textContent = 'Approving...';
+          const res = await fetch('backend/approve_kyc.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'id=' + encodeURIComponent(id)
+          });
+          const data = await res.json();
+          if (data.success) {
+            btn.parentElement.parentElement.querySelector('td:nth-child(4)').textContent = 'Approved';
+            btn.parentElement.parentElement.querySelector('td:nth-child(4)').className = 'approved';
+            btn.remove();
+            addAuditLog('KYC #' + id + ' approved');
+            sendEmailNotification('user@example.com', 'KYC Approved', 'Your KYC #' + id + ' was approved.');
+          } else {
+            alert('Failed: ' + (data.error || 'Unknown error'));
+            btn.disabled = false;
+            btn.textContent = 'Approve';
+          }
+        }
+        async function rejectKyc(id, btn) {
+          btn.disabled = true;
+          btn.textContent = 'Rejecting...';
+          btn.parentElement.parentElement.querySelector('td:nth-child(4)').textContent = 'Rejected';
+          btn.parentElement.parentElement.querySelector('td:nth-child(4)').className = 'rejected';
+          btn.remove();
+          addAuditLog('KYC #' + id + ' rejected');
+          sendEmailNotification('user@example.com', 'KYC Rejected', 'Your KYC #' + id + ' was rejected.');
+        }
+        // Initial load
+        fetchKyc().then(renderKyc);
+    // --- State ---
+    let allProducts = [];
+    let currentPage = 1;
+    const pageSize = 10;
+    let selectedIds = new Set();
+
+    async function fetchProducts() {
+      const res = await fetch('backend/list_products.php');
+      return res.json();
+    }
+    function renderProducts(products) {
+      const tbody = document.querySelector('#products-table tbody');
+      tbody.innerHTML = '';
+      products.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="checkbox" class="select-product" value="${p.id}"></td>
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td>${p.price}</td>
+          <td>${p.image1 ? `<img src="${p.image1}" alt="Product">` : ''}</td>
+          <td class="${p.approved == 1 ? 'approved' : p.approved == -1 ? 'rejected' : ''}">${p.approved == 1 ? 'Approved' : p.approved == -1 ? 'Rejected' : 'Pending'}</td>
+          <td>
+            <button class="btn-view" onclick="viewProduct(${p.id})">View</button>
+            ${p.approved == 1 ? '' : `<button class=\"btn-approve\" onclick=\"approveProduct(${p.id}, this)\">Approve</button>`}
+            ${p.approved == 1 ? '' : `<button class=\"btn-reject\" onclick=\"rejectProduct(${p.id}, this)\">Reject</button>`}
+            <button class="btn-reject" onclick="deleteProduct(${p.id}, this)">Delete</button>
+            <button class="btn-view" onclick="openChatBox(${p.id})">Chat</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      // Checkbox logic
+      document.querySelectorAll('.select-product').forEach(cb => {
+        cb.checked = selectedIds.has(cb.value);
+        cb.onchange = function() {
+          if (cb.checked) selectedIds.add(cb.value); else selectedIds.delete(cb.value);
+        };
+      });
+    }
+    async function approveProduct(id, btn) {
+      btn.disabled = true;
+      btn.textContent = 'Approving...';
+      const res = await fetch('backend/approve_product.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id)
+      });
+      const data = await res.json();
+      if (data.success) {
+        btn.parentElement.parentElement.querySelector('td:nth-child(7)').textContent = 'Approved';
+        btn.parentElement.parentElement.querySelector('td:nth-child(7)').className = 'approved';
+        btn.remove();
+      } else {
+        alert('Failed: ' + (data.error || 'Unknown error'));
+        btn.disabled = false;
+        btn.textContent = 'Approve';
+      }
+    }
+    async function rejectProduct(id, btn) {
+      btn.disabled = true;
+      btn.textContent = 'Rejecting...';
+      // For demo, just mark as rejected (extend with backend if needed)
+      btn.parentElement.parentElement.querySelector('td:nth-child(7)').textContent = 'Rejected';
+      btn.parentElement.parentElement.querySelector('td:nth-child(7)').className = 'rejected';
+      btn.remove();
+    }
+    async function deleteProduct(id, btn) {
+      if (!confirm('Delete this product?')) return;
+      btn.disabled = true;
+      btn.textContent = 'Deleting...';
+      const res = await fetch('backend/delete_product.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id)
+      });
+      const data = await res.json();
+      if (data.success) {
+        btn.parentElement.parentElement.remove();
+      } else {
+        alert('Failed: ' + (data.error || 'Unknown error'));
+        btn.disabled = false;
+        btn.textContent = 'Delete';
+      }
+    }
+    function viewProduct(id) {
+      const p = allProducts.find(x => x.id == id);
+      if (!p) return;
+      alert(`Product Details:\nName: ${p.name}\nCategory: ${p.category}\nPrice: ${p.price}\nStatus: ${p.approved == 1 ? 'Approved' : p.approved == -1 ? 'Rejected' : 'Pending'}`);
+    }
+    function openChatBox(id) {
+      document.getElementById('chat-box').style.display = 'flex';
+      document.getElementById('chat-messages').innerHTML = `<div style='color:#888'>Chat with seller for product #${id} (demo only)</div>`;
+    }
+    document.getElementById('chat-close').onclick = function() {
+      document.getElementById('chat-box').style.display = 'none';
+    };
+    function sendChat() {
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+      const messages = document.getElementById('chat-messages');
+      messages.innerHTML += `<div style='margin:6px 0'><b>Admin:</b> ${msg}</div>`;
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+    }
+    // Bulk actions
+    function bulkApprove() {
+      document.querySelectorAll('.select-product:checked').forEach(cb => {
+        const btn = cb.parentElement.parentElement.querySelector('.btn-approve');
+        if (btn) btn.click();
+      });
+    }
+    function bulkReject() {
+      document.querySelectorAll('.select-product:checked').forEach(cb => {
+        const btn = cb.parentElement.parentElement.querySelector('.btn-reject');
+        if (btn) btn.click();
+      });
+    }
+    // Search/filter
+    document.getElementById('search-input').oninput = function() { renderPage(); };
+    document.getElementById('filter-status').onchange = function() { renderPage(); };
+    // Pagination
+    function renderPage() {
+      let filtered = allProducts.filter(p => {
+        const q = document.getElementById('search-input').value.toLowerCase();
+        const status = document.getElementById('filter-status').value;
+        let match = (!q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+        if (status !== '') match = match && String(p.approved) === status;
+        return match;
+      });
+      const total = filtered.length;
+      const pages = Math.ceil(total / pageSize);
+      if (currentPage > pages) currentPage = 1;
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+      renderProducts(filtered.slice(start, end));
+      // Pagination controls
+      const pag = document.getElementById('pagination');
+      pag.innerHTML = '';
+      for (let i = 1; i <= pages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.className = 'active';
+        btn.onclick = function() { currentPage = i; renderPage(); };
+        pag.appendChild(btn);
+      }
+    }
+    document.getElementById('select-all').onchange = function() {
+      document.querySelectorAll('.select-product').forEach(cb => { cb.checked = this.checked; if (this.checked) selectedIds.add(cb.value); else selectedIds.delete(cb.value); });
+    };
+    // Chart rendering
+    function renderSellerChart(products) {
+      // Aggregate seller stats
+      const sellers = {};
+      products.forEach(p => {
+        if (!sellers[p.seller]) sellers[p.seller] = { name: p.seller_name || p.seller, count: 0 };
+        sellers[p.seller].count++;
+      });
+      const sellerNames = Object.values(sellers).map(s => s.name);
+      const sellerCounts = Object.values(sellers).map(s => s.count);
+      // Render chart (simple bar chart)
+      const canvas = document.getElementById('sellerChartCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const max = Math.max(...sellerCounts, 1);
+      const barWidth = Math.max(40, Math.floor(canvas.width / sellerNames.length));
+      sellerNames.forEach((name, i) => {
+        const x = i * barWidth + 20;
+        const y = canvas.height - (sellerCounts[i] / max) * (canvas.height - 40);
+        ctx.fillStyle = '#7c3aed';
+        ctx.fillRect(x, y, barWidth - 16, canvas.height - y - 20);
+        ctx.fillStyle = '#222';
+        ctx.fillText(name, x, canvas.height - 8);
+        ctx.fillText(sellerCounts[i], x, y - 8);
+      });
+      // Legend
+      document.getElementById('sellerChartLegend').innerHTML = sellerNames.map((name,i) => `<span style='display:inline-block;margin-right:16px'><b>${name}</b>: ${sellerCounts[i]} products</span>`).join('');
+    }
+    // --- Admin authentication ---
+    let adminLoggedIn = false;
+    function adminLogin() {
+      const pass = document.getElementById('admin-pass').value;
+      if (pass === 'admin123') { // Demo password
+        adminLoggedIn = true;
+        document.getElementById('admin-auth-status').textContent = 'Login successful';
+        document.getElementById('admin-auth-status').style.color = '#22c55e';
+      } else {
+        adminLoggedIn = false;
+        document.getElementById('admin-auth-status').textContent = 'Wrong password';
+        document.getElementById('admin-auth-status').style.color = '#ef4444';
+      }
+    }
+    // --- Audit log ---
+    function addAuditLog(msg) {
+      const ul = document.getElementById('auditLogList');
+      const li = document.createElement('li');
+      li.textContent = msg + ' (' + new Date().toLocaleString() + ')';
+      ul.prepend(li);
+    }
+    // Email notification (demo)
+    function sendEmailNotification(to, subject, body) {
+      // Placeholder: integrate backend email
+      addAuditLog('Email sent to ' + to + ': ' + subject);
+    }
+    // Patch approve/reject/delete to log and notify
+    async function approveProduct(id, btn) {
+      btn.disabled = true;
+      btn.textContent = 'Approving...';
+      const res = await fetch('backend/approve_product.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id)
+      });
+      const data = await res.json();
+      if (data.success) {
+        btn.parentElement.parentElement.querySelector('td:nth-child(7)').textContent = 'Approved';
+        btn.parentElement.parentElement.querySelector('td:nth-child(7)').className = 'approved';
+        btn.remove();
+        addAuditLog('Product #' + id + ' approved');
+        sendEmailNotification('seller@example.com', 'Product Approved', 'Your product #' + id + ' was approved.');
+      } else {
+        alert('Failed: ' + (data.error || 'Unknown error'));
+        btn.disabled = false;
+        btn.textContent = 'Approve';
+      }
+    }
+    async function rejectProduct(id, btn) {
+      btn.disabled = true;
+      btn.textContent = 'Rejecting...';
+      btn.parentElement.parentElement.querySelector('td:nth-child(7)').textContent = 'Rejected';
+      btn.parentElement.parentElement.querySelector('td:nth-child(7)').className = 'rejected';
+      btn.remove();
+      addAuditLog('Product #' + id + ' rejected');
+      sendEmailNotification('seller@example.com', 'Product Rejected', 'Your product #' + id + ' was rejected.');
+    }
+    async function deleteProduct(id, btn) {
+      if (!confirm('Delete this product?')) return;
+      btn.disabled = true;
+      btn.textContent = 'Deleting...';
+      const res = await fetch('backend/delete_product.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id)
+      });
+      const data = await res.json();
+      if (data.success) {
+        btn.parentElement.parentElement.remove();
+        addAuditLog('Product #' + id + ' deleted');
+        sendEmailNotification('seller@example.com', 'Product Deleted', 'Your product #' + id + ' was deleted.');
+      } else {
+        alert('Failed: ' + (data.error || 'Unknown error'));
+        btn.disabled = false;
+        btn.textContent = 'Delete';
+      }
+    }
+    // Initial load
+    fetchProducts().then(products => { allProducts = products; renderPage(); renderSellerChart(products); });
+  </script>
+</body>
+</html>

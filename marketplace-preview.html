@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omenda Pi Pays – Marketplace Preview</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body class="bg-slate-100 font-sans">
+
+<!-- NAV BAR -->
+<nav class="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-3 py-2">
+    <div class="flex items-center gap-2">
+      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500 text-xs font-extrabold text-white">OP</div>
+      <span class="text-sm font-bold text-slate-900">Omenda Pi Pays</span>
+    </div>
+    <div class="hidden gap-5 sm:flex">
+      <a href="#" class="text-sm font-medium text-slate-700 hover:text-orange-600">Home</a>
+      <a href="#" class="text-sm font-medium text-slate-500 hover:text-orange-600">Services</a>
+      <a href="#" class="text-sm font-medium text-slate-500 hover:text-orange-600">Map</a>
+      <a href="#" class="text-sm font-medium text-slate-500 hover:text-orange-600">Social</a>
+    </div>
+    <button class="rounded-full bg-violet-600 px-3 py-1.5 text-xs font-bold text-white">Connect Pi</button>
+  </div>
+</nav>
+
+<div id="app" class="mx-auto w-full max-w-6xl pb-20"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white">
+  <div class="mx-auto flex max-w-2xl items-center justify-around py-1.5">
+    <a href="NIB.html" class="flex flex-col items-center gap-0.5 text-orange-600"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-[10px] font-bold">Home</span></a>
+    <a href="marketplace-preview.html" class="flex flex-col items-center gap-0.5 text-slate-400"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg><span class="text-[10px]">Market</span></a>
+    <a href="Submit.html" class="flex flex-col items-center gap-0.5"><div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-lg"><svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4.5v15m7.5-7.5h-15"/></svg></div><span class="text-[10px] text-slate-500">Sell</span></a>
+    <a href="social.html" class="relative flex flex-col items-center gap-0.5 text-slate-400"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg><span class="absolute -right-1 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[8px] font-bold text-white">3</span><span class="text-[10px]">Chat</span></a>
+    <a href="about.html" class="flex flex-col items-center gap-0.5 text-slate-400"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg><span class="text-[10px]">Profile</span></a>
+  </div>
+</nav>
+
+<!-- Product Detail Modal -->
+<div id="modal-overlay" class="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center hidden" onclick="closeModal()">
+  <div id="modal-content" class="relative max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white sm:rounded-2xl" onclick="event.stopPropagation()"></div>
+</div>
+
+<script>
+// ── DATA ──
+const marketProducts = [
+  { id:"e1", title:"17 PRO MAX Smartphone", price:"\u03C00.003", priceHigh:"0.005", stat:"100+ Heats", image:"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1565849904461-04a58ad377e0?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580910051074-3eb694886571?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=400&auto=format&fit=crop"], tag:"Most Popular", tagColor:"from-rose-500/80 to-rose-600/80", category:"Electronics" },
+  { id:"e2", title:"DELL Latitude x360 7320", price:"\u03C00.004", stat:"50+ sold", image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=400&auto=format&fit=crop"], category:"Electronics" },
+  { id:"e3", title:"MacBook Air M3 2024", price:"\u03C00.004", stat:"120+ views", image:"https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1629131726692-1acfc0d42e2a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=400&auto=format&fit=crop"], category:"Electronics" },
+  { id:"e4", title:"Smart Watch Ultra", price:"\u03C00.001", priceHigh:"0.002", stat:"1100+", image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1546868871-af0de0ae72be?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=400&auto=format&fit=crop"], tag:"Most Wished", tagColor:"from-violet-500/80 to-violet-600/80", category:"Electronics" },
+  { id:"e5", title:"Wireless Earbuds Pro", price:"\u03C00.0005", stat:"200+ sold", image:"https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1631176093617-63490a3d785a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1613040809024-b4ef7ba99bc3?q=80&w=400&auto=format&fit=crop"], category:"Electronics" },
+  { id:"e6", title:"4K Monitor 27\"", price:"\u03C00.002", stat:"15+ sold", image:"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585792180666-f7347c490ee2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1616763355548-1b606f439f86?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=400&auto=format&fit=crop"], category:"Electronics" },
+  { id:"f1", title:"Leather Crossbody Bag", price:"\u03C00.0003", stat:"40+ sold", image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&auto=format&fit=crop"], tag:"New Releases", tagColor:"from-amber-500/80 to-amber-600/80", category:"Fashion" },
+  { id:"f2", title:"Running Sneakers", price:"\u03C00.0004", stat:"85+ sold", image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=400&auto=format&fit=crop"], category:"Fashion" },
+  { id:"f3", title:"Sunglasses UV400", price:"\u03C00.0001", stat:"60+ sold", image:"https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1577803645773-f96470509666?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1509695507497-903c140c43b0?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=400&auto=format&fit=crop"], category:"Fashion" },
+  { id:"f4", title:"Leather Belt Set", price:"\u03C00.0001", priceHigh:"0.0002", stat:"6 Pieces (MOQ)", image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1624222247344-550fb60583dc?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1603487742131-4160ec999306?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1608505362930-da3c8e0a43a4?q=80&w=400&auto=format&fit=crop"], category:"Fashion" },
+  { id:"f5", title:"Fashion T-Shirts Bundle", price:"\u03C00.00003", stat:"1 Piece (MOQ)", image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503341504253-dff4f94032fc?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=400&auto=format&fit=crop"], category:"Fashion" },
+  { id:"hg1", title:"Premium Hair Dryer Kit", price:"\u03C00.0004", stat:"New", image:"https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585747860036-4cb2f4c6ea5c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1576426863848-c21f53c60b19?q=80&w=400&auto=format&fit=crop"], category:"Home & Garden" },
+  { id:"hg2", title:"7-Layer Shoe Rack", price:"\u03C00.0002", stat:"Popular", image:"https://images.unsplash.com/photo-1616628182509-6f8046f8cb07?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1616628182509-6f8046f8cb07?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558997519-83ea9252edf8?q=80&w=400&auto=format&fit=crop"], category:"Home & Garden" },
+  { id:"hg3", title:"Portable Blender", price:"\u03C00.0003", stat:"25+ sold", image:"https://images.unsplash.com/photo-1570222094114-d054a817e56b?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1570222094114-d054a817e56b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585515320310-259814833e62?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1622480916113-9000ac49b79d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1517142089942-ba376ce32a2e?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=400&auto=format&fit=crop"], category:"Home & Garden" },
+  { id:"hg4", title:"LED Desk Lamp", price:"\u03C00.0001", stat:"Fast seller", image:"https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1534105615256-13940a56ff44?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1573790387438-4da905039392?q=80&w=400&auto=format&fit=crop"], category:"Home & Garden" },
+  { id:"hg5", title:"Garden Spray Nozzle", price:"\u03C00.000003", priceHigh:"0.00001", stat:"", image:"https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=400&auto=format&fit=crop"], category:"Home & Garden" },
+  { id:"hg6", title:"Premium Bedding Set", price:"\u03C00.00004", priceHigh:"0.00008", stat:"", image:"https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1616627547584-bf28cee262db?q=80&w=400&auto=format&fit=crop"], category:"Home & Garden" },
+  { id:"c1", title:"Mercedes-Benz GLE 350", price:"\u03C00.19", stat:"Premium", image:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1619682817481-e994891cd1f5?q=80&w=400&auto=format&fit=crop"], tag:"Movers & Shakers", tagColor:"from-emerald-500/80 to-emerald-600/80", category:"Cars" },
+  { id:"c2", title:"Toyota Camry SE 2018", price:"\u03C00.08", stat:"Clean title", image:"https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=400&auto=format&fit=crop"], category:"Cars" },
+  { id:"c3", title:"Range Rover Evoque 2019", price:"\u03C00.17", stat:"Automatic", image:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606611013016-969c19ba27a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=400&auto=format&fit=crop"], category:"Cars" },
+  { id:"c4", title:"Honda Civic 2021", price:"\u03C00.09", stat:"Low mileage", image:"https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop", images:["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=400&auto=format&fit=crop"], category:"Cars" },
+];
+
+const hotels = [
+  { id:"h1", name:"Serena Hotel Dar es Salaam", location:"Dar es Salaam, Tanzania", rating:4.8, pricePerNight:0.0006, image:"https://picsum.photos/seed/serena/600/400", type:"luxury" },
+  { id:"h2", name:"Hyatt Regency", location:"Nairobi, Kenya", rating:4.6, pricePerNight:0.0005, image:"https://picsum.photos/seed/hyatt/600/400", type:"luxury" },
+  { id:"h3", name:"Zanzibar Beach Resort", location:"Zanzibar, Tanzania", rating:4.9, pricePerNight:0.001, image:"https://picsum.photos/seed/zanzibar/600/400", type:"luxury" },
+  { id:"h4", name:"City Lodge Hotel", location:"Kampala, Uganda", rating:4.2, pricePerNight:0.0002, image:"https://picsum.photos/seed/citylodge/600/400", type:"standard" },
+  { id:"h5", name:"Mountain View Inn", location:"Arusha, Tanzania", rating:4.4, pricePerNight:0.0003, image:"https://picsum.photos/seed/mountainview/600/400", type:"standard" },
+  { id:"h6", name:"Pioneer Backpackers", location:"Mombasa, Kenya", rating:4.0, pricePerNight:0.00008, image:"https://picsum.photos/seed/backpack/600/400", type:"budget" },
+];
+
+const properties = [
+  { id:"p1", title:"Modern Villa with Ocean View", location:"Masaki, Dar es Salaam", price:6.5, image:"https://picsum.photos/seed/villa1/600/400", bedrooms:5, bathrooms:4, featured:true },
+  { id:"p2", title:"3BR Apartment in Westlands", location:"Westlands, Nairobi", price:1.6, image:"https://picsum.photos/seed/apt1/600/400", bedrooms:3, bathrooms:2, featured:true },
+  { id:"p3", title:"Commercial Plot - CBD", location:"CBD, Dar es Salaam", price:15, image:"https://picsum.photos/seed/land1/600/400", bedrooms:0, bathrooms:0, featured:false },
+  { id:"p4", title:"Penthouse Suite", location:"Kilimani, Nairobi", price:4.8, image:"https://picsum.photos/seed/pent1/600/400", bedrooms:4, bathrooms:3, featured:true },
+  { id:"p5", title:"Family Home in Mikocheni", location:"Mikocheni, Dar es Salaam", price:2.5, image:"https://picsum.photos/seed/house2/600/400", bedrooms:4, bathrooms:3, featured:false },
+  { id:"p6", title:"Retail Space - Mall", location:"Mlimani City, Dar es Salaam", price:1.3, image:"https://picsum.photos/seed/shop1/600/400", bedrooms:0, bathrooms:1, featured:false },
+];
+
+const billProviders = [
+  { id:"b1", name:"TANESCO", icon:"\u26A1", description:"Tanzania Electric Supply Company" },
+  { id:"b2", name:"DAWASCO", icon:"\uD83D\uDCA7", description:"Dar es Salaam Water & Sewerage" },
+  { id:"b3", name:"Vodacom", icon:"\uD83D\uDCF1", description:"Vodacom Tanzania" },
+  { id:"b4", name:"Airtel", icon:"\uD83D\uDCF1", description:"Airtel Tanzania" },
+  { id:"b5", name:"Tigo/MIC", icon:"\uD83D\uDCF1", description:"MIC Tanzania (Tigo)" },
+  { id:"b6", name:"TTCL Fiber", icon:"\uD83C\uDF10", description:"TTCL Internet Services" },
+  { id:"b7", name:"Raha Fiber", icon:"\uD83C\uDF10", description:"Raha ISP Fiber Internet" },
+  { id:"b8", name:"DSTV", icon:"\uD83D\uDCFA", description:"MultiChoice DSTV Subscription" },
+  { id:"b9", name:"Azam TV", icon:"\uD83D\uDCFA", description:"Azam Media TV Subscription" },
+  { id:"b10", name:"Jubilee Insurance", icon:"\uD83D\uDEE1\uFE0F", description:"Jubilee Insurance Premium" },
+  { id:"b11", name:"NSSF", icon:"\uD83D\uDEE1\uFE0F", description:"National Social Security Fund" },
+  { id:"b12", name:"Kenya Power", icon:"\u26A1", description:"Kenya Power & Lighting" },
+];
+
+const transportServices = [
+  { id:"tr1", icon:"\uD83D\uDE97", name:"Economy Ride", price:"0.00001-0.00003 \u03C0", desc:"Affordable everyday rides", badge:"Popular" },
+  { id:"tr2", icon:"\uD83D\uDE99", name:"Comfort Plus", price:"0.00003-0.00005 \u03C0", desc:"Spacious SUVs, premium interiors" },
+  { id:"tr3", icon:"\uD83C\uDFCE\uFE0F", name:"Luxury", price:"0.00005-0.0001 \u03C0", desc:"Executive cars for VIP transport", badge:"Premium" },
+  { id:"tr4", icon:"\uD83D\uDE95", name:"City Taxi", price:"0.00001-0.00003 \u03C0", desc:"Licensed metered taxis", badge:"Popular" },
+  { id:"tr5", icon:"\u2708\uFE0F\uD83D\uDE95", name:"Airport Transfer", price:"0.00003-0.00007 \u03C0", desc:"Reliable airport pickup & drop" },
+  { id:"tr6", icon:"\uD83C\uDFCD\uFE0F", name:"Boda / Motorbike", price:"0.000003-0.00001 \u03C0", desc:"Quick motorcycle rides" },
+  { id:"tr7", icon:"\uD83D\uDEFA", name:"Tuk-Tuk", price:"0.000006-0.00002 \u03C0", desc:"Short city trips", badge:"New" },
+  { id:"tr8", icon:"\uD83D\uDC68\u200D\u2708\uFE0F", name:"Daily Driver", price:"0.00006-0.0001 \u03C0/day", desc:"Personal driver for the day" },
+  { id:"tr9", icon:"\uD83D\uDCE6", name:"Express Delivery", price:"0.000006-0.00002 \u03C0", desc:"Same-day delivery, under 2 hrs", badge:"Popular" },
+  { id:"tr10", icon:"\uD83D\uDE9B", name:"Heavy Cargo", price:"0.00003-0.0001 \u03C0", desc:"Furniture & large items" },
+];
+
+const flights = [
+  { id:"fl1", airline:"Kenya Airways", icon:"\uD83C\uDDF0\uD83C\uDDEA", from:"NBO", to:"DXB", price:"0.002 \u03C0", duration:"5h 20m" },
+  { id:"fl2", airline:"Ethiopian Airlines", icon:"\uD83C\uDDEA\uD83C\uDDF9", from:"ADD", to:"LHR", price:"0.003 \u03C0", duration:"8h 15m" },
+  { id:"fl3", airline:"Emirates", icon:"\uD83C\uDDE6\uD83C\uDDEA", from:"DXB", to:"JFK", price:"0.004 \u03C0", duration:"13h 40m" },
+  { id:"fl4", airline:"RwandAir", icon:"\uD83C\uDDF7\uD83C\uDDFC", from:"NBO", to:"EBB", price:"0.0005 \u03C0", duration:"1h 05m" },
+  { id:"fl5", airline:"Qatar Airways", icon:"\uD83C\uDDF6\uD83C\uDDE6", from:"NBO", to:"NRT", price:"0.005 \u03C0", duration:"18h 30m" },
+  { id:"fl6", airline:"Turkish Airlines", icon:"\uD83C\uDDF9\uD83C\uDDF7", from:"DAR", to:"CDG", price:"0.004 \u03C0", duration:"12h 45m" },
+];
+
+const allCategories = ["All","Electronics","Fashion","Home & Garden","Cars","Hotels","Properties","Transport","Bills"];
+
+// ── STATE ──
+let activeTab = "All";
+let search = "";
+let modalImgIdx = 0;
+let selectedProduct = null;
+let liveProducts = [];
+
+// ── Fetch live products from backend ──
+(function loadLiveProducts() {
+  fetch('backend/list_products.php')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success && Array.isArray(data.products)) {
+        liveProducts = data.products;
+        render();
+      }
+    })
+    .catch(function() { /* backend offline, show static only */ });
+})();
+
+// ── HELPERS ──
+function esc(s) { if (s == null) return ""; const d = document.createElement("div"); d.textContent = String(s); return d.innerHTML; }
+
+function tagGradientStyle(tagColor) {
+  if (!tagColor) return "";
+  const map = {
+    "from-rose-500/80 to-rose-600/80":"linear-gradient(to top,rgba(244,63,94,.8),rgba(225,29,72,.8))",
+    "from-violet-500/80 to-violet-600/80":"linear-gradient(to top,rgba(139,92,246,.8),rgba(124,58,237,.8))",
+    "from-amber-500/80 to-amber-600/80":"linear-gradient(to top,rgba(245,158,11,.8),rgba(217,119,6,.8))",
+    "from-emerald-500/80 to-emerald-600/80":"linear-gradient(to top,rgba(16,185,129,.8),rgba(5,150,105,.8))"
+  };
+  return map[tagColor] || "linear-gradient(to top,rgba(100,100,100,.8),rgba(80,80,80,.8))";
+}
+
+function badgeClass(badge) {
+  if (badge === "Popular") return "bg-amber-100 text-amber-700";
+  if (badge === "Premium") return "bg-violet-100 text-violet-700";
+  return "bg-green-100 text-green-700";
+}
+
+// ── RENDER ──
+function render() {
+  const q = search.toLowerCase();
+  const filtered = marketProducts.filter(p => {
+    const matchTab = activeTab === "All" || p.category === activeTab;
+    const matchSearch = !q || p.title.toLowerCase().includes(q);
+    return matchTab && matchSearch;
+  });
+  const showHotels = activeTab === "All" || activeTab === "Hotels";
+  const showProperties = activeTab === "All" || activeTab === "Properties";
+  const showTransport = activeTab === "All" || activeTab === "Transport";
+  const showBills = activeTab === "All" || activeTab === "Bills";
+  const fHotels = hotels.filter(h => !q || h.name.toLowerCase().includes(q) || h.location.toLowerCase().includes(q));
+  const fProps = properties.filter(p => !q || p.title.toLowerCase().includes(q) || p.location.toLowerCase().includes(q));
+  const fBills = billProviders.filter(b => !q || b.name.toLowerCase().includes(q));
+
+  let html = "";
+
+  // ── Search Bar ──
+  html += `<div class="bg-white px-3 pb-2 pt-3"><div class="flex items-center gap-2"><div class="relative flex-1">
+    <input type="text" id="searchInput" placeholder="Search all products & services..." value="${esc(search)}"
+      class="w-full rounded-full border border-slate-300 bg-white py-2 pl-4 pr-20 text-sm outline-none placeholder:text-slate-400 focus:border-orange-400 focus:ring-1 focus:ring-orange-400"/>
+    <div class="absolute right-1 top-1/2 flex -translate-y-1/2 items-center gap-0.5">
+      <button class="rounded-full p-1.5 text-slate-400 hover:text-slate-600"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></button>
+      <button class="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500 text-white"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+    </div></div></div></div>`;
+
+  // ── Category Tabs ──
+  html += `<div class="border-b border-slate-200 bg-white"><div class="flex items-center gap-0 overflow-x-auto px-1 hide-scrollbar">`;
+  allCategories.forEach(tab => {
+    const active = tab === activeTab;
+    html += `<button onclick="setTab('${tab.replace(/'/g,"\\'")}')" class="whitespace-nowrap px-3 py-2 text-[13px] font-medium transition-colors ${active ? "border-b-2 border-slate-800 font-bold text-slate-900" : "text-slate-500 hover:text-slate-700"}">${esc(tab)}</button>`;
+  });
+  html += `</div></div>`;
+
+  // ── Trending Row ──
+  if (activeTab === "All" && !search) {
+    const tagged = marketProducts.filter(p => p.tag);
+    html += `<div class="bg-white px-3 py-2"><div class="flex snap-x gap-2 overflow-x-auto hide-scrollbar">`;
+    tagged.forEach(p => {
+      html += `<article class="min-w-[120px] max-w-[180px] cursor-pointer snap-start" onclick="openModal('${p.id}')">
+        <div class="relative h-[110px] overflow-hidden rounded-lg bg-slate-100">
+          <img src="${p.image}" alt="${esc(p.title)}" class="h-full w-full object-cover" loading="lazy"/>
+          ${p.tag ? `<div class="absolute bottom-0 left-0 right-0 px-1.5 py-1" style="background:${tagGradientStyle(p.tagColor)}"><span class="text-[10px] font-bold text-white">${esc(p.tag)}</span></div>` : ""}
+        </div>
+        <div class="mt-1"><p class="text-[12px] font-bold text-rose-600">${esc(p.price)}${p.priceHigh ? "-"+esc(p.priceHigh) : ""}</p><p class="text-[10px] text-slate-500">${esc(p.stat)}</p></div>
+      </article>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // ── Secured Trading ──
+  if (activeTab === "All" && !search) {
+    html += `<section class="mt-1 bg-white px-3 py-3"><div class="flex items-center justify-between"><div>
+      <h2 class="text-[15px] font-bold text-slate-900">Secured Trading Service</h2>
+      <p class="mt-0.5 text-[11px] text-slate-500">Money safe \u00B7 Multiple payments \u00B7 Online support</p>
+    </div><svg class="h-4 w-4 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div></section>`;
+  }
+
+  // ── All Products Grid ──
+  if (filtered.length > 0) {
+    html += `<section class="mt-1 bg-white px-2 py-3">
+      <h2 class="mb-2 px-1 text-[15px] font-bold text-slate-900">${activeTab === "All" ? "All Products" : esc(activeTab)} <span class="ml-2 text-[11px] font-normal text-slate-400">(${filtered.length})</span></h2>
+      <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">`;
+    filtered.forEach(item => {
+      html += `<article class="cursor-pointer overflow-hidden rounded-lg border border-slate-100 bg-white shadow-sm transition-shadow hover:shadow-md" onclick="openModal('${item.id}')">
+        <div class="relative h-[95px] overflow-hidden bg-slate-50">
+          <img src="${item.images[0]}" alt="${esc(item.title)}" class="h-full w-full object-cover" loading="lazy"/>
+          <span class="absolute right-1 top-1 rounded bg-black/50 px-1 py-0.5 text-[8px] font-bold text-white">1/${item.images.length}</span>
+          ${item.tag ? `<div class="absolute bottom-0 left-0 right-0 px-1.5 py-0.5" style="background:${tagGradientStyle(item.tagColor)}"><span class="text-[9px] font-bold text-white">${esc(item.tag)}</span></div>` : ""}
+        </div>
+        <div class="p-1.5">
+          <p class="line-clamp-1 text-[11px] leading-tight text-slate-700">${esc(item.title)}</p>
+          <p class="mt-0.5 text-[12px] font-bold text-rose-600">${esc(item.price)}${item.priceHigh ? "-"+esc(item.priceHigh) : ""}</p>
+          ${item.stat ? `<p class="text-[9px] text-slate-400">${esc(item.stat)}</p>` : ""}
+        </div></article>`;
+    });
+    html += `</div></section>`;
+  }
+
+  // ── Hotels ──
+  if (showHotels && fHotels.length > 0) {
+    html += `<section class="mt-1 bg-white px-2 py-3"><h2 class="mb-2 px-1 text-[15px] font-bold text-slate-900">\uD83C\uDFE8 Hotels <span class="text-[11px] font-normal text-slate-400">(${fHotels.length})</span></h2>
+    <div class="flex snap-x gap-2 overflow-x-auto pb-1 hide-scrollbar">`;
+    fHotels.forEach(h => {
+      html += `<article class="min-w-[160px] max-w-[220px] snap-start overflow-hidden rounded-lg border border-slate-100 bg-white shadow-sm">
+        <div class="relative h-[90px] overflow-hidden"><img src="${h.image}" alt="${esc(h.name)}" class="h-full w-full object-cover" loading="lazy"/>
+          <span class="absolute left-1.5 top-1.5 rounded-full bg-black/60 px-1.5 py-0.5 text-[9px] font-semibold capitalize text-white">${esc(h.type)}</span>
+          <span class="absolute right-1.5 top-1.5 rounded-full bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-black">\u2605 ${h.rating}</span>
+        </div><div class="p-2"><p class="line-clamp-1 text-[12px] font-bold text-slate-800">${esc(h.name)}</p><p class="text-[10px] text-slate-500">\uD83D\uDCCD ${esc(h.location)}</p>
+        <div class="mt-1 flex items-center justify-between"><span class="text-[13px] font-bold text-rose-600">${h.pricePerNight} \u03C0</span><span class="rounded bg-orange-500 px-1.5 py-0.5 text-[9px] font-bold text-white">Book</span></div></div></article>`;
+    });
+    html += `</div></section>`;
+  }
+
+  // ── Footprints (Properties header) ──
+  if (showProperties && fProps.length > 0 && activeTab === "All" && !search) {
+    html += `<section class="mt-1 bg-white px-3 py-3"><div class="flex items-center gap-3">
+      <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-lg text-white">\uD83D\uDC63</div>
+      <div><h2 class="text-[14px] font-bold text-slate-900">Footprints Visited</h2><p class="text-[11px] text-slate-500">Explore where pioneers live & invest</p></div>
+    </div></section>`;
+  }
+
+  // ── Properties ──
+  if (showProperties && fProps.length > 0) {
+    html += `<section class="mt-1 bg-white px-2 py-3"><h2 class="mb-2 px-1 text-[15px] font-bold text-slate-900">\uD83C\uDFE0 Properties <span class="text-[11px] font-normal text-slate-400">(${fProps.length})</span></h2>
+    <div class="flex snap-x gap-2 overflow-x-auto pb-1 hide-scrollbar">`;
+    fProps.forEach(prop => {
+      html += `<article class="min-w-[160px] max-w-[220px] snap-start overflow-hidden rounded-lg border border-slate-100 bg-white shadow-sm">
+        <div class="relative h-[90px] overflow-hidden"><img src="${prop.image}" alt="${esc(prop.title)}" class="h-full w-full object-cover" loading="lazy"/>
+          ${prop.featured ? `<span class="absolute left-1.5 top-1.5 rounded-full bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-black">\u2B50 Featured</span>` : ""}
+        </div><div class="p-2"><p class="line-clamp-1 text-[12px] font-bold text-slate-800">${esc(prop.title)}</p><p class="text-[10px] text-slate-500">\uD83D\uDCCD ${esc(prop.location)}</p>
+        <div class="mt-1 flex gap-2 text-[9px] text-slate-500">${prop.bedrooms > 0 ? `<span>\uD83D\uDECF ${prop.bedrooms}</span>` : ""}${prop.bathrooms > 0 ? `<span>\uD83D\uDEBF ${prop.bathrooms}</span>` : ""}</div>
+        <p class="mt-1 text-[13px] font-bold text-rose-600">${prop.price.toLocaleString()} \u03C0</p></div></article>`;
+    });
+    html += `</div></section>`;
+  }
+
+  // ── Transport & Delivery ──
+  if (showTransport) {
+    html += `<section class="mt-1 bg-white px-2 py-3"><h2 class="mb-2 px-1 text-[15px] font-bold text-slate-900">\uD83D\uDE97 Transport & Delivery</h2>
+    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">`;
+    transportServices.forEach(s => {
+      html += `<div class="rounded-lg border border-slate-100 bg-white p-2 shadow-sm">
+        <div class="mb-0.5 flex items-center justify-between"><span class="text-lg">${s.icon}</span>${s.badge ? `<span class="rounded-full px-1.5 py-0.5 text-[8px] font-bold ${badgeClass(s.badge)}">${esc(s.badge)}</span>` : ""}</div>
+        <p class="text-[12px] font-bold text-slate-800">${esc(s.name)}</p><p class="text-[9px] leading-tight text-slate-500">${esc(s.desc)}</p>
+        <p class="mt-1 text-[12px] font-bold text-rose-600">${esc(s.price)}</p></div>`;
+    });
+    html += `</div>`;
+
+    // Flights
+    html += `<h3 class="mb-1.5 mt-3 text-[13px] font-bold text-slate-800">\u2708\uFE0F Flights</h3><div class="flex snap-x gap-2 overflow-x-auto hide-scrollbar">`;
+    flights.forEach(f => {
+      html += `<div class="min-w-[150px] max-w-[200px] snap-start rounded-lg border border-slate-100 bg-white p-2 shadow-sm">
+        <div class="mb-1 flex items-center gap-1.5"><span class="text-base">${f.icon}</span><span class="text-[11px] font-bold text-slate-700">${esc(f.airline)}</span></div>
+        <div class="mb-1 flex items-center gap-1 text-[13px] font-extrabold text-slate-900">${esc(f.from)} <span class="text-slate-300">\u2192</span> ${esc(f.to)}</div>
+        <p class="text-[9px] text-slate-500">${esc(f.duration)}</p><p class="mt-0.5 text-[13px] font-bold text-rose-600">${esc(f.price)}</p></div>`;
+    });
+    html += `</div></section>`;
+  }
+
+  // ── Bills ──
+  if (showBills && fBills.length > 0) {
+    html += `<section class="mt-1 bg-white px-2 py-3"><h2 class="mb-2 px-1 text-[15px] font-bold text-slate-900">\uD83D\uDCB3 Pay Bills <span class="text-[11px] font-normal text-slate-400">(${fBills.length})</span></h2>
+    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">`;
+    fBills.forEach(b => {
+      html += `<div class="flex items-center gap-2 rounded-lg border border-slate-100 bg-white p-2 shadow-sm">
+        <span class="text-lg">${b.icon}</span><div class="min-w-0"><p class="text-[11px] font-bold text-slate-800 truncate">${esc(b.name)}</p><p class="text-[9px] text-slate-500 truncate">${esc(b.description)}</p></div></div>`;
+    });
+    html += `</div></section>`;
+  }
+
+  // ── Single Purchase Ease ──
+  if (activeTab === "All" && !search) {
+    html += `<section class="mt-1 flex items-stretch gap-0 overflow-hidden bg-white">
+      <div class="flex flex-1 flex-col justify-center px-4 py-4">
+        <h2 class="text-[16px] font-extrabold text-slate-900">Single Purchase Ease</h2>
+        <ul class="mt-1.5 space-y-0.5 text-[12px] text-slate-600">
+          <li class="flex items-center gap-1.5"><svg class="h-3 w-3 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Bulk Flexibility</li>
+          <li class="flex items-center gap-1.5"><svg class="h-3 w-3 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Certified Sellers</li>
+          <li class="flex items-center gap-1.5"><svg class="h-3 w-3 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Secure Pi Trading</li>
+        </ul></div>
+      <div class="w-[120px] shrink-0 bg-gradient-to-br from-orange-50 to-amber-50"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop" alt="Secure trading" class="h-full w-full object-cover" loading="lazy"/></div>
+    </section>`;
+  }
+
+  // ── Sell CTA ──
+  html += `<section class="mt-1 bg-white px-3 py-3"><div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1a0533] via-[#2d1065] to-[#0d3f8f] p-5 text-white">
+    <div class="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/5 blur-2xl"></div>
+    <div class="absolute -bottom-8 -left-8 h-28 w-28 rounded-full bg-amber-400/10 blur-2xl"></div>
+    <div class="relative z-10">
+      <div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-base">\uD83D\uDCB0</span><span class="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">Pi Commerce</span></div>
+      <h2 class="text-lg font-extrabold tracking-tight">Sell Your Product for Pi</h2>
+      <p class="mt-1 max-w-[280px] text-[12px] leading-relaxed text-white/70">Post your item, chat with buyers, and accept Pi cryptocurrency securely through our marketplace.</p>
+      <div class="mt-3 flex items-center gap-3">
+        <a href="Submit.html" class="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-2 text-xs font-extrabold text-black shadow-lg shadow-orange-500/25 transition hover:shadow-orange-500/40 hover:brightness-110">\uD83D\uDE80 Sell Now</a>
+        <a href="form.html?redirect=Submit.html" class="rounded-full border border-white/20 px-3 py-1.5 text-[11px] font-bold text-white/80 transition hover:bg-white/10">Get Verified</a>
+      </div>
+    </div>
+  </div></section>`;
+
+  // ── Live Products from Backend ──
+  if (liveProducts.length > 0) {
+    const fLive = liveProducts.filter(p => {
+      const matchTab = activeTab === 'All' || p.category === activeTab;
+      const matchSearch = !q || p.name.toLowerCase().includes(q);
+      return matchTab && matchSearch;
+    });
+    if (fLive.length > 0) {
+      html += `<section class="mt-1 bg-white px-2 py-3">
+        <div class="mb-2 flex items-center justify-between px-1"><h2 class="text-[15px] font-bold text-slate-900">\uD83C\uDF1F Pioneer Listings <span class="ml-1 text-[11px] font-normal text-slate-400">(${fLive.length})</span></h2><span class="rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-bold text-emerald-600">LIVE</span></div>
+        <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">`;
+      fLive.forEach(item => {
+        const imgSrc = item.image1 ? (item.image1.startsWith('http') ? item.image1 : 'backend/' + item.image1) : 'https://via.placeholder.com/400x300?text=No+Image';
+        const imgCount = [item.image1,item.image2,item.image3,item.image4,item.image5,item.image6].filter(Boolean).length;
+        html += `<article class="cursor-pointer overflow-hidden rounded-lg border border-slate-100 bg-white shadow-sm transition-shadow hover:shadow-md" onclick="openLiveModal(${item.id})">
+          <div class="relative h-[95px] overflow-hidden bg-slate-50">
+            <img src="${imgSrc}" alt="${esc(item.name)}" class="h-full w-full object-cover" loading="lazy"/>
+            <span class="absolute right-1 top-1 rounded bg-black/50 px-1 py-0.5 text-[8px] font-bold text-white">${imgCount} pic${imgCount!==1?'s':''}</span>
+            ${item.condition ? `<span class="absolute left-1 top-1 rounded bg-emerald-500/80 px-1 py-0.5 text-[8px] font-bold text-white">${esc(item.condition)}</span>` : ''}
+          </div>
+          <div class="p-1.5">
+            <p class="line-clamp-1 text-[11px] leading-tight text-slate-700">${esc(item.name)}</p>
+            <p class="mt-0.5 text-[12px] font-bold text-rose-600">\u03C0${esc(item.price)}</p>
+            <p class="text-[9px] text-slate-400">${esc(item.category)} \u00B7 ${esc(item.seller_name || 'Pioneer')}</p>
+          </div></article>`;
+      });
+      html += `</div></section>`;
+    }
+  }
+
+  // Footer space
+  html += `<div class="h-4"></div>`;
+
+  document.getElementById("app").innerHTML = html;
+
+  // Bind search
+  const si = document.getElementById("searchInput");
+  if (si) {
+    si.addEventListener("input", function() { search = this.value; render(); });
+    // Restore cursor position
+    si.focus();
+    si.setSelectionRange(si.value.length, si.value.length);
+  }
+}
+
+function setTab(tab) { activeTab = tab; render(); }
+
+// ── MODAL ──
+function openModal(id) {
+  selectedProduct = marketProducts.find(p => p.id === id);
+  if (!selectedProduct) return;
+  modalImgIdx = 0;
+  renderModal();
+  document.getElementById("modal-overlay").classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  document.getElementById("modal-overlay").classList.add("hidden");
+  document.body.style.overflow = "";
+  selectedProduct = null;
+}
+
+function setModalImg(i) { modalImgIdx = i; renderModal(); }
+function nextModalImg() { if (!selectedProduct) return; modalImgIdx = (modalImgIdx + 1) % selectedProduct.images.length; renderModal(); }
+function prevModalImg() { if (!selectedProduct) return; modalImgIdx = (modalImgIdx - 1 + selectedProduct.images.length) % selectedProduct.images.length; renderModal(); }
+
+function renderModal() {
+  const p = selectedProduct;
+  if (!p) return;
+  const imgs = p.images;
+  let h = "";
+
+  // Close button
+  h += `<button onclick="closeModal()" class="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 transition">
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>`;
+
+  // Image carousel
+  h += `<div class="relative h-[280px] w-full overflow-hidden bg-slate-100 sm:h-[340px]">
+    <img src="${imgs[modalImgIdx]}" alt="${esc(p.title)} ${modalImgIdx+1}" class="h-full w-full object-cover transition-opacity"/>
+    <button onclick="event.stopPropagation();prevModalImg()" class="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+    <button onclick="event.stopPropagation();nextModalImg()" class="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <span class="absolute right-3 top-3 rounded-full bg-black/50 px-2 py-0.5 text-xs font-bold text-white">${modalImgIdx+1}/${imgs.length}</span>
+    <div class="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">`;
+  imgs.forEach((_, i) => {
+    h += `<button onclick="event.stopPropagation();setModalImg(${i})" class="h-2 rounded-full transition-all ${i === modalImgIdx ? "w-5 bg-white" : "w-2 bg-white/50"}"></button>`;
+  });
+  h += `</div></div>`;
+
+  // Thumbnails
+  h += `<div class="flex gap-1.5 overflow-x-auto bg-white px-3 py-2 hide-scrollbar">`;
+  imgs.forEach((src, i) => {
+    h += `<button onclick="event.stopPropagation();setModalImg(${i})" class="h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${i === modalImgIdx ? "border-orange-500 ring-1 ring-orange-400" : "border-transparent opacity-60 hover:opacity-80"}"><img src="${src}" alt="Thumb ${i+1}" class="h-full w-full object-cover"/></button>`;
+  });
+  h += `</div>`;
+
+  // Product info
+  h += `<div class="px-4 pb-6 pt-2">`;
+  if (p.tag) h += `<span class="mb-2 inline-block rounded-full bg-orange-100 px-2.5 py-0.5 text-[11px] font-bold text-orange-700">${esc(p.tag)}</span>`;
+  h += `<h2 class="text-lg font-extrabold text-slate-900">${esc(p.title)}</h2>
+    <p class="mt-1 text-sm text-slate-500">${esc(p.category)} \u00B7 ${esc(p.stat)}</p>
+    <div class="mt-3 flex items-baseline gap-2"><span class="text-2xl font-extrabold text-rose-600">${esc(p.price)}</span>
+      ${p.priceHigh ? `<span class="text-sm text-slate-400">\u2013 ${esc(p.priceHigh)}</span>` : ""}
+      <span class="text-xs text-slate-400">GCV</span></div>
+    <div class="mt-4 grid grid-cols-3 gap-2 text-center text-[11px]">
+      <div class="rounded-lg bg-slate-50 py-2"><p class="font-bold text-slate-700">Pi Secured</p><p class="text-slate-400">Safe Trade</p></div>
+      <div class="rounded-lg bg-slate-50 py-2"><p class="font-bold text-slate-700">Verified</p><p class="text-slate-400">Seller</p></div>
+      <div class="rounded-lg bg-slate-50 py-2"><p class="font-bold text-slate-700">Global</p><p class="text-slate-400">Shipping</p></div>
+    </div>
+    <div class="mt-4 flex gap-2">
+      <button class="flex-1 rounded-xl bg-orange-500 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600">\u03C0 Buy Now (${esc(p.price)})</button>
+      <button class="flex-1 rounded-xl border border-orange-500 py-3 text-sm font-bold text-orange-600 transition-colors hover:bg-orange-50">Add to Cart</button>
+    </div></div>`;
+
+  document.getElementById("modal-content").innerHTML = h;
+}
+
+// ── Live product modal ──
+function openLiveModal(id) {
+  var p = liveProducts.find(function(x) { return x.id == id; });
+  if (!p) return;
+  var imgs = [p.image1, p.image2, p.image3, p.image4, p.image5, p.image6].filter(Boolean).map(function(src) {
+    return src.startsWith('http') ? src : 'backend/' + src;
+  });
+  if (imgs.length === 0) imgs = ['https://via.placeholder.com/600x400?text=No+Image'];
+  modalImgIdx = 0;
+
+  var h = '';
+  h += '<button onclick="closeModal()" class="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 transition"><svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>';
+  h += '<div class="relative h-[280px] w-full overflow-hidden bg-slate-100 sm:h-[340px]"><img id="live-modal-img" src="' + imgs[0] + '" alt="' + esc(p.name) + '" class="h-full w-full object-cover"/>';
+  h += '<span class="absolute right-3 top-3 rounded-full bg-black/50 px-2 py-0.5 text-xs font-bold text-white">1/' + imgs.length + '</span></div>';
+  if (imgs.length > 1) {
+    h += '<div class="flex gap-1.5 overflow-x-auto bg-white px-3 py-2 hide-scrollbar">';
+    imgs.forEach(function(src, i) {
+      h += '<button onclick="event.stopPropagation();document.getElementById(\'live-modal-img\').src=\'' + src + '\'" class="h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition-all ' + (i === 0 ? 'border-orange-500' : 'border-transparent opacity-60 hover:opacity-80') + '"><img src="' + src + '" class="h-full w-full object-cover"/></button>';
+    });
+    h += '</div>';
+  }
+  h += '<div class="px-4 pb-6 pt-3">';
+  if (p.condition) h += '<span class="mb-2 inline-block rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700">' + esc(p.condition) + '</span> ';
+  h += '<span class="mb-2 inline-block rounded-full bg-violet-100 px-2.5 py-0.5 text-[11px] font-bold text-violet-700">' + esc(p.category) + '</span>';
+  h += '<h2 class="mt-1 text-lg font-extrabold text-slate-900">' + esc(p.name) + '</h2>';
+  h += '<p class="mt-0.5 text-[12px] text-slate-500">by ' + esc(p.seller_name || 'Pioneer') + '</p>';
+  h += '<div class="mt-3 flex items-baseline gap-2"><span class="text-2xl font-extrabold text-rose-600">\u03C0' + esc(p.price) + '</span><span class="text-xs text-slate-400">Pi</span></div>';
+  if (p.description) h += '<p class="mt-3 text-[13px] leading-relaxed text-slate-600">' + esc(p.description) + '</p>';
+  h += '<div class="mt-4 grid grid-cols-3 gap-2 text-center text-[11px]"><div class="rounded-lg bg-slate-50 py-2"><p class="font-bold text-slate-700">Pi Secured</p><p class="text-slate-400">Safe Trade</p></div><div class="rounded-lg bg-slate-50 py-2"><p class="font-bold text-slate-700">KYC Verified</p><p class="text-slate-400">Seller</p></div><div class="rounded-lg bg-slate-50 py-2"><p class="font-bold text-slate-700">Escrow</p><p class="text-slate-400">Protected</p></div></div>';
+  h += '<div class="mt-4 flex gap-2"><button class="flex-1 rounded-xl bg-orange-500 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600">\u03C0 Buy Now</button><button class="flex-1 rounded-xl border border-orange-500 py-3 text-sm font-bold text-orange-600 transition-colors hover:bg-orange-50">Message Seller</button></div>';
+  h += '</div>';
+
+  document.getElementById('modal-content').innerHTML = h;
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+// ── Keyboard support ──
+document.addEventListener("keydown", function(e) {
+  if (!selectedProduct) return;
+  if (e.key === "Escape") closeModal();
+  if (e.key === "ArrowLeft") prevModalImg();
+  if (e.key === "ArrowRight") nextModalImg();
+});
+
+// ── INIT ──
+render();
+</script>
+</body>
+</html>
