@@ -84,30 +84,38 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     /* ── Map init ── */
-    var map = L.map('business-map').setView([-6.17, 35.74], 6); /* Tanzania center */
+    var map = L.map('business-map', { maxZoom: 21 }).setView([-6.17, 35.74], 6);
 
-    /* Satellite + street labels hybrid layer */
-    var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: '&copy; Esri, Maxar, Earthstar'
-    });
-    var streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap'
-    });
-    var labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
-      attribution: '&copy; Esri'
-    });
-    var placeNames = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-      attribution: '&copy; Esri'
+    /* Google Satellite Hybrid — shows buildings, houses, streets, labels */
+    var googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      maxZoom: 21, attribution: '&copy; Google'
     });
 
-    /* Default: satellite + road labels + place names */
-    var hybridLayer = L.layerGroup([satellite, labels, placeNames]).addTo(map);
+    /* Google Satellite only (no labels) */
+    var googleSat = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      maxZoom: 21, attribution: '&copy; Google'
+    });
+
+    /* Google Streets */
+    var googleStreets = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      maxZoom: 21, attribution: '&copy; Google'
+    });
+
+    /* OpenStreetMap */
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '&copy; OpenStreetMap'
+    });
+
+    /* Default: Google Hybrid (satellite + streets + houses + labels) */
+    googleHybrid.addTo(map);
 
     /* Layer switcher */
     L.control.layers({
-      '🛰️ Satellite + Roads': hybridLayer,
-      '🗺️ Street Map': streets
-    }, null, { collapsed: false, position: 'topright' }).addTo(map);
+      '\uD83D\uDEF0\uFE0F Satellite + Streets': googleHybrid,
+      '\uD83D\uDEF0\uFE0F Satellite Only': googleSat,
+      '\uD83D\uDDFA\uFE0F Google Streets': googleStreets,
+      '\uD83D\uDDFA\uFE0F OpenStreetMap': osm
+    }, null, { collapsed: true, position: 'topright' }).addTo(map);
 
     /* Fix Leaflet tile rendering glitch */
     setTimeout(function(){ map.invalidateSize(); }, 300);
