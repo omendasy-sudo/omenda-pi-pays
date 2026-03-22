@@ -20,6 +20,27 @@
     .btn-reject:hover { background: #b91c1c; }
     .btn-view { background: #3b82f6; color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-left: 8px; }
     .btn-view:hover { background: #1d4ed8; }
+    .btn-suggest { background: #f59e0b; color: #fff; border: none; padding: 6px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-left: 8px; }
+    .btn-suggest:hover { background: #d97706; }
+    .suggestion { color: #f59e0b; font-weight: 700; }
+    /* Modal overlay */
+    .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center; }
+    .modal-overlay.active { display:flex; }
+    .modal-box { background:#fff; border-radius:16px; max-width:520px; width:90%; padding:28px; box-shadow:0 8px 40px rgba(0,0,0,0.2); }
+    .modal-box h3 { margin:0 0 16px; font-size:1.2rem; }
+    .modal-box textarea { width:100%; min-height:100px; border:1px solid #ddd; border-radius:8px; padding:10px; font-size:.95rem; resize:vertical; }
+    .modal-box .modal-actions { display:flex; gap:10px; margin-top:16px; justify-content:flex-end; }
+    .modal-box .modal-actions button { padding:8px 20px; border-radius:8px; font-weight:600; border:none; cursor:pointer; }
+    /* Detail modal */
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+    .detail-grid img { width:100%; border-radius:8px; max-height:150px; object-fit:cover; }
+    .detail-label { font-weight:600; color:#555; font-size:.85rem; }
+    .detail-val { margin-bottom:10px; }
+    .status-badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:.8rem; font-weight:700; }
+    .status-badge.pending { background:#fef3c7; color:#92400e; }
+    .status-badge.approved { background:#d1fae5; color:#065f46; }
+    .status-badge.rejected { background:#fecaca; color:#991b1b; }
+    .status-badge.suggestion { background:#fef3c7; color:#92400e; }
     .search-bar { margin-bottom: 18px; }
     .pagination { margin-top: 18px; text-align: center; }
     .pagination button { margin: 0 4px; padding: 6px 12px; border-radius: 6px; border: 1px solid #ddd; background: #f4f4f5; cursor: pointer; }
@@ -72,6 +93,8 @@
         <option value="">All</option>
         <option value="0">Pending</option>
         <option value="1">Approved</option>
+        <option value="-1">Rejected</option>
+        <option value="2">Needs Changes</option>
       </select>
       <button onclick="bulkApprove()" style="margin-left:8px;">Bulk Approve</button>
       <button onclick="bulkReject()">Bulk Reject</button>
@@ -86,6 +109,7 @@
           <th>Price (Pi)</th>
           <th>Image</th>
           <th>Status</th>
+          <th>Admin Note</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -166,8 +190,15 @@
     let selectedIds = new Set();
 
     async function fetchProducts() {
-      const res = await fetch('backend/list_products.php');
-      return res.json();
+      const res = await fetch('backend/list_products.php?approved=0');
+      const data = await res.json();
+      return data.products || data;
+    }
+    function statusLabel(approved) {
+      if (approved == 1) return '<span class="status-badge approved">Approved</span>';
+      if (approved == -1) return '<span class="status-badge rejected">Rejected</span>';
+      if (approved == 2) return '<span class="status-badge suggestion">Needs Changes</span>';
+      return '<span class="status-badge pending">Pending</span>';
     }
     function renderProducts(products) {
       const tbody = document.querySelector('#products-table tbody');
@@ -181,13 +212,14 @@
           <td>${p.category}</td>
           <td>${p.price}</td>
           <td>${p.image1 ? `<img src="${p.image1}" alt="Product">` : ''}</td>
-          <td class="${p.approved == 1 ? 'approved' : p.approved == -1 ? 'rejected' : ''}">${p.approved == 1 ? 'Approved' : p.approved == -1 ? 'Rejected' : 'Pending'}</td>
+          <td>${statusLabel(p.approved)}</td>
+          <td style="max-width:140px;font-size:.85rem;color:#666">${p.admin_note || '—'}</td>
           <td>
             <button class="btn-view" onclick="viewProduct(${p.id})">View</button>
             ${p.approved == 1 ? '' : `<button class=\"btn-approve\" onclick=\"approveProduct(${p.id}, this)\">Approve</button>`}
-            ${p.approved == 1 ? '' : `<button class=\"btn-reject\" onclick=\"rejectProduct(${p.id}, this)\">Reject</button>`}
-            <button class="btn-reject" onclick="deleteProduct(${p.id}, this)">Delete</button>
-            <button class="btn-view" onclick="openChatBox(${p.id})">Chat</button>
+            ${p.approved == 1 ? '' : `<button class=\"btn-reject\" onclick=\"openRejectModal(${p.id})\">Reject</button>`}
+            ${p.approved == 1 ? '' : `<button class=\"btn-suggest\" onclick=\"openSuggestModal(${p.id})\">Suggest</button>`}
+            <button class="btn-reject" onclick="deleteProduct(${p.id}, this)" style="margin-top:4px">Delete</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -219,44 +251,96 @@
         btn.textContent = 'Approve';
       }
     }
-    async function rejectProduct(id, btn) {
-      btn.disabled = true;
-      btn.textContent = 'Rejecting...';
-      // For demo, just mark as rejected (extend with backend if needed)
-      btn.parentElement.parentElement.querySelector('td:nth-child(7)').textContent = 'Rejected';
-      btn.parentElement.parentElement.querySelector('td:nth-child(7)').className = 'rejected';
-      btn.remove();
-    }
-    async function deleteProduct(id, btn) {
-      if (!confirm('Delete this product?')) return;
-      btn.disabled = true;
-      btn.textContent = 'Deleting...';
-      const res = await fetch('backend/delete_product.php', {
+    async function rejectProduct(id, reason) {
+      const res = await fetch('backend/reject_product.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'id=' + encodeURIComponent(id)
+        body: 'id=' + encodeURIComponent(id) + '&reason=' + encodeURIComponent(reason)
       });
       const data = await res.json();
       if (data.success) {
-        btn.parentElement.parentElement.remove();
+        addAuditLog('Product #' + id + ' rejected: ' + reason);
+        reloadProducts();
       } else {
         alert('Failed: ' + (data.error || 'Unknown error'));
-        btn.disabled = false;
-        btn.textContent = 'Delete';
       }
     }
+    async function suggestProduct(id, note) {
+      const res = await fetch('backend/suggest_product.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id) + '&note=' + encodeURIComponent(note)
+      });
+      const data = await res.json();
+      if (data.success) {
+        addAuditLog('Suggestion sent for product #' + id);
+        reloadProducts();
+      } else {
+        alert('Failed: ' + (data.error || 'Unknown error'));
+      }
+    }
+    function reloadProducts() {
+      fetchProducts().then(products => { allProducts = products; renderPage(); });
+    }
+    /* ── Reject Modal ── */
+    var rejectTargetId = null;
+    function openRejectModal(id) {
+      rejectTargetId = id;
+      document.getElementById('reject-reason').value = '';
+      document.getElementById('reject-modal').classList.add('active');
+    }
+    function closeRejectModal() {
+      document.getElementById('reject-modal').classList.remove('active');
+      rejectTargetId = null;
+    }
+    function submitReject() {
+      var reason = document.getElementById('reject-reason').value.trim();
+      if (!reason) { alert('Please enter a reason for rejection.'); return; }
+      closeRejectModal();
+      rejectProduct(rejectTargetId, reason);
+    }
+    /* ── Suggest Modal ── */
+    var suggestTargetId = null;
+    function openSuggestModal(id) {
+      suggestTargetId = id;
+      document.getElementById('suggest-note').value = '';
+      document.getElementById('suggest-modal').classList.add('active');
+    }
+    function closeSuggestModal() {
+      document.getElementById('suggest-modal').classList.remove('active');
+      suggestTargetId = null;
+    }
+    function submitSuggest() {
+      var note = document.getElementById('suggest-note').value.trim();
+      if (!note) { alert('Please enter a suggestion for the seller.'); return; }
+      closeSuggestModal();
+      suggestProduct(suggestTargetId, note);
+    }
+    /* ── Detail Modal ── */
     function viewProduct(id) {
       const p = allProducts.find(x => x.id == id);
       if (!p) return;
-      alert(`Product Details:\nName: ${p.name}\nCategory: ${p.category}\nPrice: ${p.price}\nStatus: ${p.approved == 1 ? 'Approved' : p.approved == -1 ? 'Rejected' : 'Pending'}`);
+      var imgs = [p.image1, p.image2, p.image3, p.image4, p.image5, p.image6].filter(Boolean);
+      var imgsHtml = imgs.length ? imgs.map(i => '<img src="'+i+'" alt="Product">').join('') : '<span style="color:#999">No images</span>';
+      var statusText = p.approved == 1 ? 'Approved' : p.approved == -1 ? 'Rejected' : p.approved == 2 ? 'Needs Changes' : 'Pending';
+      var statusClass = p.approved == 1 ? 'approved' : p.approved == -1 ? 'rejected' : p.approved == 2 ? 'suggestion' : 'pending';
+      document.getElementById('detail-content').innerHTML = `
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">${imgsHtml}</div>
+        <div class="detail-label">Product Name</div><div class="detail-val">${p.name}</div>
+        <div class="detail-label">Category</div><div class="detail-val">${p.category}</div>
+        <div class="detail-label">Price</div><div class="detail-val">${p.price} Pi</div>
+        <div class="detail-label">Condition</div><div class="detail-val">${p.condition || 'N/A'}</div>
+        <div class="detail-label">Description</div><div class="detail-val">${p.description || 'N/A'}</div>
+        <div class="detail-label">Seller</div><div class="detail-val">${p.seller_name || 'N/A'} (${p.seller_email || ''})</div>
+        <div class="detail-label">Status</div><div class="detail-val"><span class="status-badge ${statusClass}">${statusText}</span></div>
+        <div class="detail-label">Admin Note</div><div class="detail-val">${p.admin_note || 'None'}</div>
+        <div class="detail-label">Submitted</div><div class="detail-val">${p.created_at || ''}</div>
+      `;
+      document.getElementById('detail-modal').classList.add('active');
     }
-    function openChatBox(id) {
-      document.getElementById('chat-box').style.display = 'flex';
-      document.getElementById('chat-messages').innerHTML = `<div style='color:#888'>Chat with seller for product #${id} (demo only)</div>`;
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.remove('active');
     }
-    document.getElementById('chat-close').onclick = function() {
-      document.getElementById('chat-box').style.display = 'none';
-    };
     function sendChat() {
       const input = document.getElementById('chat-input');
       const msg = input.value.trim();
@@ -365,7 +449,7 @@
       // Placeholder: integrate backend email
       addAuditLog('Email sent to ' + to + ': ' + subject);
     }
-    // Patch approve/reject/delete to log and notify
+    // Patch approve/delete to log and notify + reload
     async function approveProduct(id, btn) {
       btn.disabled = true;
       btn.textContent = 'Approving...';
@@ -376,25 +460,13 @@
       });
       const data = await res.json();
       if (data.success) {
-        btn.parentElement.parentElement.querySelector('td:nth-child(7)').textContent = 'Approved';
-        btn.parentElement.parentElement.querySelector('td:nth-child(7)').className = 'approved';
-        btn.remove();
         addAuditLog('Product #' + id + ' approved');
-        sendEmailNotification('seller@example.com', 'Product Approved', 'Your product #' + id + ' was approved.');
+        reloadProducts();
       } else {
         alert('Failed: ' + (data.error || 'Unknown error'));
         btn.disabled = false;
         btn.textContent = 'Approve';
       }
-    }
-    async function rejectProduct(id, btn) {
-      btn.disabled = true;
-      btn.textContent = 'Rejecting...';
-      btn.parentElement.parentElement.querySelector('td:nth-child(7)').textContent = 'Rejected';
-      btn.parentElement.parentElement.querySelector('td:nth-child(7)').className = 'rejected';
-      btn.remove();
-      addAuditLog('Product #' + id + ' rejected');
-      sendEmailNotification('seller@example.com', 'Product Rejected', 'Your product #' + id + ' was rejected.');
     }
     async function deleteProduct(id, btn) {
       if (!confirm('Delete this product?')) return;
@@ -409,12 +481,52 @@
       if (data.success) {
         btn.parentElement.parentElement.remove();
         addAuditLog('Product #' + id + ' deleted');
-        sendEmailNotification('seller@example.com', 'Product Deleted', 'Your product #' + id + ' was deleted.');
       } else {
         alert('Failed: ' + (data.error || 'Unknown error'));
         btn.disabled = false;
         btn.textContent = 'Delete';
       }
+    }
+    // Initial load — fetch ALL products (approved=0 means show all)
+    fetchProducts().then(products => { allProducts = products; renderPage(); renderSellerChart(products); });
+  </script>
+
+  <!-- REJECT MODAL -->
+  <div class="modal-overlay" id="reject-modal">
+    <div class="modal-box">
+      <h3>❌ Reject Product</h3>
+      <p style="color:#666;font-size:.9rem">Enter a reason for rejection. The seller will see this.</p>
+      <textarea id="reject-reason" placeholder="e.g. Images are unclear, price seems too high, wrong category..."></textarea>
+      <div class="modal-actions">
+        <button onclick="closeRejectModal()" style="background:#e5e7eb;color:#333">Cancel</button>
+        <button onclick="submitReject()" style="background:#ef4444;color:#fff">Reject Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGGEST MODAL -->
+  <div class="modal-overlay" id="suggest-modal">
+    <div class="modal-box">
+      <h3>💡 Send Suggestion to Seller</h3>
+      <p style="color:#666;font-size:.9rem">Write a suggestion for the seller. The product will be marked as "Needs Changes" until they resubmit.</p>
+      <textarea id="suggest-note" placeholder="e.g. Please add better photos, lower the price to match market, add a more detailed description..."></textarea>
+      <div class="modal-actions">
+        <button onclick="closeSuggestModal()" style="background:#e5e7eb;color:#333">Cancel</button>
+        <button onclick="submitSuggest()" style="background:#f59e0b;color:#fff">Send Suggestion</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-box" style="max-width:620px">
+      <h3>📦 Product Details</h3>
+      <div id="detail-content"></div>
+      <div class="modal-actions">
+        <button onclick="closeDetailModal()" style="background:#e5e7eb;color:#333">Close</button>
+      </div>
+    </div>
+  </div>
     }
     // Initial load
     fetchProducts().then(products => { allProducts = products; renderPage(); renderSellerChart(products); });
