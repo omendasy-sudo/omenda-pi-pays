@@ -1,433 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Product | Omenda Pi Pays Global Marketplace</title>
-    <meta name="description" content="List your product for sale on Omenda Pi Pays Global. Sell physical or digital goods and get paid in Pi cryptocurrency.">
-    <meta name="robots" content="index, follow">
-        <meta name="referrer" content="strict-origin-when-cross-origin">
-    <link rel="canonical" href="https://omendapipaysglobel.online/Submit.html">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://omendapipaysglobel.online/Submit.html">
-    <meta property="og:title" content="Post a Product | Omenda Pi Pays Global">
-    <meta property="og:description" content="List your product for sale and get paid in Pi cryptocurrency.">
-    <meta property="og:site_name" content="Omenda Pi Pays Global">
-    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script src="lang.js"></script>
-    <script src="theme.js"></script>
-    <script src="gcv.js"></script>
-    <style>
-        :root {
-            --pi-gold: #f5a623;
-            --pi-gold-light: rgba(245,166,35,0.12);
-            --pi-purple: #7c3aed;
-            --pi-purple-light: rgba(124,58,237,0.10);
-            --bg-primary: #09090b;
-            --bg-secondary: #111114;
-            --bg-card: rgba(255,255,255,0.04);
-            --border: rgba(255,255,255,0.08);
-            --border-hover: rgba(255,255,255,0.16);
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --radius: 16px;
-            --radius-sm: 10px;
-        }
-        html.light {
-            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
-            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
-            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
-            --danger: #dc2626;
-            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
-        }
-        html.light body { background: #fff !important; color: #18181b; }
-        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
-        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
-        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post a Product | Omenda Pi Pays</title>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script src="lang.js"></script>
+  <script src="theme.js"></script>
+  <style>
+    :root {
+      --pi-gold: #f5a623;
+      --pi-gold-light: rgba(245,166,35,0.12);
+      --pi-purple: #7c3aed;
+      --pi-purple-light: rgba(124,58,237,0.10);
+      --bg-primary: #09090b;
+      --bg-secondary: #111114;
+      --bg-card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.16);
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+    html.light {
+      --bg-primary:#fff;--bg-secondary:#f4f4f5;--bg-card:rgba(0,0,0,0.02);
+      --border:rgba(0,0,0,0.06);--border-hover:rgba(0,0,0,0.12);
+      --text-primary:#18181b;--text-secondary:#52525b;--text-muted:#a1a1aa;
+      --danger:#dc2626;--pi-gold-light:rgba(245,166,35,0.10);--pi-purple-light:rgba(124,58,237,0.08);
+    }
+    html.light body{background:#fff!important;color:#18181b;}
+    html.light nav{background:rgba(255,255,255,0.88)!important;}
+    html.light .bottom-nav{background:rgba(255,255,255,0.92)!important;border-top-color:rgba(0,0,0,0.06);}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary); color: var(--text-primary);
-            min-height: 100vh; -webkit-font-smoothing: antialiased;
-        }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+      background:var(--bg-primary);color:var(--text-primary);
+      min-height:100vh;-webkit-font-smoothing:antialiased;
+    }
 
-        /* Nav */
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 max(5%,24px); height: 72px;
-            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid var(--border);
-        }
-        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
-        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
-        .logo span { color: var(--pi-gold); }
-        .nav-center { display: flex; gap: 8px; }
-        .nav-center a {
-            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
-            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
-        }
-        .nav-center a:hover, .nav-center a.active { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+    /* ═══ Top Nav ═══ */
+    nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 max(4%,16px);height:56px;
+      background:rgba(9,9,11,0.92);backdrop-filter:blur(20px) saturate(1.2);
+      position:sticky;top:0;z-index:1000;
+      border-bottom:1px solid var(--border);
+    }
+    .nav-left{display:flex;align-items:center;gap:10px;}
+    .nav-left .back{color:var(--text-primary);text-decoration:none;font-size:20px;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;transition:background .2s;}
+    .nav-left .back:hover{background:rgba(255,255,255,0.06);}
+    .nav-logo{width:36px;height:36px;border-radius:8px;object-fit:contain;}
+    .nav-right{display:flex;align-items:center;gap:8px;}
+    .nav-username{font-size:.8rem;color:var(--text-muted);font-weight:500;}
+    .nav-badge{padding:4px 10px;border-radius:100px;font-size:.7rem;font-weight:600;border:1px solid var(--border);}
+    .nav-badge.verified{background:rgba(34,197,94,0.12);color:#4ade80;border-color:rgba(34,197,94,0.2);}
+    .nav-badge.pending{background:rgba(234,179,8,0.12);color:#facc15;border-color:rgba(234,179,8,0.2);}
+    .nav-badge.none{background:rgba(239,68,68,0.12);color:#f87171;border-color:rgba(239,68,68,0.2);}
 
-        /* Page Header */
-        .page-header {
-            text-align: center; padding: 56px max(5%,24px) 40px;
-            border-bottom: 1px solid var(--border);
-        }
-        .page-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
-        .page-header p { color: var(--text-secondary); font-size: 1rem; max-width: 480px; margin: 0 auto; }
+    /* ═══ Page Hero ═══ */
+    .hero{
+      text-align:center;padding:32px 20px 24px;
+      background:linear-gradient(180deg,rgba(124,58,237,0.06) 0%,transparent 100%);
+    }
+    .hero h1{font-size:1.6rem;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;}
+    .hero p{font-size:.88rem;color:var(--text-muted);line-height:1.5;max-width:400px;margin:0 auto;}
 
-        /* Form */
-        .form-container {
-            max-width: 580px; margin: 0 auto; padding: 40px max(5%,24px) 80px;
-        }
-        .form-section {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 28px; margin-bottom: 24px;
-        }
-        .form-section-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
-        .form-section-desc { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 24px; }
+    /* ═══ Container ═══ */
+    .container{max-width:540px;margin:0 auto;padding:0 16px 120px;}
 
-        .field { margin-bottom: 20px; }
-        .field label {
-            display: block; font-size: 0.8125rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 6px;
-        }
-        .field label .required { color: var(--danger); }
-        .field input, .field select, .field textarea {
-            width: 100%; padding: 12px 16px;
-            background: var(--bg-primary); border: 1px solid var(--border);
-            border-radius: var(--radius-sm); color: var(--text-primary);
-            font-size: 0.9375rem; outline: none; transition: border-color 0.2s;
-            font-family: inherit; resize: vertical;
-        }
-        .field input::placeholder, .field textarea::placeholder { color: var(--text-muted); }
-        .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--pi-purple); }
+    /* ═══ Section Card ═══ */
+    .section{
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:var(--radius);padding:24px 20px;margin-bottom:20px;
+    }
+    .section-title{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);margin-bottom:6px;}
+    .section-desc{font-size:.8rem;color:var(--text-muted);margin-bottom:20px;line-height:1.4;}
 
-        /* Pi Price Field */
-        .pi-input-wrapper { position: relative; }
-        .pi-input-wrapper .pi-symbol {
-            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-            color: var(--pi-gold); font-weight: 800; font-size: 1.1rem;
-        }
-        .pi-input-wrapper input { padding-left: 40px; border-color: rgba(245,166,35,0.3); }
-        .pi-input-wrapper input:focus { border-color: var(--pi-gold); }
+    /* ═══ Photo Grid — 6 slots ═══ */
+    .photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .photo-main{grid-column:1/-1;}
+    .photo-slot{
+      position:relative;border:2px dashed var(--border-hover);
+      border-radius:var(--radius-sm);display:flex;flex-direction:column;
+      align-items:center;justify-content:center;cursor:pointer;
+      overflow:hidden;transition:all .2s;background:var(--bg-secondary);
+    }
+    .photo-main .photo-slot{aspect-ratio:16/9;}
+    .photo-slot:not(.photo-main .photo-slot){aspect-ratio:4/3;}
+    .photo-slot:hover{border-color:var(--pi-gold);}
+    .photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;}
+    .photo-slot .ph-icon{font-size:30px;color:var(--text-muted);margin-bottom:4px;transition:transform .2s;}
+    .photo-slot:hover .ph-icon{transform:scale(1.1);}
+    .photo-slot .ph-label{font-size:.72rem;font-weight:600;color:var(--text-muted);}
+    .photo-slot .ph-tag{
+      position:absolute;top:8px;right:8px;font-size:.6rem;font-weight:700;
+      padding:3px 8px;border-radius:6px;background:var(--pi-gold-light);color:var(--pi-gold);z-index:2;
+    }
+    .photo-slot input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:3;}
+    .photo-slot .ph-remove{
+      position:absolute;top:6px;left:6px;z-index:4;width:26px;height:26px;
+      border-radius:50%;background:rgba(0,0,0,0.7);color:#fff;border:none;
+      font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;
+      backdrop-filter:blur(4px);transition:background .2s;
+    }
+    .photo-slot .ph-remove:hover{background:var(--danger);}
+    .photo-slot.has-img .ph-remove{display:flex;}
+    .photo-slot.has-img .ph-icon,.photo-slot.has-img .ph-label,.photo-slot.has-img .ph-tag{display:none;}
 
-        /* Image Grid */
-        .image-upload-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-        }
-        .img-slot {
-            border: 2px dashed var(--border); border-radius: var(--radius-sm);
-            aspect-ratio: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
-            background: var(--bg-primary);
-        }
-        .img-slot:first-child { grid-column: span 2; aspect-ratio: 16/9; }
-        .img-slot:hover { border-color: var(--pi-purple); background: var(--pi-purple-light); }
-        .img-slot input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-        .img-slot img {
-            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-            display: none;
-        }
-        .img-slot.has-image img { display: block; }
-        .img-slot.has-image .slot-label { display: none; }
-        .slot-icon { font-size: 1.5rem; color: var(--text-muted); margin-bottom: 4px; }
-        .slot-label { font-size: 0.75rem; color: var(--text-muted); text-align: center; }
+    /* ═══ Form Fields ═══ */
+    .field{margin-bottom:18px;}
+    .field label{display:block;font-weight:600;font-size:.8rem;color:var(--text-secondary);margin-bottom:6px;}
+    .field label .req{color:var(--danger);margin-left:2px;}
+    .field input,.field select,.field textarea{
+      width:100%;padding:12px 14px;
+      background:var(--bg-secondary);border:1px solid var(--border);
+      border-radius:var(--radius-sm);color:var(--text-primary);
+      font-size:.93rem;outline:none;transition:border .2s;font-family:inherit;
+    }
+    .field input::placeholder,.field textarea::placeholder{color:var(--text-muted);}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pi-purple);box-shadow:0 0 0 2px var(--pi-purple-light);}
+    .field select option{background:var(--bg-primary);color:var(--text-primary);}
+    .field textarea{min-height:110px;resize:vertical;}
 
-        /* Buttons */
-        .btn-submit {
-            width: 100%; padding: 14px 24px; background: var(--pi-purple); color: #fff;
-            border: none; border-radius: var(--radius-sm); font-weight: 700;
-            font-size: 0.9375rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
-        }
-        .btn-submit:hover { background: #6d28d9; transform: translateY(-1px); }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    /* ═══ Condition Selector ═══ */
+    .condition-row{display:flex;gap:8px;flex-wrap:wrap;}
+    .condition-row label{
+      flex:1;min-width:90px;padding:10px 14px;text-align:center;
+      background:var(--bg-secondary);border:1px solid var(--border);
+      border-radius:var(--radius-sm);cursor:pointer;font-size:.82rem;
+      font-weight:600;color:var(--text-secondary);transition:all .2s;
+    }
+    .condition-row input[type="radio"]{display:none;}
+    .condition-row input[type="radio"]:checked+span{color:var(--pi-gold);}
+    .condition-row label:has(input:checked){border-color:var(--pi-gold);background:var(--pi-gold-light);}
 
-        /* Loading state */
-        .btn-submit.loading { pointer-events: none; opacity: 0.7; }
+    /* ═══ Buttons ═══ */
+    .btn-submit{
+      display:block;width:100%;padding:16px;border:none;
+      border-radius:var(--radius-sm);font-size:1rem;font-weight:800;
+      cursor:pointer;transition:all .25s;text-align:center;
+      background:linear-gradient(135deg,var(--pi-purple),#6d28d9);color:#fff;
+      box-shadow:0 4px 20px rgba(124,58,237,0.25);
+    }
+    .btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(124,58,237,0.35);}
+    .btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}
+    .btn-kyc{
+      display:block;width:100%;padding:14px;border:none;text-align:center;text-decoration:none;
+      border-radius:var(--radius-sm);font-size:.95rem;font-weight:700;
+      background:linear-gradient(135deg,var(--pi-gold),#d4890a);color:#000;cursor:pointer;
+    }
 
-        /* Footer */
-        footer {
-            padding: 32px max(5%,24px); border-top: 1px solid var(--border);
-            text-align: center; font-size: 0.8125rem; color: var(--text-muted);
-        }
+    /* ═══ Alerts ═══ */
+    .alert{padding:14px 18px;border-radius:var(--radius-sm);font-size:.85rem;margin-bottom:18px;font-weight:500;line-height:1.4;}
+    .alert-error{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.18);}
+    .alert-success{background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.18);}
+    .alert-warning{background:rgba(234,179,8,0.1);color:#facc15;border:1px solid rgba(234,179,8,0.18);}
 
-        @media (max-width: 768px) {
-            nav { padding: 0 16px; }
-            .nav-center { display: none; }
-            .form-container { padding: 24px 16px 60px; }
-            .form-section { padding: 20px; }
-            .image-upload-grid { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
+    /* ═══ KYC Block ═══ */
+    .kyc-block{text-align:center;padding:40px 20px;}
+    .kyc-block .kyc-icon{font-size:48px;margin-bottom:16px;}
+    .kyc-block h2{font-size:1.2rem;font-weight:700;margin-bottom:8px;}
+    .kyc-block p{font-size:.85rem;color:var(--text-muted);margin-bottom:24px;line-height:1.5;}
+
+    /* ═══ Bottom Nav ═══ */
+    .bottom-nav{
+      position:fixed;bottom:0;left:0;right:0;height:60px;
+      background:rgba(9,9,11,0.95);backdrop-filter:blur(20px) saturate(1.2);
+      border-top:1px solid var(--border);display:flex;justify-content:space-around;
+      align-items:center;z-index:999;padding:0 8px;
+    }
+    .bottom-nav a{
+      display:flex;flex-direction:column;align-items:center;gap:3px;
+      text-decoration:none;color:var(--text-muted);font-size:.65rem;font-weight:600;
+      padding:6px 12px;border-radius:10px;transition:all .2s;min-width:52px;
+    }
+    .bottom-nav a:hover,.bottom-nav a.active{color:var(--pi-gold);}
+    .bottom-nav a .nav-icon{font-size:20px;line-height:1;}
+    .bottom-nav .sell-btn{
+      margin-top:-18px;width:48px;height:48px;border-radius:50%;
+      background:linear-gradient(135deg,var(--pi-gold),#d4890a);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 4px 16px rgba(245,166,35,0.3);font-size:0;
+    }
+    .bottom-nav .sell-btn .nav-icon{font-size:22px;color:#000;}
+    .bottom-nav .sell-btn span:last-child{display:none;}
+
+    /* ═══ Success Overlay ═══ */
+    .success-overlay{
+      position:fixed;inset:0;background:rgba(9,9,11,0.92);
+      display:none;align-items:center;justify-content:center;
+      z-index:2000;padding:24px;backdrop-filter:blur(8px);
+    }
+    .success-overlay.show{display:flex;}
+    .success-box{
+      background:var(--bg-secondary);border:1px solid var(--border);
+      border-radius:var(--radius);padding:40px 28px;text-align:center;
+      max-width:380px;width:100%;
+    }
+    .success-box .check{font-size:56px;margin-bottom:16px;}
+    .success-box h2{font-size:1.3rem;font-weight:700;margin-bottom:8px;}
+    .success-box p{font-size:.85rem;color:var(--text-muted);line-height:1.5;margin-bottom:24px;}
+    .success-box .btn-back{
+      display:inline-block;padding:12px 32px;background:var(--pi-purple);color:#fff;
+      border:none;border-radius:var(--radius-sm);font-weight:700;font-size:.9rem;
+      cursor:pointer;text-decoration:none;transition:all .2s;
+    }
+    .success-box .btn-back:hover{background:#6d28d9;}
+
+    .hidden{display:none!important;}
+    @media(max-width:768px){
+      .hero h1{font-size:1.35rem;}
+      .section{padding:20px 16px;}
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Nav -->
-    <nav>
-        <a href="index.html" style="text-decoration:none;color:inherit"><div class="logo"><img src="logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div></a>
-        <div class="nav-center">
-            <a href="index.html" data-i18n="nav.home">Home</a>
-            <a href="new.html" data-i18n="nav.explore">Explore</a>
-            <a href="map.html" data-i18n="nav.map">Map</a>
-            <a href="social.html" data-i18n="nav.social">Social</a>
-            <a href="form.html" data-i18n="nav.register">Register</a>
-            <a href="Submit.html" class="active" data-i18n="nav.sell">Sell</a>
-            <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="nav.services">Services</a>
-            <a href="transport.html" data-i18n="nav.transport">Transport</a>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-            <span id="pi-username" style="color:#f5a623;font-weight:600;font-size:0.85rem;display:none"></span>
-            <a href="https://omendapipaysglobel.online/services" target="_blank" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.82rem;text-decoration:none">All Services</a>
-            <button id="pi-connect-btn" onclick="piConnect()" style="background:#7c3aed;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.85rem" data-i18n="nav.connectPi">Connect Pi</button>
-        </div>
-    </nav>
-
-    <!-- Page Header -->
-    <div class="page-header">
-        <h1 data-i18n="sell.postTitle">Post a Product</h1>
-        <p data-i18n="sell.postSubtitle">List your product on the marketplace. Upload photos, set your Pi price, and start selling.</p>
+  <!-- ═══ Top Nav ═══ -->
+  <nav>
+    <div class="nav-left">
+      <a href="./" class="back">←</a>
+      <img src="https://omendapipaysglobel.online/globe.svg" alt="Logo" class="nav-logo">
     </div>
-
-    <!-- Form -->
-    <div class="form-container">
-        <form id="productForm" action="https://formspree.io/f/xpwzovkw" method="POST" enctype="multipart/form-data">
-
-            <!-- Images Section -->
-            <div class="form-section">
-                <h3 class="form-section-title" data-i18n="sell.productPhotos">Product Photos</h3>
-                <p class="form-section-desc">Upload up to 5 photos. The first image will be the main listing photo.</p>
-
-                <div class="image-upload-grid">
-                    <div class="img-slot" onclick="this.querySelector('input').click()">
-                        <img id="prev1" alt="">
-                        <span class="slot-icon">&#128247;</span>
-                        <span class="slot-label">Main Photo<br>(Required)</span>
-                        <input type="file" name="Image_1" id="img1" accept="image/*" required onchange="previewImage(this, 'prev1')">
-                    </div>
-                    <div class="img-slot" onclick="this.querySelector('input').click()">
-                        <img id="prev2" alt="">
-                        <span class="slot-icon">+</span>
-                        <span class="slot-label">Photo 2</span>
-                        <input type="file" name="Image_2" id="img2" accept="image/*" onchange="previewImage(this, 'prev2')">
-                    </div>
-                    <div class="img-slot" onclick="this.querySelector('input').click()">
-                        <img id="prev3" alt="">
-                        <span class="slot-icon">+</span>
-                        <span class="slot-label">Photo 3</span>
-                        <input type="file" name="Image_3" id="img3" accept="image/*" onchange="previewImage(this, 'prev3')">
-                    </div>
-                    <div class="img-slot" onclick="this.querySelector('input').click()">
-                        <img id="prev4" alt="">
-                        <span class="slot-icon">+</span>
-                        <span class="slot-label">Photo 4</span>
-                        <input type="file" name="Image_4" id="img4" accept="image/*" onchange="previewImage(this, 'prev4')">
-                    </div>
-                    <div class="img-slot" onclick="this.querySelector('input').click()">
-                        <img id="prev5" alt="">
-                        <span class="slot-icon">+</span>
-                        <span class="slot-label">Photo 5</span>
-                        <input type="file" name="Image_5" id="img5" accept="image/*" onchange="previewImage(this, 'prev5')">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Details -->
-            <div class="form-section">
-                <h3 class="form-section-title" data-i18n="sell.productDetails">Product Details</h3>
-                <p class="form-section-desc">Provide accurate details to help buyers find your product.</p>
-
-                <div class="field">
-                    <label>Product Name <span class="required">*</span></label>
-                    <input type="text" name="Product_Name" placeholder="e.g. Samsung Galaxy S24 Ultra" required>
-                </div>
-
-                <div class="field">
-                    <label>Category <span class="required">*</span></label>
-                    <select name="Category" required>
-                        <option value="" disabled selected>Select category</option>
-                        <option value="Electronics">Electronics & Gadgets</option>
-                        <option value="Fashion">Fashion & Accessories</option>
-                        <option value="Digital">Digital Products</option>
-                        <option value="Home">Home & Living</option>
-                        <option value="Sports">Sports & Fitness</option>
-                        <option value="Books">Books & Education</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label>Price in Pi <span class="required">*</span></label>
-                    <div class="pi-input-wrapper">
-                        <span class="pi-symbol">&#960;</span>
-                        <input type="number" step="any" min="0.0000001" name="Price_in_Pi" placeholder="0.00" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label>Description <span class="required">*</span></label>
-                    <textarea name="Description" rows="4" placeholder="Describe your product — condition, features, what's included..." required></textarea>
-                </div>
-            </div>
-
-            <!-- Submit -->
-            <button type="submit" class="btn-submit" id="postBtn" data-i18n="sell.publishProduct">Publish Product</button>
-        </form>
+    <div class="nav-right">
+      <span class="nav-username" id="seller-display"></span>
+      <span class="nav-badge none" id="kyc-badge-nav">No KYC</span>
     </div>
+  </nav>
 
-    <!-- Footer -->
-    <footer>
-        &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
-        <br><span style="display:inline-block;margin-top:8px;color:#71717a">Omenda Pi Pays Global, Block A, Nyerere Road, Dodoma, Dodoma 41101, Tanzania | <a href="mailto:support@omendapipaysglobel.online" style="color:#71717a;text-decoration:none">support@omendapipaysglobel.online</a></span>
-        &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:#71717a;text-decoration:none" data-i18n="footer.privacyPolicy">Privacy Policy</a>
-        &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:#71717a;text-decoration:none" data-i18n="footer.termsOfService">Terms of Service</a>
-    </footer>
+  <!-- ═══ Hero ═══ -->
+  <div class="hero">
+    <h1 data-i18n="sell.postTitle">Post a Product</h1>
+    <p data-i18n="sell.postSubtitle">List your product on the marketplace. Upload photos, set your Pi price, and start selling.</p>
+  </div>
 
-    <script>
-        function previewImage(input, previewId) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById(previewId);
-                    img.src = e.target.result;
-                    input.closest('.img-slot').classList.add('has-image');
-                };
-                reader.readAsDataURL(input.files[0]);
+  <!-- ═══ KYC Required Screen ═══ -->
+  <div class="container" id="kyc-required" class="hidden">
+    <div class="section kyc-block">
+      <div class="kyc-icon">🔒</div>
+      <h2>KYC Verification Required</h2>
+      <p>You must complete and be approved for KYC verification before you can post products on the marketplace.</p>
+      <div id="kyc-status-msg"></div>
+      <a href="form.html?redirect=Submit.html" class="btn-kyc" id="kyc-action-btn">Complete KYC Verification</a>
+    </div>
+  </div>
+
+  <!-- ═══ Product Form ═══ -->
+  <div class="container hidden" id="form-container">
+    <form id="product-form" enctype="multipart/form-data">
+
+      <div id="form-alert" class="hidden"></div>
+      <input type="hidden" id="h_seller_email" name="seller_email">
+      <input type="hidden" id="h_seller_name" name="seller_name">
+
+      <!-- Photos -->
+      <div class="section">
+        <div class="section-title" data-i18n="sell.productPhotos">Product Photos</div>
+        <div class="section-desc">Upload up to 6 photos. The first image will be the main listing photo.</div>
+        <div class="photo-grid">
+          <div class="photo-main">
+            <div class="photo-slot" id="slot-1">
+              <span class="ph-icon">📷</span>
+              <span class="ph-label">Main Photo</span>
+              <span class="ph-tag">Required</span>
+              <button type="button" class="ph-remove" onclick="removeImg(1)">✕</button>
+              <input type="file" name="Image_1" accept="image/*" onchange="previewImg(this,1)">
+            </div>
+          </div>
+          <div><div class="photo-slot" id="slot-2">
+            <span class="ph-icon">+</span><span class="ph-label">Photo 2</span>
+            <button type="button" class="ph-remove" onclick="removeImg(2)">✕</button>
+            <input type="file" name="Image_2" accept="image/*" onchange="previewImg(this,2)">
+          </div></div>
+          <div><div class="photo-slot" id="slot-3">
+            <span class="ph-icon">+</span><span class="ph-label">Photo 3</span>
+            <button type="button" class="ph-remove" onclick="removeImg(3)">✕</button>
+            <input type="file" name="Image_3" accept="image/*" onchange="previewImg(this,3)">
+          </div></div>
+          <div><div class="photo-slot" id="slot-4">
+            <span class="ph-icon">+</span><span class="ph-label">Photo 4</span>
+            <button type="button" class="ph-remove" onclick="removeImg(4)">✕</button>
+            <input type="file" name="Image_4" accept="image/*" onchange="previewImg(this,4)">
+          </div></div>
+          <div><div class="photo-slot" id="slot-5">
+            <span class="ph-icon">+</span><span class="ph-label">Photo 5</span>
+            <button type="button" class="ph-remove" onclick="removeImg(5)">✕</button>
+            <input type="file" name="Image_5" accept="image/*" onchange="previewImg(this,5)">
+          </div></div>
+          <div><div class="photo-slot" id="slot-6">
+            <span class="ph-icon">+</span><span class="ph-label">Photo 6</span>
+            <button type="button" class="ph-remove" onclick="removeImg(6)">✕</button>
+            <input type="file" name="Image_6" accept="image/*" onchange="previewImg(this,6)">
+          </div></div>
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="section">
+        <div class="section-title" data-i18n="sell.productDetails">Product Details</div>
+        <div class="field">
+          <label>Product Name <span class="req">*</span></label>
+          <input type="text" id="Product_Name" name="Product_Name" placeholder="e.g. MacBook Air M3" required>
+        </div>
+        <div class="field">
+          <label>Category <span class="req">*</span></label>
+          <select id="Category" name="Category" required>
+            <option value="">Select a category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Fashion">Fashion & Clothing</option>
+            <option value="Home">Home & Garden</option>
+            <option value="Cars">Cars & Vehicles</option>
+            <option value="Food">Food & Beverages</option>
+            <option value="Services">Services</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="Digital">Digital Products</option>
+            <option value="Health">Health & Beauty</option>
+            <option value="Sports">Sports & Outdoors</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Condition</label>
+          <div class="condition-row">
+            <label><input type="radio" name="Condition" value="New" checked><span>🆕 New</span></label>
+            <label><input type="radio" name="Condition" value="Like New"><span>✨ Like New</span></label>
+            <label><input type="radio" name="Condition" value="Used"><span>♻️ Used</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing -->
+      <div class="section">
+        <div class="section-title">Pricing</div>
+        <div class="field">
+          <label>Price in Pi (π) <span class="req">*</span></label>
+          <input type="number" step="any" min="0" id="Price_in_Pi" name="Price_in_Pi" placeholder="0.00" required>
+        </div>
+        <div class="field">
+          <label>Description <span class="req">*</span></label>
+          <textarea id="Description" name="Description" placeholder="Describe your product — condition, features, location, delivery options..." required></textarea>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-submit" id="submit-btn" data-i18n="sell.publishProduct">Publish Product</button>
+    </form>
+  </div>
+
+  <!-- ═══ Success Overlay ═══ -->
+  <div class="success-overlay" id="success-overlay">
+    <div class="success-box">
+      <div class="check">✅</div>
+      <h2 data-i18n="success.title">Submitted Successfully!</h2>
+      <p data-i18n="success.subtitle">Your product has been received and is now under review. It will appear on the marketplace once approved.</p>
+      <a href="./" class="btn-back">Back to Home</a>
+      <br><br>
+      <button type="button" class="btn-back" style="background:var(--pi-gold);color:#000;" onclick="postAnother()">Post Another</button>
+    </div>
+  </div>
+
+  <!-- ═══ Bottom Nav ═══ -->
+  <div class="bottom-nav">
+    <a href="./"><span class="nav-icon">🏠</span><span>Home</span></a>
+    <a href="marketplace-preview.html"><span class="nav-icon">❤️</span><span>Favorites</span></a>
+    <a href="Submit.html" class="sell-btn active"><span class="nav-icon">＋</span><span>Sell</span></a>
+    <a href="social.html"><span class="nav-icon">💬</span><span>Chat</span></a>
+    <a href="about.html"><span class="nav-icon">👤</span><span>Profile</span></a>
+  </div>
+
+  <script>
+    /* ═══ Image Preview ═══ */
+    function previewImg(input, idx) {
+      var slot = document.getElementById('slot-' + idx);
+      if (!input.files || !input.files[0]) return;
+      // Validate size (max 5MB)
+      if (input.files[0].size > 5 * 1024 * 1024) {
+        alert('Image too large. Max 5MB per photo.');
+        input.value = '';
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = slot.querySelector('img');
+        if (!img) { img = document.createElement('img'); slot.appendChild(img); }
+        img.src = e.target.result;
+        slot.classList.add('has-img');
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+    function removeImg(idx) {
+      var slot = document.getElementById('slot-' + idx);
+      var img = slot.querySelector('img');
+      if (img) img.remove();
+      var fi = slot.querySelector('input[type="file"]');
+      if (fi) fi.value = '';
+      slot.classList.remove('has-img');
+    }
+
+    /* ═══ Escape HTML ═══ */
+    function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+    /* ═══ KYC Gate ═══ */
+    var sellerEmail = '', sellerName = '';
+
+    (function checkKyc() {
+      var kycDone = localStorage.getItem('kyc_completed');
+      var kycEmail = localStorage.getItem('kyc_email') || '';
+      var reqEl = document.getElementById('kyc-required');
+      var formEl = document.getElementById('form-container');
+      var badgeNav = document.getElementById('kyc-badge-nav');
+      var statusMsg = document.getElementById('kyc-status-msg');
+      var actionBtn = document.getElementById('kyc-action-btn');
+      var sellerDisp = document.getElementById('seller-display');
+
+      if (!kycDone && !kycEmail) {
+        reqEl.classList.remove('hidden');
+        formEl.classList.add('hidden');
+        badgeNav.className = 'nav-badge none'; badgeNav.textContent = 'No KYC';
+        return;
+      }
+
+      if (kycEmail) {
+        fetch('backend/kyc_status.php?email=' + encodeURIComponent(kycEmail))
+          .then(function(r) { return r.json(); })
+          .then(function(d) {
+            if (d.kyc_completed && d.approved) {
+              // ✅ Approved — show form
+              reqEl.classList.add('hidden');
+              formEl.classList.remove('hidden');
+              badgeNav.className = 'nav-badge verified'; badgeNav.textContent = '✓ Verified';
+              sellerEmail = kycEmail;
+              sellerName = d.fullname || '';
+              document.getElementById('h_seller_email').value = sellerEmail;
+              document.getElementById('h_seller_name').value = sellerName;
+              sellerDisp.textContent = sellerName;
+            } else if (d.kyc_completed) {
+              // ⏳ Pending
+              reqEl.classList.remove('hidden');
+              formEl.classList.add('hidden');
+              badgeNav.className = 'nav-badge pending'; badgeNav.textContent = '⏳ Pending';
+              statusMsg.innerHTML = '<div class="alert alert-warning" style="text-align:left;margin-bottom:20px;">Your KYC has been submitted and is awaiting admin approval. You\'ll be able to post once approved.</div>';
+              actionBtn.textContent = 'Check Again';
+              actionBtn.href = 'javascript:location.reload()';
+            } else {
+              reqEl.classList.remove('hidden');
+              formEl.classList.add('hidden');
+              badgeNav.className = 'nav-badge none'; badgeNav.textContent = 'No KYC';
             }
-        }
-
-        document.getElementById('productForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('postBtn');
-            const form = e.target;
-            const formData = new FormData(form);
-
-            btn.textContent = "Publishing...";
-            btn.classList.add('loading');
-            btn.disabled = true;
-
-            fetch(form.action, {
-                method: "POST",
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            })
-            .then(async response => {
-                if (response.ok) {
-                    window.location.href = "submit%20success%20full.html";
-                } else {
-                    let errorMsg = 'Submission failed';
-                    try {
-                        const data = await response.json();
-                        errorMsg = data.error || JSON.stringify(data);
-                    } catch (err) {
-                        errorMsg = await response.text();
-                    }
-                    throw new Error(errorMsg);
-                }
-            })
-            .catch(function(err) {
-                alert('Failed to submit: ' + err.message);
-                btn.textContent = "Publish Product";
-                btn.classList.remove('loading');
-                btn.disabled = false;
-            });
-        });
-    </script>
-    <script>
-        function waitForPiSdk(timeout) {
-            return new Promise(function(resolve, reject) {
-                if (window.Pi) return resolve(window.Pi);
-                var elapsed = 0, interval = 120;
-                var t = setInterval(function() {
-                    if (window.Pi) { clearInterval(t); resolve(window.Pi); return; }
-                    elapsed += interval;
-                    if (elapsed >= timeout) { clearInterval(t); reject(new Error('Pi SDK did not load within ' + timeout + 'ms')); }
-                }, interval);
-            });
-        }
-        var _piInitPromise = null;
-        function usePiSandbox() {
-            return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
-        }
-        function ensurePiInitialized() {
-            if (_piInitPromise) return _piInitPromise;
-            _piInitPromise = waitForPiSdk(10000).then(function() {
-                return Pi.init({ version: '2.0', sandbox: usePiSandbox() });
-            }).catch(function(e) { _piInitPromise = null; return Promise.reject(e); });
-            return _piInitPromise;
-        }
-        var isPiBrowser = /PiBrowser/i.test(navigator.userAgent) || typeof window.Pi !== 'undefined';
-        function setConnectedState(username) {
-            document.getElementById('pi-username').textContent = '@' + username;
-            document.getElementById('pi-username').style.display = 'inline';
-            document.getElementById('pi-connect-btn').textContent = 'Connected';
-            document.getElementById('pi-connect-btn').style.background = '#16a34a';
-        }
-        function restoreConnectedState() {
-            var u = sessionStorage.getItem('piUser');
-            if (u) { var user = JSON.parse(u); setConnectedState(user.username); return true; }
-            return false;
-        }
-        function piConnect(silent) {
-            if (!isPiBrowser) {
-                if (!silent) alert('Please open this app in Pi Browser to connect.');
-                return Promise.resolve(null);
+          })
+          .catch(function() {
+            // Offline fallback
+            if (kycDone) {
+              reqEl.classList.add('hidden');
+              formEl.classList.remove('hidden');
+              sellerEmail = kycEmail;
+              document.getElementById('h_seller_email').value = sellerEmail;
+              badgeNav.className = 'nav-badge pending'; badgeNav.textContent = 'Offline';
             }
-            return ensurePiInitialized().then(function() {
-                return Pi.authenticate(['username','payments'], {
-                    onIncompletePaymentFound: function(p) { console.log('Incomplete payment:', p); }
-                });
-            }).then(function(auth) {
-                setConnectedState(auth.user.username);
-                sessionStorage.setItem('piUser', JSON.stringify(auth.user));
-                return auth;
-            }).catch(function(e) { if (!silent) console.error('Pi auth error:', e); });
-        }
-        (function() {
-            if (!restoreConnectedState() && isPiBrowser) piConnect(true);
-        })();
+          });
+      } else if (kycDone) {
+        reqEl.classList.remove('hidden');
+        formEl.classList.add('hidden');
+        badgeNav.className = 'nav-badge pending'; badgeNav.textContent = '⚠️';
+        statusMsg.innerHTML = '<div class="alert alert-warning" style="text-align:left;margin-bottom:20px;">KYC on file but email missing. Please redo verification.</div>';
+        actionBtn.textContent = 'Redo KYC';
+      }
+    })();
 
-        // Pi SDK — Request camera permission for product photo uploads
+    /* ═══ Apply translations ═══ */
+    if (typeof applyTranslations === 'function') applyTranslations();
 
-        function piRequestPermission(perm) {
-            if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
-        }
-        function piShare(title, message) {
-            if (isPiBrowser && Pi.openShareDialog) Pi.openShareDialog(title, message);
-            else if (navigator.share) navigator.share({ title: title, text: message });
-        }
-        function piCopy(text) {
-            if (isPiBrowser && Pi.copyText) Pi.copyText(text);
-            else if (navigator.clipboard) navigator.clipboard.writeText(text);
-            alert('Copied: ' + text);
-        }
-        function piOpenUrl(url) {
-            if (isPiBrowser && Pi.openUrlInSystemBrowser) Pi.openUrlInSystemBrowser(url);
-            else window.open(url, '_blank');
-        }
-        function piChat(id) {
-            if (isPiBrowser && Pi.openConversation) Pi.openConversation(id);
-        }
-        async function piShowAd() {
-            if (!isPiBrowser || !Pi.Ads) return;
-            try { await Pi.Ads.requestAd('interstitial'); var r = await Pi.Ads.isAdReady('interstitial'); if (r) await Pi.Ads.showAd('interstitial'); } catch(e) {}
-        }
+    /* ═══ Form Submit ═══ */
+    document.getElementById('product-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var alertEl = document.getElementById('form-alert');
+      var btn = document.getElementById('submit-btn');
+      alertEl.classList.add('hidden');
 
-        // Auto-request camera permission when file upload slots are clicked
-        document.querySelectorAll('input[type="file"]').forEach(function(el) {
-            el.addEventListener('click', function() { piRequestPermission('camera'); });
+      // Validate at least main photo
+      var mainFile = document.querySelector('#slot-1 input[type="file"]');
+      if (!mainFile.files || !mainFile.files[0]) {
+        alertEl.className = 'alert alert-error';
+        alertEl.textContent = 'Please upload at least the main product photo.';
+        alertEl.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Publishing...';
+
+      var fd = new FormData(this);
+
+      fetch('backend/product_submit.php', { method: 'POST', body: fd })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.success) {
+            document.getElementById('success-overlay').classList.add('show');
+          } else {
+            alertEl.className = 'alert alert-error';
+            alertEl.textContent = data.error || 'Failed to publish product.';
+            alertEl.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (data.kyc_required) {
+              setTimeout(function() { location.href = 'form.html?redirect=Submit.html'; }, 2500);
+            }
+          }
+          btn.disabled = false;
+          btn.textContent = 'Publish Product';
+        })
+        .catch(function() {
+          alertEl.className = 'alert alert-error';
+          alertEl.textContent = 'Network error. Check your connection and try again.';
+          alertEl.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Publish Product';
         });
-    </script>
-    <script src="clear-button.js"></script>
+    });
+
+    /* ═══ Post Another ═══ */
+    function postAnother() {
+      document.getElementById('success-overlay').classList.remove('show');
+      document.getElementById('product-form').reset();
+      document.getElementById('h_seller_email').value = sellerEmail;
+      document.getElementById('h_seller_name').value = sellerName;
+      for (var i = 1; i <= 6; i++) removeImg(i);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>

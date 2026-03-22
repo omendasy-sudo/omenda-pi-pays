@@ -23,7 +23,7 @@ const navItems = [
     ),
   },
   {
-    href: "/Submit.html",
+    href: "#",
     label: "Sell",
     icon: null,
     isCenter: true,
@@ -55,8 +55,8 @@ export function BottomNav() {
   if (pathname?.startsWith("/admin")) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white px-2 pb-[env(safe-area-inset-bottom)] pt-1 shadow-[0_-2px_10px_rgba(0,0,0,0.06)] md:hidden">
-      <div className="mx-auto flex max-w-md items-center justify-around">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white px-2 pb-[env(safe-area-inset-bottom)] pt-1 shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
+      <div className="mx-auto flex max-w-2xl items-center justify-around">
         {navItems.map((item) => {
           const isActive =
             item.href === "/"
@@ -68,6 +68,16 @@ export function BottomNav() {
               <a
                 key={item.label}
                 href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (typeof window !== "undefined") {
+                    if (localStorage.getItem("kyc_completed")) {
+                      window.location.href = "/Submit.html";
+                    } else {
+                      window.location.href = "/form.html?redirect=Submit.html";
+                    }
+                  }
+                }}
                 className="flex flex-col items-center gap-0.5 py-1 text-slate-400"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-orange-500 text-white shadow-lg">

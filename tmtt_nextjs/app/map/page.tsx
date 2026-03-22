@@ -4,49 +4,20 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ProductOverview } from "@/components/ProductOverview";
 
-// Map data: global pioneers, businesses & services
-const mapData = [
+type MapEntry = {
+  id: number; name: string; lat: number; lng: number;
+  type: "user" | "business" | "service"; city: string; desc: string;
+  users: number; txns: number; category: string;
+  live?: boolean; image?: string;
+};
+
+// Seed data: global pioneers, businesses & services (fallback)
+const seedData: MapEntry[] = [
   // Africa
   { id:1, name:"Omenda Pi Pays HQ", lat:-1.2921, lng:36.8219, type:"business" as const, city:"Nairobi, Kenya", desc:"Flagship decentralized marketplace for Pi payments across Africa.", users:1840, txns:9500, category:"marketplace" },
   { id:2, name:"Pi Cafe Nairobi", lat:-1.3000, lng:36.8150, type:"business" as const, city:"Nairobi, Kenya", desc:"Coffee shop & co-working space accepting Pi payments.", users:320, txns:2100, category:"food" },
   { id:3, name:"Lagos Pi Merchants Hub", lat:6.5244, lng:3.3792, type:"business" as const, city:"Lagos, Nigeria", desc:"West Africa's largest Pi merchant network.", users:980, txns:5200, category:"marketplace" },
   { id:4, name:"Cape Town Pioneer Community", lat:-33.9249, lng:18.4241, type:"user" as const, city:"Cape Town, South Africa", desc:"Pioneer meetup group with monthly Pi trading events.", users:450, txns:1800, category:"community" },
-  { id:5, name:"Accra Pi Services", lat:5.6037, lng:-0.1870, type:"service" as const, city:"Accra, Ghana", desc:"Bill payments & utility services via Pi.", users:290, txns:3400, category:"bills" },
-  { id:6, name:"Dar es Salaam Pi Hotels", lat:-6.7924, lng:39.2083, type:"service" as const, city:"Dar es Salaam, Tanzania", desc:"Hotel bookings along the coast — payable in Pi.", users:180, txns:620, category:"hotel" },
-  { id:7, name:"Kampala Pi Market", lat:0.3476, lng:32.5825, type:"business" as const, city:"Kampala, Uganda", desc:"East African agricultural Pi trading marketplace.", users:540, txns:2800, category:"marketplace" },
-  { id:8, name:"Kigali Pi Tech Hub", lat:-1.9403, lng:29.8739, type:"service" as const, city:"Kigali, Rwanda", desc:"Tech services and digital products purchasable with Pi.", users:220, txns:1100, category:"service" },
-  { id:9, name:"Cairo Pi Exchange", lat:30.0444, lng:31.2357, type:"business" as const, city:"Cairo, Egypt", desc:"North Africa's first Pi-enabled exchange platform.", users:670, txns:4300, category:"marketplace" },
-  { id:10, name:"Johannesburg Pi Trade", lat:-26.2041, lng:28.0473, type:"business" as const, city:"Johannesburg, South Africa", desc:"South African Pi trading platform for local goods.", users:520, txns:2400, category:"marketplace" },
-
-  // Europe
-  { id:11, name:"London Pi Traders", lat:51.5074, lng:-0.1278, type:"business" as const, city:"London, UK", desc:"Europe's top Pi merchant network.", users:1200, txns:7800, category:"marketplace" },
-  { id:12, name:"Berlin Pi Community", lat:52.5200, lng:13.4050, type:"user" as const, city:"Berlin, Germany", desc:"2,000+ pioneers hosting weekly meetups.", users:2100, txns:3200, category:"community" },
-  { id:13, name:"Paris Pi Boutique", lat:48.8566, lng:2.3522, type:"business" as const, city:"Paris, France", desc:"Luxury fashion & accessories — Pi payments.", users:480, txns:2400, category:"marketplace" },
-  { id:14, name:"Amsterdam Pi Hotels", lat:52.3676, lng:4.9041, type:"service" as const, city:"Amsterdam, Netherlands", desc:"Book canal-side hotels with Pi.", users:350, txns:1300, category:"hotel" },
-  { id:15, name:"Madrid Pi Services", lat:40.4168, lng:-3.7038, type:"service" as const, city:"Madrid, Spain", desc:"Bill payment & home services via Pi.", users:290, txns:1800, category:"bills" },
-  { id:16, name:"Rome Pi Dining", lat:41.9028, lng:12.4964, type:"business" as const, city:"Rome, Italy", desc:"Italian restaurants accepting Pi.", users:410, txns:2100, category:"food" },
-  { id:17, name:"Stockholm Pi Real Estate", lat:59.3293, lng:18.0686, type:"service" as const, city:"Stockholm, Sweden", desc:"Scandinavian property listings with Pi.", users:180, txns:420, category:"realestate" },
-  { id:18, name:"Warsaw Pi Exchange", lat:52.2297, lng:21.0122, type:"business" as const, city:"Warsaw, Poland", desc:"Central European Pi trading platform.", users:560, txns:3100, category:"marketplace" },
-  { id:19, name:"Dublin Pi Pioneers", lat:53.3498, lng:-6.2603, type:"user" as const, city:"Dublin, Ireland", desc:"500+ active pioneers trading weekly.", users:520, txns:1600, category:"community" },
-  { id:20, name:"Barcelona Pi Pioneers", lat:41.3874, lng:2.1686, type:"user" as const, city:"Barcelona, Spain", desc:"Catalan pioneers — beach meetups & Pi trading.", users:440, txns:1300, category:"community" },
-
-  // Asia Pacific
-  { id:21, name:"Tokyo Pi Exchange", lat:35.6762, lng:139.6503, type:"business" as const, city:"Tokyo, Japan", desc:"Japan's largest Pi marketplace.", users:1800, txns:9200, category:"marketplace" },
-  { id:22, name:"Mumbai Pi Market", lat:19.0760, lng:72.8777, type:"business" as const, city:"Mumbai, India", desc:"India's Pi marketplace — textiles, spices & software.", users:2400, txns:11000, category:"marketplace" },
-  { id:23, name:"Singapore Pi Hotels", lat:1.3521, lng:103.8198, type:"service" as const, city:"Singapore", desc:"Luxury hotel bookings — pay with Pi.", users:890, txns:3400, category:"hotel" },
-  { id:24, name:"Bangkok Pi Services", lat:13.7563, lng:100.5018, type:"service" as const, city:"Bangkok, Thailand", desc:"Travel, food & bill payment via Pi.", users:720, txns:4100, category:"bills" },
-  { id:25, name:"Seoul Pi Tech", lat:37.5665, lng:126.9780, type:"business" as const, city:"Seoul, South Korea", desc:"Korean tech products — Pi payments.", users:1500, txns:6800, category:"marketplace" },
-  { id:26, name:"Sydney Pioneer Hub", lat:-33.8688, lng:151.2093, type:"user" as const, city:"Sydney, Australia", desc:"800+ active pioneer members.", users:820, txns:2400, category:"community" },
-  { id:27, name:"Jakarta Pi Marketplace", lat:-6.2088, lng:106.8456, type:"business" as const, city:"Jakarta, Indonesia", desc:"Southeast Asia's fastest-growing Pi marketplace.", users:1300, txns:5600, category:"marketplace" },
-  { id:28, name:"Manila Pi Bills", lat:14.5995, lng:120.9842, type:"service" as const, city:"Manila, Philippines", desc:"Pay utility bills with Pi.", users:940, txns:7200, category:"bills" },
-  { id:29, name:"Shanghai Pi Commerce", lat:31.2304, lng:121.4737, type:"business" as const, city:"Shanghai, China", desc:"Chinese Pi commerce hub.", users:1900, txns:8600, category:"marketplace" },
-  { id:30, name:"Delhi Pi Pioneers", lat:28.7041, lng:77.1025, type:"user" as const, city:"Delhi, India", desc:"North India pioneer community.", users:1100, txns:3200, category:"community" },
-
-  // Americas
-  { id:31, name:"New York Pi Hub", lat:40.7128, lng:-74.0060, type:"business" as const, city:"New York, USA", desc:"East Coast Pi commerce center.", users:1600, txns:8400, category:"marketplace" },
-  { id:32, name:"San Francisco Pi Labs", lat:37.7749, lng:-122.4194, type:"service" as const, city:"San Francisco, USA", desc:"Pi developer hub & API services.", users:900, txns:2800, category:"service" },
-  { id:33, name:"São Paulo Pi Market", lat:-23.5505, lng:-46.6333, type:"business" as const, city:"São Paulo, Brazil", desc:"Latin America's largest Pi marketplace.", users:1200, txns:5400, category:"marketplace" },
-  { id:34, name:"Mexico City Pi Services", lat:19.4326, lng:-99.1332, type:"service" as const, city:"Mexico City, Mexico", desc:"Bill payments & remittances via Pi.", users:680, txns:3900, category:"bills" },
   { id:35, name:"Toronto Pi Community", lat:43.6532, lng:-79.3832, type:"user" as const, city:"Toronto, Canada", desc:"600+ member pioneer group.", users:640, txns:1900, category:"community" },
   { id:36, name:"Miami Pi Hotels", lat:25.7617, lng:-80.1918, type:"service" as const, city:"Miami, USA", desc:"Beach-front hotel bookings with Pi.", users:480, txns:1200, category:"hotel" },
   { id:37, name:"Buenos Aires Pi Exchange", lat:-34.6037, lng:-58.3816, type:"business" as const, city:"Buenos Aires, Argentina", desc:"South American Pi exchange.", users:560, txns:2600, category:"marketplace" },
@@ -130,6 +101,35 @@ export default function MapPage() {
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [leafletLoaded, setLeafletLoaded] = useState(false);
+  const [mapData, setMapData] = useState<MapEntry[]>(seedData);
+  const [liveCount, setLiveCount] = useState(0);
+
+  // Fetch live data from PHP backend + merge with seed data
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchLive() {
+      try {
+        const res = await fetch("/backend/map_data.php");
+        if (!res.ok) return;
+        const data = await res.json();
+        const live: MapEntry[] = (data.live || []).map((d: MapEntry) => ({
+          ...d,
+          type: (d.type || "business") as MapEntry["type"],
+        }));
+        if (!cancelled && live.length > 0) {
+          // Merge: seed data + live data (deduplicated by id)
+          const seedIds = new Set(seedData.map((s) => s.id));
+          const unique = live.filter((l) => !seedIds.has(l.id));
+          setMapData([...seedData, ...unique]);
+          setLiveCount(unique.length);
+        }
+      } catch {
+        // Backend unavailable — keep seed data
+      }
+    }
+    fetchLive();
+    return () => { cancelled = true; };
+  }, []);
 
   // Load Leaflet dynamically (client only)
   useEffect(() => {
@@ -219,12 +219,12 @@ export default function MapPage() {
       const marker = L.marker([d.lat, d.lng], { icon })
         .bindPopup(
           `<div style="min-width:220px;padding:4px">
-            <h4 style="font-weight:700;font-size:14px;margin-bottom:4px">${d.name}</h4>
+            <h4 style="font-weight:700;font-size:14px;margin-bottom:4px">${d.name}${d.live ? ' <span style="background:#22c55e;color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:100px;margin-left:6px">LIVE</span>' : ''}</h4>
             <span style="${badgeStyle};font-size:11px;font-weight:700;padding:2px 8px;border-radius:100px;display:inline-block;margin-bottom:8px">${label}</span>
             <p style="color:#a1a1aa;font-size:13px;line-height:1.4;margin-bottom:8px">${d.desc}</p>
             <div style="display:flex;gap:16px;font-size:12px;color:#71717a">
-              <span>👤 ${d.users.toLocaleString()} users</span>
-              <span>🔄 ${d.txns.toLocaleString()} txns</span>
+              <span>👤 ${(d.users || 0).toLocaleString()} users</span>
+              <span>🔄 ${(d.txns || 0).toLocaleString()} txns</span>
             </div>
             <span style="color:#71717a;font-size:12px">📍 ${d.city}</span>
           </div>`,
@@ -234,7 +234,7 @@ export default function MapPage() {
 
       markersRef.current.push(marker);
     });
-  }, [leafletLoaded, activeFilter, search]);
+  }, [leafletLoaded, activeFilter, search, mapData]);
 
   const filtered = mapData.filter((d) => {
     const matchSearch =
@@ -287,29 +287,36 @@ export default function MapPage() {
         <div className="flex flex-wrap gap-3">
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-            <strong className="text-slate-800">12,480</strong>
+            <strong className="text-slate-800">{counts.user?.toLocaleString() || 0}</strong>
             <span className="text-slate-500">Pioneers</span>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            <strong className="text-slate-800">3,240</strong>
+            <strong className="text-slate-800">{counts.business?.toLocaleString() || 0}</strong>
             <span className="text-slate-500">Businesses</span>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-orange-500" />
-            <strong className="text-slate-800">890</strong>
+            <strong className="text-slate-800">{counts.service?.toLocaleString() || 0}</strong>
             <span className="text-slate-500">Services</span>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-cyan-500" />
-            <strong className="text-slate-800">2,400</strong>
+            <strong className="text-slate-800">{counts.transport?.toLocaleString() || 0}</strong>
             <span className="text-slate-500">Transport</span>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white shadow-sm px-4 py-2 text-xs">
             <span className="h-2 w-2 animate-pulse rounded-full bg-pink-500" />
-            <strong className="text-slate-800">4,800</strong>
+            <strong className="text-slate-800">{counts.social?.toLocaleString() || 0}</strong>
             <span className="text-slate-500">Social</span>
           </div>
+          {liveCount > 0 && (
+            <div className="flex items-center gap-2 rounded-full border border-green-200 bg-green-50 shadow-sm px-4 py-2 text-xs">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
+              <strong className="text-green-700">{liveCount}</strong>
+              <span className="text-green-600">Live Sellers</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -379,7 +386,10 @@ export default function MapPage() {
                   }`}
                 >
                   <div className="mb-1 flex items-start justify-between gap-2">
-                    <h4 className="text-sm font-bold leading-snug text-slate-800">{d.name}</h4>
+                    <h4 className="text-sm font-bold leading-snug text-slate-800">
+                      {d.name}
+                      {d.live && <span className="ml-1.5 inline-block rounded-full bg-green-500 px-1.5 py-0.5 text-[9px] font-bold text-white">LIVE</span>}
+                    </h4>
                     <span
                       className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
                         d.category === "transport"

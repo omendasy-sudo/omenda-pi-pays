@@ -472,6 +472,12 @@ export const Markers = {
   getAll: () => [...mapMarkers],
   getByCategory: (category: MapMarker["category"]) => mapMarkers.filter((m) => m.category === category),
   count: () => mapMarkers.length,
+
+  create: (data: Omit<MapMarker, "id">): MapMarker => {
+    const marker: MapMarker = { id: genId("M"), ...data };
+    mapMarkers.push(marker);
+    return marker;
+  },
 };
 
 // ══════════════════════════════════════════════════════════════

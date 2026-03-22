@@ -1,621 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Your Business | Omenda Pi Pays Global</title>
-    <meta name="description" content="Register your business on Omenda Pi Pays Global to start selling products and services. Accept Pi cryptocurrency payments.">
-    <meta name="robots" content="index, follow">
-        <meta name="referrer" content="strict-origin-when-cross-origin">
-    <link rel="canonical" href="https://omendapipaysglobel.online/form.html">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://omendapipaysglobel.online/form.html">
-    <meta property="og:title" content="Register Your Business | Omenda Pi Pays Global">
-    <meta property="og:description" content="Register your business to start selling and accepting Pi cryptocurrency payments.">
-    <meta property="og:site_name" content="Omenda Pi Pays Global">
-    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script src="lang.js"></script>
-    <script src="theme.js"></script>
-    <script src="gcv.js"></script>
-    <style>
-        :root {
-            --pi-gold: #f5a623;
-            --pi-gold-light: rgba(245,166,35,0.12);
-            --pi-purple: #7c3aed;
-            --pi-purple-light: rgba(124,58,237,0.10);
-            --bg-primary: #09090b;
-            --bg-secondary: #111114;
-            --bg-card: rgba(255,255,255,0.04);
-            --border: rgba(255,255,255,0.08);
-            --border-hover: rgba(255,255,255,0.16);
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --radius: 16px;
-            --radius-sm: 10px;
-        }
-        html.light {
-            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
-            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
-            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
-            --danger: #dc2626;
-            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
-        }
-        html.light body { background: #fff !important; color: #18181b; }
-        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
-        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
-        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary); color: var(--text-primary);
-            min-height: 100vh; -webkit-font-smoothing: antialiased;
-        }
-
-        /* Nav */
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 max(5%,24px); height: 72px;
-            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid var(--border);
-        }
-        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
-        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
-        .logo span { color: var(--pi-gold); }
-        .nav-center { display: flex; gap: 8px; }
-        .nav-center a {
-            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
-            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
-        }
-        .nav-center a:hover, .nav-center a.active { color: var(--text-primary); background: rgba(255,255,255,0.06); }
-
-        .quick-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 10px max(5%,24px) 0;
-        }
-        .quick-link {
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            text-decoration: none;
-            border-radius: 10px;
-            padding: 8px 12px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Page Header */
-        .page-header {
-            text-align: center; padding: 56px max(5%,24px) 40px;
-            border-bottom: 1px solid var(--border);
-        }
-        .page-header h1 {
-            font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px;
-        }
-        .page-header p { color: var(--text-secondary); font-size: 1rem; max-width: 480px; margin: 0 auto; }
-
-        /* Language Switcher */
-        .lang-switcher {
-            display: flex; justify-content: center; gap: 4px; margin-top: 20px;
-        }
-        .lang-btn {
-            padding: 6px 16px; border: 1px solid var(--border); background: transparent;
-            color: var(--text-muted); border-radius: 100px; font-size: 0.8125rem;
-            font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
-        }
-        .lang-btn.active { background: var(--pi-purple); border-color: var(--pi-purple); color: #fff; }
-
-        /* Form Container */
-        .form-container {
-            max-width: 640px; margin: 0 auto; padding: 40px max(5%,24px) 80px;
-        }
-
-        /* Steps Indicator */
-        .steps {
-            display: flex; gap: 8px; margin-bottom: 40px; align-items: center;
-        }
-        .step {
-            flex: 1; text-align: center;
-        }
-        .step-number {
-            width: 36px; height: 36px; border-radius: 50%; display: inline-flex;
-            align-items: center; justify-content: center; font-size: 0.8125rem; font-weight: 700;
-            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
-            transition: all 0.3s; margin-bottom: 8px;
-        }
-        .step.active .step-number { background: var(--pi-purple); border-color: var(--pi-purple); color: #fff; }
-        .step.done .step-number { background: var(--success); border-color: var(--success); color: #fff; }
-        .step-label { font-size: 0.75rem; color: var(--text-muted); display: block; }
-        .step.active .step-label { color: var(--text-primary); }
-        .step-line {
-            flex: 0 0 40px; height: 1px; background: var(--border); margin: 0 4px; margin-bottom: 20px;
-        }
-
-        /* Fieldset */
-        .form-section {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 28px; margin-bottom: 24px;
-        }
-        .form-section-title {
-            font-size: 1rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px;
-        }
-        .form-section-desc {
-            font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 24px;
-        }
-
-        /* Input */
-        .field { margin-bottom: 20px; }
-        .field label {
-            display: block; font-size: 0.8125rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 6px;
-        }
-        .field label .required { color: var(--danger); }
-        .field input, .field select {
-            width: 100%; padding: 12px 16px;
-            background: var(--bg-primary); border: 1px solid var(--border);
-            border-radius: var(--radius-sm); color: var(--text-primary);
-            font-size: 0.9375rem; outline: none; transition: border-color 0.2s;
-            font-family: inherit;
-        }
-        .field input::placeholder { color: var(--text-muted); }
-        .field input:focus, .field select:focus { border-color: var(--pi-purple); }
-
-        /* File Upload */
-        .file-upload {
-            border: 2px dashed var(--border); border-radius: var(--radius-sm);
-            padding: 24px; text-align: center; cursor: pointer;
-            transition: all 0.2s; position: relative;
-        }
-        .file-upload:hover { border-color: var(--pi-purple); background: var(--pi-purple-light); }
-        .file-upload input[type="file"] {
-            position: absolute; inset: 0; opacity: 0; cursor: pointer;
-        }
-        .file-upload .upload-icon { font-size: 1.5rem; margin-bottom: 8px; display: block; color: var(--text-muted); }
-        .file-upload .upload-text { font-size: 0.8125rem; color: var(--text-muted); }
-        .file-upload .upload-text strong { color: var(--pi-purple); }
-
-        .help-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; display: block; }
-
-        /* Map */
-        #map {
-            width: 100%; height: 220px; border-radius: var(--radius-sm);
-            border: 1px solid var(--border); margin-bottom: 8px;
-        }
-        .location-status {
-            font-size: 0.8125rem; color: var(--text-muted);
-            display: flex; align-items: center; gap: 6px;
-        }
-
-        /* Buttons */
-        .form-actions { display: flex; gap: 12px; margin-top: 8px; }
-        .btn-submit {
-            flex: 1; padding: 14px 24px; background: var(--pi-purple); color: #fff;
-            border: none; border-radius: var(--radius-sm); font-weight: 700;
-            font-size: 0.9375rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
-        }
-        .btn-submit:hover { background: #6d28d9; transform: translateY(-1px); }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        /* Footer */
-        footer {
-            padding: 32px max(5%,24px); border-top: 1px solid var(--border);
-            text-align: center; font-size: 0.8125rem; color: var(--text-muted);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            nav { padding: 0 16px; }
-            .nav-center { display: none; }
-            .form-container { padding: 24px 16px 60px; }
-            .form-section { padding: 20px; }
-            .steps { gap: 4px; }
-            .step-line { flex: 0 0 20px; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYC Verification | Omenda Pi Pays</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f4f4f5; color: #18181b; }
+    .kyc-container { max-width: 480px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 32px; }
+    h2 { font-size: 2rem; font-weight: 700; margin-bottom: 18px; }
+    .kyc-form label { font-weight: 500; margin-bottom: 6px; display: block; }
+    .kyc-form input, .kyc-form select { width: 100%; padding: 10px; margin-bottom: 16px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; }
+    .kyc-form button { background: #7c3aed; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+    .kyc-form button:hover { background: #5b21b6; }
+    .kyc-form .note { font-size: 0.9rem; color: #52525b; margin-bottom: 16px; }
+  </style>
 </head>
 <body>
+  <div class="kyc-container">
+    <h2>KYC Verification</h2>
+    <form class="kyc-form" action="#" method="post">
+            <hr style="margin:32px 0;">
+            <h3>Business Location</h3>
+            <div class="note">Pin your business location on the map below. The coordinates will be saved automatically.</div>
+            <div id="business-map" style="width:100%;height:320px;margin-bottom:18px;border-radius:12px;overflow:hidden;border:1px solid #ddd;"></div>
+            <button type="button" id="pin-location-btn" style="background:#22c55e;color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;margin-bottom:16px;">Pin Business Location</button>
+            <label for="business_address">Business Address</label>
+            <input type="text" id="business_address" name="business_address" placeholder="Enter business address or coordinates">
+            <input type="hidden" id="business_latlng" name="business_latlng">
+      <div class="note">Please fill in your details for Know Your Customer (KYC) verification.</div>
+      <h3>Personal KYC</h3>
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" name="fullname" required>
 
-    <!-- Nav -->
-    <nav>
-        <a href="index.html" style="text-decoration:none;color:inherit"><div class="logo"><img src="logo.png" alt="Omenda Pi Pays Logo">OMENDA <span>PI PAYS</span></div></a>
-        <div class="nav-center">
-            <a href="index.html" data-i18n="nav.home">Home</a>
-            <a href="new.html" data-i18n="nav.explore">Explore</a>
-            <a href="map.html" data-i18n="nav.map">Map</a>
-            <a href="social.html" data-i18n="nav.social">Social</a>
-            <a href="form.html" class="active" data-i18n="nav.register">Register</a>
-            <a href="Submit.html" data-i18n="nav.sell">Sell</a>
-            <a href="https://omendapipaysglobel.online/services" target="_blank" data-i18n="nav.services">Services</a>
-            <a href="transport.html" data-i18n="nav.transport">Transport</a>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-            <span id="pi-username" style="color:#f5a623;font-weight:600;font-size:0.85rem;display:none"></span>
-            <a href="https://omendapipaysglobel.online/services" target="_blank" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.82rem;text-decoration:none">All Services</a>
-            <button id="pi-connect-btn" onclick="piConnect()" style="background:#7c3aed;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.85rem" data-i18n="nav.connectPi">Connect Pi</button>
-        </div>
-    </nav>
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required>
 
-    <div class="quick-links">
-        <a class="quick-link" href="index.html">Home</a>
-        <a class="quick-link" href="transport.html">Transport</a>
-        <a class="quick-link" href="https://omendapipaysglobel.online/services" target="_blank" rel="noopener noreferrer">All Services</a>
-    </div>
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" required>
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <h1 id="form-title">Register Your Business</h1>
-        <p id="form-desc">Complete KYC verification and business details to start selling on Pi Network.</p>
-    </div>
+      <label for="idtype">ID Type</label>
+      <select id="idtype" name="idtype" required>
+        <option value="">Select ID Type</option>
+        <option value="passport">Passport</option>
+        <option value="national_id">National ID</option>
+        <option value="driver_license">Driver's License</option>
+      </select>
 
-    <!-- Form -->
-    <div class="form-container">
+      <label for="idnumber">ID Number</label>
+      <input type="text" id="idnumber" name="idnumber" required>
 
-        <!-- Steps -->
-        <div class="steps">
-            <div class="step active" id="step-1">
-                <span class="step-number">1</span>
-                <span class="step-label" id="step-label-1">KYC Verification</span>
-            </div>
-            <div class="step-line"></div>
-            <div class="step" id="step-2">
-                <span class="step-number">2</span>
-                <span class="step-label" id="step-label-2">Business Info</span>
-            </div>
-            <div class="step-line"></div>
-            <div class="step" id="step-3">
-                <span class="step-number">3</span>
-                <span class="step-label" id="step-label-3">Submit</span>
-            </div>
-        </div>
+      <label for="idfile">Upload ID Document</label>
+      <input type="file" id="idfile" name="idfile" accept="image/*,application/pdf" required>
 
-        <form id="businessForm" action="https://formspree.io/f/xpwzovkw" method="POST" enctype="multipart/form-data">
+      <hr style="margin:32px 0;">
+      <h3>Business KYC</h3>
+      <label for="business_name">Business Name</label>
+      <input type="text" id="business_name" name="business_name">
 
-            <!-- Section 1: KYC -->
-            <div class="form-section">
-                <h3 class="form-section-title" id="leg-personal">KYC & Owner Verification</h3>
-                <p class="form-section-desc">Verify your identity to comply with Pi Network trading regulations.</p>
+      <label for="business_reg">Business Registration Number</label>
+      <input type="text" id="business_reg" name="business_reg">
 
-                <div class="field">
-                    <label id="lbl-pi-user">Pi Network Username <span class="required">*</span></label>
-                    <input type="text" name="Pi_Username" placeholder="@username" required>
-                </div>
+      <label for="business_type">Business Type</label>
+      <select id="business_type" name="business_type">
+        <option value="">Select Business Type</option>
+        <option value="sole_proprietor">Sole Proprietor</option>
+        <option value="partnership">Partnership</option>
+        <option value="limited_company">Limited Company</option>
+        <option value="ngo">NGO / Non-Profit</option>
+      </select>
 
-                <div class="field">
-                    <label id="lbl-full-name">Full Name (As on ID) <span class="required">*</span></label>
-                    <input type="text" name="Owner_Full_Name" required>
-                </div>
+      <label for="business_doc">Upload Business Registration Document</label>
+      <input type="file" id="business_doc" name="business_doc" accept="image/*,application/pdf">
 
-                <div class="field">
-                    <label id="lbl-id-type">ID Type <span class="required">*</span></label>
-                    <select name="ID_Type" required>
-                        <option value="NIDA">NIDA</option>
-                        <option value="Passport" id="opt-passport">Passport</option>
-                        <option value="Driving_License" id="opt-dl">Driving License</option>
-                    </select>
-                </div>
+      <button type="submit" id="kyc-submit-btn">Submit KYC</button>
+    </form>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('business-map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    var marker;
+    document.getElementById('pin-location-btn').onclick = function() {
+      map.once('click', function(e) {
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(e.latlng).addTo(map);
+        document.getElementById('business_latlng').value = e.latlng.lat + ',' + e.latlng.lng;
+        document.getElementById('business_address').value = 'Lat: ' + e.latlng.lat + ', Lng: ' + e.latlng.lng;
+      });
+      alert('Click on the map to pin your business location.');
+    };
 
-                <div class="field">
-                    <label id="lbl-id-front">ID Photo (Front) <span class="required">*</span></label>
-                    <div class="file-upload">
-                        <span class="upload-icon">&#128196;</span>
-                        <span class="upload-text">Click to upload or drag and drop<br><strong>JPG, PNG</strong> up to 5MB</span>
-                        <input type="file" name="ID_Photo_Front" accept="image/*" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label id="lbl-id-back">ID Photo (Back) <span class="required">*</span></label>
-                    <div class="file-upload">
-                        <span class="upload-icon">&#128196;</span>
-                        <span class="upload-text">Click to upload or drag and drop<br><strong>JPG, PNG</strong> up to 5MB</span>
-                        <input type="file" name="ID_Photo_Back" accept="image/*" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label id="lbl-kyc-photo">KYC Selfie (Holding ID) <span class="required">*</span></label>
-                    <div class="file-upload">
-                        <span class="upload-icon">&#129489;</span>
-                        <span class="upload-text">Take a selfie holding your ID card<br><strong>Face and ID text must be visible</strong></span>
-                        <input type="file" name="KYC_Selfie" accept="image/*" required>
-                    </div>
-                    <span class="help-text" id="help-kyc">Ensure your face and ID details are clearly visible in the photo.</span>
-                </div>
-            </div>
-
-            <!-- Section 2: Business -->
-            <div class="form-section">
-                <h3 class="form-section-title" id="leg-biz">Business Information</h3>
-                <p class="form-section-desc">Tell us about your business so buyers can find you.</p>
-
-                <div class="field">
-                    <label id="lbl-biz-name">Business Name <span class="required">*</span></label>
-                    <input type="text" name="Business_Name" placeholder="e.g. ABC Merchants Ltd" required>
-                </div>
-
-                <div class="field">
-                    <label id="lbl-email">Business Email <span class="required">*</span></label>
-                    <input type="email" name="Business_Email" placeholder="business@example.com" required>
-                </div>
-
-                <div class="field">
-                    <label id="lbl-map">Business Location <span class="required">*</span></label>
-                    <div id="map"></div>
-                    <input type="hidden" id="map_link" name="Google_Maps_Location">
-                    <span class="location-status" id="location-status">&#128205; Tap the map to pin your business location</span>
-                </div>
-
-                <div class="field">
-                    <label id="lbl-license">Business License (Optional)</label>
-                    <div class="file-upload">
-                        <span class="upload-icon">&#128203;</span>
-                        <span class="upload-text">Upload license document<br><strong>Image or PDF</strong></span>
-                        <input type="file" name="Business_License" accept="image/*,.pdf">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit -->
-            <div class="form-actions">
-                <button type="submit" class="btn-submit" id="btn-submit">Submit Registration</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        &copy; 2026 Omenda Pi Pays &mdash; <span data-i18n="footer.copyright">Built for Pioneers. Powered by Pi Network.</span>
-        <br><span style="display:inline-block;margin-top:8px;color:#71717a">Omenda Pi Pays Global, Block A, Nyerere Road, Dodoma, Dodoma 41101, Tanzania | <a href="mailto:support@omendapipaysglobel.online" style="color:#71717a;text-decoration:none">support@omendapipaysglobel.online</a></span>
-        &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:#71717a;text-decoration:none" data-i18n="footer.privacyPolicy">Privacy Policy</a>
-        &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:#71717a;text-decoration:none" data-i18n="footer.termsOfService">Terms of Service</a>
-    </footer>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Language translations
-        const translations = {
-            sw: {
-                title: "Sajili Biashara Yako",
-                desc: "Kamilisha uhakiki wa KYC na taarifa za biashara ili kuanza kuuza kupitia Pi Network.",
-                personal: "Uhakiki wa KYC & Mmiliki",
-                piUser: "Pi Network Username",
-                fullName: "Jina Kamili (Kama kwenye Kitambulisho)",
-                idType: "Aina ya Kitambulisho",
-                passport: "Pasipoti",
-                dl: "Leseni ya Udereva",
-                idFront: "Picha ya Kitambulisho (Mbele)",
-                idBack: "Picha ya Kitambulisho (Nyuma)",
-                kycPhoto: "Picha ya KYC (Selfie na Kitambulisho)",
-                kycHelp: "Hakikisha sura yako na maandishi ya kitambulisho yanaonekana vizuri.",
-                biz: "Taarifa za Biashara",
-                bizName: "Jina la Biashara",
-                email: "Barua Pepe ya Biashara",
-                map: "Mahali Biashara Ilipo",
-                mapStatus: "&#128205; Gusa ramani kuweka alama ya biashara yako",
-                license: "Leseni ya Biashara (Si Lazima)",
-                submit: "Wasilisha Usajili",
-                step1: "Uhakiki wa KYC",
-                step2: "Taarifa za Biashara",
-                step3: "Wasilisha"
-            },
-            en: {
-                title: "Register Your Business",
-                desc: "Complete KYC verification and business details to start selling on Pi Network.",
-                personal: "KYC & Owner Verification",
-                piUser: "Pi Network Username",
-                fullName: "Full Name (As on ID)",
-                idType: "ID Type",
-                passport: "Passport",
-                dl: "Driving License",
-                idFront: "ID Photo (Front)",
-                idBack: "ID Photo (Back)",
-                kycPhoto: "KYC Selfie (Holding ID)",
-                kycHelp: "Ensure your face and ID details are clearly visible in the photo.",
-                biz: "Business Information",
-                bizName: "Business Name",
-                email: "Business Email",
-                map: "Business Location",
-                mapStatus: "&#128205; Tap the map to pin your business location",
-                license: "Business License (Optional)",
-                submit: "Submit Registration",
-                step1: "KYC Verification",
-                step2: "Business Info",
-                step3: "Submit"
-            }
-        };
-
-        function applyFormLang(lang) {
-            if (!translations[lang]) lang = 'en';
-            const t = translations[lang];
-            document.getElementById('form-title').textContent = t.title;
-            document.getElementById('form-desc').textContent = t.desc;
-            document.getElementById('leg-personal').textContent = t.personal;
-            document.getElementById('lbl-pi-user').innerHTML = t.piUser + ' <span class="required">*</span>';
-            document.getElementById('lbl-full-name').innerHTML = t.fullName + ' <span class="required">*</span>';
-            document.getElementById('lbl-id-type').innerHTML = t.idType + ' <span class="required">*</span>';
-            document.getElementById('opt-passport').textContent = t.passport;
-            document.getElementById('opt-dl').textContent = t.dl;
-            document.getElementById('lbl-id-front').innerHTML = t.idFront + ' <span class="required">*</span>';
-            document.getElementById('lbl-id-back').innerHTML = t.idBack + ' <span class="required">*</span>';
-            document.getElementById('lbl-kyc-photo').innerHTML = t.kycPhoto + ' <span class="required">*</span>';
-            document.getElementById('help-kyc').textContent = t.kycHelp;
-            document.getElementById('leg-biz').textContent = t.biz;
-            document.getElementById('lbl-biz-name').innerHTML = t.bizName + ' <span class="required">*</span>';
-            document.getElementById('lbl-email').innerHTML = t.email + ' <span class="required">*</span>';
-            document.getElementById('lbl-map').innerHTML = t.map + ' <span class="required">*</span>';
-            document.getElementById('location-status').innerHTML = t.mapStatus;
-            document.getElementById('lbl-license').textContent = t.license;
-            document.getElementById('btn-submit').textContent = t.submit;
-            document.getElementById('step-label-1').textContent = t.step1;
-            document.getElementById('step-label-2').textContent = t.step2;
-            document.getElementById('step-label-3').textContent = t.step3;
+    // AJAX KYC submission
+    document.querySelector('.kyc-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var form = e.target;
+      var formData = new FormData(form);
+      document.getElementById('kyc-submit-btn').disabled = true;
+      fetch('backend/kyc_submit.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem('kyc_completed', '1');
+          localStorage.setItem('kyc_email', form.querySelector('#email').value);
+          alert('KYC submitted successfully!');
+          form.reset();
+          if (marker) map.removeLayer(marker);
+          // Redirect to product posting page if coming from there
+          const params = new URLSearchParams(window.location.search);
+          if (params.get('redirect')) {
+            window.location.href = params.get('redirect');
+          }
+        } else {
+          alert('Submission failed: ' + (data.error || 'Unknown error'));
         }
-
-        function changeLang(lang) {
-            if (window.OmendaLang && typeof window.OmendaLang.setLang === 'function') {
-                window.OmendaLang.setLang(lang);
-            }
-            applyFormLang(lang);
-        }
-
-        // Map
-        var map = L.map('map').setView([-6.7924, 39.2083], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
-        var marker;
-        map.on('click', function(e) {
-            if (marker) { marker.setLatLng(e.latlng); }
-            else { marker = L.marker(e.latlng).addTo(map); }
-            document.getElementById('map_link').value =
-                "https://www.google.com/maps?q=" + e.latlng.lat + "," + e.latlng.lng;
-            document.getElementById('location-status').innerHTML = "&#9989; Location saved!";
-        });
-
-        // Keep this form section aligned with site-wide language choice.
-        var initialLang = (window.OmendaLang && typeof window.OmendaLang.getLang === 'function')
-            ? window.OmendaLang.getLang()
-            : 'en';
-        applyFormLang(initialLang);
-
-        window.addEventListener('langchange', function (e) {
-            var lang = e && e.detail && e.detail.lang ? e.detail.lang : 'en';
-            applyFormLang(lang);
-        });
-    </script>
-    <script>
-        // Handle form submission with loading state and redirect
-        document.getElementById('businessForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-submit');
-            const form = e.target;
-            const formData = new FormData(form);
-
-            btn.textContent = 'Submitting…';
-            btn.disabled = true;
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            })
-            .then(function(response) {
-                if (response.ok) {
-                    window.location.href = 'submit%20success%20full.html';
-                } else {
-                    throw new Error('Submission failed');
-                }
-            })
-            .catch(function() {
-                alert('Submission failed. Please check your connection and try again.');
-                btn.textContent = 'Submit Registration';
-                btn.disabled = false;
-            });
-        });
-    </script>
-    <script>
-        function waitForPiSdk(timeout) {
-            return new Promise(function(resolve, reject) {
-                if (window.Pi) return resolve(window.Pi);
-                var elapsed = 0, interval = 120;
-                var t = setInterval(function() {
-                    if (window.Pi) { clearInterval(t); resolve(window.Pi); return; }
-                    elapsed += interval;
-                    if (elapsed >= timeout) { clearInterval(t); reject(new Error('Pi SDK did not load within ' + timeout + 'ms')); }
-                }, interval);
-            });
-        }
-        var _piInitPromise = null;
-        function usePiSandbox() {
-            return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
-        }
-        function ensurePiInitialized() {
-            if (_piInitPromise) return _piInitPromise;
-            _piInitPromise = waitForPiSdk(10000).then(function() {
-                return Pi.init({ version: '2.0', sandbox: usePiSandbox() });
-            }).catch(function(e) { _piInitPromise = null; return Promise.reject(e); });
-            return _piInitPromise;
-        }
-        var isPiBrowser = /PiBrowser/i.test(navigator.userAgent) || typeof window.Pi !== 'undefined';
-        function setConnectedState(username) {
-            document.getElementById('pi-username').textContent = '@' + username;
-            document.getElementById('pi-username').style.display = 'inline';
-            document.getElementById('pi-connect-btn').textContent = 'Connected';
-            document.getElementById('pi-connect-btn').style.background = '#16a34a';
-        }
-        function restoreConnectedState() {
-            var u = sessionStorage.getItem('piUser');
-            if (u) { var user = JSON.parse(u); setConnectedState(user.username); return true; }
-            return false;
-        }
-        function piConnect(silent) {
-            if (!isPiBrowser) {
-                if (!silent) alert('Please open this app in Pi Browser to connect.');
-                return Promise.resolve(null);
-            }
-            return ensurePiInitialized().then(function() {
-                return Pi.authenticate(['username','payments'], {
-                    onIncompletePaymentFound: function(p) { console.log('Incomplete payment:', p); }
-                });
-            }).then(function(auth) {
-                setConnectedState(auth.user.username);
-                sessionStorage.setItem('piUser', JSON.stringify(auth.user));
-                return auth;
-            }).catch(function(e) { if (!silent) console.error('Pi auth error:', e); });
-        }
-        (function() {
-            if (!restoreConnectedState() && isPiBrowser) piConnect(true);
-        })();
-
-        // Pi SDK — Request camera permission for business photo uploads
-
-        function piRequestPermission(perm) {
-            if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
-        }
-        function piShare(title, message) {
-            if (isPiBrowser && Pi.openShareDialog) Pi.openShareDialog(title, message);
-            else if (navigator.share) navigator.share({ title: title, text: message });
-        }
-        function piCopy(text) {
-            if (isPiBrowser && Pi.copyText) Pi.copyText(text);
-            else if (navigator.clipboard) navigator.clipboard.writeText(text);
-            alert('Copied: ' + text);
-        }
-        function piOpenUrl(url) {
-            if (isPiBrowser && Pi.openUrlInSystemBrowser) Pi.openUrlInSystemBrowser(url);
-            else window.open(url, '_blank');
-        }
-        function piNativeFeatures() {
-            if (isPiBrowser && Pi.nativeFeaturesList) return Pi.nativeFeaturesList();
-            return [];
-        }
-        function piChat(id) {
-            if (isPiBrowser && Pi.openConversation) Pi.openConversation(id);
-        }
-        async function piShowAd() {
-            if (!isPiBrowser || !Pi.Ads) return;
-            try { await Pi.Ads.requestAd('interstitial'); var r = await Pi.Ads.isAdReady('interstitial'); if (r) await Pi.Ads.showAd('interstitial'); } catch(e) {}
-        }
-
-        // Auto-request camera permission when file upload is clicked
-        document.querySelectorAll('input[type="file"]').forEach(function(el) {
-            el.addEventListener('click', function() { piRequestPermission('camera'); });
-        });
-    </script>
-    <script src="clear-button.js"></script>
+        document.getElementById('kyc-submit-btn').disabled = false;
+      })
+      .catch(() => {
+        alert('Submission failed. Please try again.');
+        document.getElementById('kyc-submit-btn').disabled = false;
+      });
+    });
+  </script>
 </body>
 </html>
