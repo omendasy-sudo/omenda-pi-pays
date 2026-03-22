@@ -4,7 +4,7 @@ import { ProductOverview } from "@/components/ProductOverview";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#f5f5f5] text-slate-900">
+    <main className="min-h-screen bg-white">
       <ProductOverview />
     </main>
   );
