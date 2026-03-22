@@ -24,10 +24,14 @@
             <hr style="margin:32px 0;">
             <h3>Business Location</h3>
             <div class="note">Pin your business location on the map below. The coordinates will be saved automatically.</div>
-            <div id="business-map" style="width:100%;height:320px;margin-bottom:18px;border-radius:12px;overflow:hidden;border:1px solid #ddd;"></div>
-            <button type="button" id="pin-location-btn" style="background:#22c55e;color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;margin-bottom:16px;">Pin Business Location</button>
+            <div id="business-map" style="width:100%;height:320px;margin-bottom:12px;border-radius:12px;overflow:hidden;border:1px solid #ddd;position:relative;z-index:0;"></div>
+            <div id="pin-hint" style="display:none;background:#fef3c7;color:#92400e;padding:8px 14px;border-radius:8px;font-size:.85rem;font-weight:600;margin-bottom:10px;text-align:center;">👆 Tap on the map to drop your pin</div>
+            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+              <button type="button" id="pin-location-btn" style="flex:1;min-width:140px;background:#22c55e;color:#fff;padding:10px 18px;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.9rem;">📍 Pin on Map</button>
+              <button type="button" id="gps-location-btn" style="flex:1;min-width:140px;background:#3b82f6;color:#fff;padding:10px 18px;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:.9rem;">📡 Use My GPS</button>
+            </div>
             <label for="business_address">Business Address</label>
-            <input type="text" id="business_address" name="business_address" placeholder="Enter business address or coordinates">
+            <input type="text" id="business_address" name="business_address" placeholder="Address will be filled after pinning">
             <input type="hidden" id="business_latlng" name="business_latlng">
       <div class="note">Please fill in your details for Know Your Customer (KYC) verification.</div>
       <h3>Personal KYC</h3>
@@ -79,19 +83,85 @@
   </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    var map = L.map('business-map').setView([0, 0], 2);
+    /* ── Map init ── */
+    var map = L.map('business-map').setView([-6.17, 35.74], 6); /* Tanzania center */
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: '&copy; OpenStreetMap'
     }).addTo(map);
-    var marker;
+
+    /* Fix Leaflet tile rendering glitch */
+    setTimeout(function(){ map.invalidateSize(); }, 300);
+
+    var marker = null;
+    var pinMode = false;
+
+    function placePin(lat, lng) {
+      if (marker) map.removeLayer(marker);
+      marker = L.marker([lat, lng]).addTo(map);
+      document.getElementById('business_latlng').value = lat.toFixed(6) + ',' + lng.toFixed(6);
+      document.getElementById('business_address').value = 'Lat: ' + lat.toFixed(6) + ', Lng: ' + lng.toFixed(6);
+      document.getElementById('pin-hint').style.display = 'none';
+      pinMode = false;
+      document.getElementById('pin-location-btn').textContent = '📍 Pin on Map';
+      document.getElementById('pin-location-btn').style.background = '#22c55e';
+
+      /* Reverse geocode to get address */
+      fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&addressdetails=1')
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if (d && d.display_name) {
+            document.getElementById('business_address').value = d.display_name;
+          }
+        })
+        .catch(function(){});
+    }
+
+    /* ── Pin on Map button ── */
     document.getElementById('pin-location-btn').onclick = function() {
-      map.once('click', function(e) {
-        if (marker) map.removeLayer(marker);
-        marker = L.marker(e.latlng).addTo(map);
-        document.getElementById('business_latlng').value = e.latlng.lat + ',' + e.latlng.lng;
-        document.getElementById('business_address').value = 'Lat: ' + e.latlng.lat + ', Lng: ' + e.latlng.lng;
-      });
-      alert('Click on the map to pin your business location.');
+      if (pinMode) {
+        pinMode = false;
+        document.getElementById('pin-hint').style.display = 'none';
+        this.textContent = '📍 Pin on Map';
+        this.style.background = '#22c55e';
+        return;
+      }
+      pinMode = true;
+      document.getElementById('pin-hint').style.display = 'block';
+      this.textContent = '✖ Cancel Pin';
+      this.style.background = '#ef4444';
+    };
+
+    /* ── Map click listener (always active, but only places pin when pinMode is on) ── */
+    map.on('click', function(e) {
+      if (!pinMode) return;
+      placePin(e.latlng.lat, e.latlng.lng);
+      map.setView(e.latlng, Math.max(map.getZoom(), 14));
+    });
+
+    /* ── GPS button ── */
+    document.getElementById('gps-location-btn').onclick = function() {
+      var btn = this;
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+      btn.textContent = '⏳ Locating...';
+      btn.disabled = true;
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          var lat = pos.coords.latitude, lng = pos.coords.longitude;
+          placePin(lat, lng);
+          map.setView([lat, lng], 16);
+          btn.textContent = '📡 Use My GPS';
+          btn.disabled = false;
+        },
+        function(err) {
+          alert('Could not get your location: ' + err.message);
+          btn.textContent = '📡 Use My GPS';
+          btn.disabled = false;
+        },
+        { enableHighAccuracy: true, timeout: 15000 }
+      );
     };
 
     // AJAX KYC submission
