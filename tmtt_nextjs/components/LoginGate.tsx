@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import { usePiAuth } from "./PiAuthProvider";
 
-// Pages that bypass the login gate
-const PUBLIC_PATHS = ["/sandbox"];
+// Pages that bypass the login gate (marketplace visible without sign-in)
+const PUBLIC_PATHS = ["/", "/sandbox"];
 
 export function LoginGate({ children }: { children: React.ReactNode }) {
   const { user, connected, loading, error, connect, isPiBrowser, isSandboxMode, sandboxLogin } = usePiAuth();
