@@ -144,7 +144,7 @@
         .catch(function(){});
     }
 
-    /* ── Pin on Map button ── */
+    /* ── Pin on Map button: auto-locate GPS → pin → allow tap to adjust ── */
     document.getElementById('pin-location-btn').onclick = function() {
       if (pinMode) {
         pinMode = false;
@@ -153,10 +153,42 @@
         this.style.background = '#22c55e';
         return;
       }
-      pinMode = true;
-      document.getElementById('pin-hint').style.display = 'block';
-      this.textContent = '✖ Cancel Pin';
-      this.style.background = '#ef4444';
+      var btn = this;
+      if (!navigator.geolocation) {
+        /* Fallback: just enable tap mode */
+        pinMode = true;
+        document.getElementById('pin-hint').textContent = '👆 Tap on the map to drop your pin';
+        document.getElementById('pin-hint').style.display = 'block';
+        btn.textContent = '✖ Cancel Pin';
+        btn.style.background = '#ef4444';
+        return;
+      }
+      btn.textContent = '⏳ Locating...';
+      btn.disabled = true;
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          var lat = pos.coords.latitude, lng = pos.coords.longitude;
+          placePin(lat, lng);
+          map.setView([lat, lng], 17);
+          /* After auto-pin, enable tap mode so user can adjust */
+          pinMode = true;
+          document.getElementById('pin-hint').textContent = '📌 Pinned at your location! Tap map to adjust if needed.';
+          document.getElementById('pin-hint').style.display = 'block';
+          btn.textContent = '✖ Cancel Pin';
+          btn.style.background = '#ef4444';
+          btn.disabled = false;
+        },
+        function(err) {
+          /* GPS failed — fall back to tap mode */
+          pinMode = true;
+          document.getElementById('pin-hint').textContent = '👆 Could not get GPS. Tap on the map to drop your pin.';
+          document.getElementById('pin-hint').style.display = 'block';
+          btn.textContent = '✖ Cancel Pin';
+          btn.style.background = '#ef4444';
+          btn.disabled = false;
+        },
+        { enableHighAccuracy: true, timeout: 15000 }
+      );
     };
 
     /* ── Map click listener (always active, but only places pin when pinMode is on) ── */
