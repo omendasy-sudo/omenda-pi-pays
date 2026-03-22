@@ -1,450 +1,627 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nib Product Company</title>
-    <meta name="description" content="Welcome to Nib. Explore our range of products and services for the Congo region.">
-    <meta name="robots" content="index, follow">
-        <meta name="referrer" content="strict-origin-when-cross-origin">
-    <link rel="canonical" href="https://omendapipaysglobel.online/form.html">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://omendapipaysglobel.online/form.html">
-    <meta property="og:title" content="Register Your Business">
-    <meta property="og:description" content="Register your business to start selling and accepting Pi cryptocurrency payments.">
-    <link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <script src="lang.js"></script>
-    <script src="theme.js"></script>
-    <style>
-        :root {
-            --pi-gold: #f5a623;
-            --pi-gold-light: rgba(245,166,35,0.12);
-            --pi-purple-light: rgba(124,58,237,0.10);
-            --bg-primary: #09090b;
-            --bg-secondary: #111114;
-            --bg-card: rgba(255,255,255,0.04);
-            --border: rgba(255,255,255,0.08);
-            --border-hover: rgba(255,255,255,0.16);
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --radius: 16px;
-            --radius-sm: 10px;
-        }
-        html.light {
-            --bg-primary: #ffffff; --bg-secondary: #f4f4f5; --bg-card: rgba(0,0,0,0.02);
-            --border: rgba(0,0,0,0.06); --border-hover: rgba(0,0,0,0.12);
-            --text-primary: #18181b; --text-secondary: #52525b; --text-muted: #a1a1aa;
-            --danger: #dc2626;
-            --pi-gold-light: rgba(245,166,35,0.10); --pi-purple-light: rgba(124,58,237,0.08);
-        }
-        html.light body { background: #fff !important; color: #18181b; }
-        html.light nav, html.light .topbar, html.light .mobile-header { background: rgba(255,255,255,0.88) !important; }
-        html.light footer, html.light .footer { background: #f4f4f5 !important; color: #18181b; }
-        html.light .bg-ambient::before, html.light .bg-ambient::after { opacity: 0.35; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omenda Pi Pays – Home</title>
+<meta name="description" content="Omenda Pi Pays - Buy, sell, and trade with Pi cryptocurrency. Electronics, Fashion, Cars, Hotels, Transport and more.">
+<meta name="robots" content="index, follow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://omendapipaysglobel.online/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://omendapipaysglobel.online/">
+<meta property="og:title" content="Omenda Pi Pays – Marketplace">
+<meta property="og:description" content="Buy, sell, and trade with Pi cryptocurrency. Electronics, Fashion, Cars, Hotels, Transport and more.">
+<link rel="icon" type="image/svg+xml" href="https://omendapipaysglobel.online/globe.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="lang.js"></script>
+<script src="theme.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f5;color:#18181b;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:70px}
+.hide-scrollbar::-webkit-scrollbar{display:none}
+.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary); color: var(--text-primary);
-            min-height: 100vh; -webkit-font-smoothing: antialiased;
-        }
+/* ── Top Header ── */
+.top-header{background:linear-gradient(135deg,#1a103c 0%,#261654 50%,#1a103c 100%);text-align:center;padding:28px 16px 18px;color:#fff}
+.top-header img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.15);margin-bottom:8px}
+.top-header h1{font-size:1.3rem;font-weight:800;color:#a78bfa}
+.top-header .handle{font-size:.82rem;color:rgba(255,255,255,.6)}
 
-        /* Nav */
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 max(5%,24px); height: 72px;
-            background: rgba(9,9,11,0.85); backdrop-filter: blur(20px) saturate(1.2);
-            position: sticky; top: 0; z-index: 1000;
-            border-bottom: 1px solid var(--border);
-        }
-        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
-        .logo img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; }
-        .logo span { color: var(--pi-gold); }
-        .nav-center { display: flex; gap: 8px; }
-        .nav-center a {
-            color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
-            padding: 8px 16px; border-radius: var(--radius-sm); transition: all 0.2s;
-        }
-        .nav-center a:hover, .nav-center a.active { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+/* ── Nav Tabs ── */
+.nav-tabs{display:flex;align-items:center;gap:0;padding:0 8px;background:linear-gradient(135deg,#1e1245,#2a1760);overflow-x:auto}
+.nav-tabs a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.82rem;font-weight:600;padding:10px 14px;white-space:nowrap;transition:all .2s}
+.nav-tabs a:hover,.nav-tabs a.active{color:#fff;background:rgba(255,255,255,.08);border-radius:8px}
+.nav-tabs .spacer{flex:1}
+.lang-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.08);border-radius:8px;padding:6px 10px;font-size:.78rem;color:#fff;font-weight:600;cursor:pointer}
+.profile-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);border-radius:20px;padding:5px 12px 5px 6px;font-size:.78rem;color:#f5a623;font-weight:700;text-decoration:none;cursor:pointer}
+.profile-badge .dot{width:24px;height:24px;border-radius:50%;background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#000}
 
-        .quick-links {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 10px max(5%,24px) 0;
-        }
-        .quick-link {
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            text-decoration: none;
-            border-radius: 10px;
-            padding: 8px 12px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+/* ── Search ── */
+.search-wrap{background:#fff;padding:12px 12px 8px}
+.search-bar{display:flex;align-items:center;gap:8px;background:#f4f4f5;border:1px solid #e4e4e7;border-radius:24px;padding:4px 6px 4px 16px}
+.search-bar input{flex:1;border:none;background:transparent;outline:none;font-size:.9rem;padding:8px 0;font-family:inherit;color:#18181b}
+.search-bar input::placeholder{color:#a1a1aa}
+.search-bar .cam-btn{width:34px;height:34px;border-radius:50%;background:transparent;border:none;color:#a1a1aa;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.search-bar .go-btn{width:36px;height:36px;border-radius:50%;background:#f97316;border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
 
-        /* Page Header */
-        .page-header {
-            text-align: center; padding: 56px max(5%,24px) 40px;
-            border-bottom: 1px solid var(--border);
-        }
-        .page-header h1 {
-            font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px;
-        }
-        .page-header p { color: var(--text-secondary); font-size: 1rem; max-width: 480px; margin: 0 auto; }
+/* ── Category Tabs ── */
+.cat-tabs{display:flex;overflow-x:auto;gap:0;background:#fff;border-bottom:1px solid #e4e4e7;padding:0 4px}
+.cat-tabs button{background:none;border:none;padding:10px 14px;font-size:.82rem;font-weight:500;color:#71717a;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;font-family:inherit;transition:all .2s}
+.cat-tabs button.active{color:#18181b;font-weight:700;border-bottom-color:#18181b}
 
-        /* Form Container */
-        .form-container {
-            max-width: 640px; margin: 0 auto; padding: 40px max(5%,24px) 80px;
-        }
+/* ── Trending Row ── */
+.trending-row{display:flex;gap:10px;overflow-x:auto;padding:10px 12px;background:#fff}
+.trending-card{min-width:130px;max-width:180px;cursor:pointer;flex-shrink:0}
+.trending-card .img-wrap{position:relative;height:115px;border-radius:10px;overflow:hidden;background:#f4f4f5}
+.trending-card .img-wrap img{width:100%;height:100%;object-fit:cover}
+.trending-card .tag{position:absolute;bottom:0;left:0;right:0;padding:3px 8px;font-size:.65rem;font-weight:700;color:#fff}
+.trending-card .price{font-size:.78rem;font-weight:700;color:#dc2626;margin-top:4px}
+.trending-card .stat{font-size:.68rem;color:#a1a1aa}
 
-        /* Steps Indicator */
-        .steps {
-            display: flex; gap: 8px; margin-bottom: 40px; align-items: center;
-        }
-        .step {
-            flex: 1; text-align: center;
-        }
-        .step-number {
-            width: 36px; height: 36px; border-radius: 50%; display: inline-flex;
-            align-items: center; justify-content: center; font-size: 0.8125rem; font-weight: 700;
-            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
-            transition: all 0.3s; margin-bottom: 8px;
-        }
-        .step.active .step-number { background: var(--pi-purple); border-color: var(--pi-purple); color: #fff; }
-        .step.done .step-number { background: var(--success); border-color: var(--success); color: #fff; }
-        .step-label { font-size: 0.75rem; color: var(--text-muted); display: block; }
-        .step.active .step-label { color: var(--text-primary); }
-        .step-line {
-            flex: 0 0 40px; height: 1px; background: var(--border); margin: 0 4px; margin-bottom: 20px;
-        }
+/* ── Section ── */
+.section{background:#fff;margin-top:4px;padding:12px}
+.section-title{font-size:.92rem;font-weight:800;color:#18181b}
+.section-count{font-size:.7rem;color:#a1a1aa;font-weight:400;margin-left:6px}
 
-        /* Fieldset */
-        .form-section {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 28px; margin-bottom: 24px;
-        }
-        .form-section-title {
-            font-size: 1rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px;
-        }
-        .form-section-desc {
-            font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 24px;
-        }
+/* ── Product Grid ── */
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+@media(min-width:640px){.prod-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1024px){.prod-grid{grid-template-columns:repeat(4,1fr)}}
+.prod-card{border:1px solid #f4f4f5;border-radius:10px;overflow:hidden;background:#fff;cursor:pointer;transition:box-shadow .2s}
+.prod-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.prod-card .img-box{position:relative;height:100px;overflow:hidden;background:#f9fafb}
+.prod-card .img-box img{width:100%;height:100%;object-fit:cover}
+.prod-card .img-count{position:absolute;right:4px;top:4px;background:rgba(0,0,0,.5);color:#fff;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:4px}
+.prod-card .condition-tag{position:absolute;left:4px;top:4px;background:rgba(16,185,129,.8);color:#fff;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:4px}
+.prod-card .tag-overlay{position:absolute;bottom:0;left:0;right:0;padding:3px 8px;font-size:.6rem;font-weight:700;color:#fff}
+.prod-card .info{padding:8px}
+.prod-card .info .name{font-size:.72rem;color:#3f3f46;line-height:1.3;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.prod-card .info .price{font-size:.78rem;font-weight:700;color:#dc2626;margin-top:2px}
+.prod-card .info .meta{font-size:.62rem;color:#a1a1aa;margin-top:1px}
 
-        /* Input */
-        .field { margin-bottom: 20px; }
-        .field label {
-            display: block; font-size: 0.8125rem; font-weight: 600;
-            color: var(--text-secondary); margin-bottom: 6px;
-        }
-        .field label .required { color: var(--danger); }
-        .field input, .field select {
-            width: 100%; padding: 12px 16px;
-            background: var(--bg-primary); border: 1px solid var(--border);
-            border-radius: var(--radius-sm); color: var(--text-primary);
-            font-size: 0.9375rem; outline: none; transition: border-color 0.2s;
-            font-family: inherit;
-        }
-        .field input::placeholder { color: var(--text-muted); }
-        .field input:focus, .field select:focus { border-color: var(--pi-purple); }
+/* ── Secured Trading ── */
+.secured-row{display:flex;align-items:center;justify-content:space-between;background:#fff;margin-top:4px;padding:14px 12px}
+.secured-row h3{font-size:.92rem;font-weight:800}
+.secured-row p{font-size:.72rem;color:#71717a;margin-top:2px}
 
-        /* File Upload */
-        .file-upload {
-            border: 2px dashed var(--border); border-radius: var(--radius-sm);
-            padding: 24px; text-align: center; cursor: pointer;
-            transition: all 0.2s; position: relative;
-        }
-        .file-upload:hover { border-color: var(--pi-purple); background: var(--pi-purple-light); }
-        .file-upload input[type="file"] {
-            position: absolute; inset: 0; opacity: 0; cursor: pointer;
-        }
-        .file-upload .upload-icon { font-size: 1.5rem; margin-bottom: 8px; display: block; color: var(--text-muted); }
-        .file-upload .upload-text { font-size: 0.8125rem; color: var(--text-muted); }
-        .file-upload .upload-text strong { color: var(--pi-purple); }
+/* ── Hotel / Transport cards ── */
+.h-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.h-card{min-width:165px;max-width:220px;flex-shrink:0;border:1px solid #f4f4f5;border-radius:10px;overflow:hidden;background:#fff}
+.h-card .h-img{height:95px;overflow:hidden;position:relative}
+.h-card .h-img img{width:100%;height:100%;object-fit:cover}
+.h-card .h-body{padding:8px}
+.h-card .h-body .h-name{font-size:.78rem;font-weight:700;color:#18181b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.h-card .h-body .h-loc{font-size:.68rem;color:#71717a}
+.h-card .h-body .h-price{font-size:.82rem;font-weight:700;color:#dc2626;margin-top:4px}
+.badge-overlay{position:absolute;padding:3px 8px;border-radius:12px;font-size:.62rem;font-weight:700}
 
-        .help-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; display: block; }
+/* ── Sell CTA ── */
+.sell-cta{margin:4px 12px 8px;border-radius:16px;padding:22px 20px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(135deg,#1a0533,#2d1065,#0d3f8f)}
+.sell-cta .glow1{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);top:-24px;right:-24px;filter:blur(40px)}
+.sell-cta .glow2{position:absolute;width:100px;height:100px;border-radius:50%;background:rgba(245,166,35,.1);bottom:-30px;left:-30px;filter:blur(40px)}
+.sell-cta h2{font-size:1.1rem;font-weight:800;margin-top:8px}
+.sell-cta p{font-size:.78rem;color:rgba(255,255,255,.7);margin-top:6px;max-width:280px;line-height:1.5}
+.sell-cta .btns{display:flex;gap:10px;margin-top:14px;align-items:center}
+.sell-cta .btn-sell{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f59e0b,#f97316);color:#000;font-weight:800;padding:10px 20px;border-radius:24px;font-size:.82rem;text-decoration:none;box-shadow:0 4px 16px rgba(249,115,22,.25);transition:all .2s;border:none;cursor:pointer}
+.sell-cta .btn-sell:hover{filter:brightness(1.1);box-shadow:0 6px 24px rgba(249,115,22,.35)}
+.sell-cta .btn-verify{border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);padding:8px 16px;border-radius:24px;font-size:.72rem;font-weight:700;text-decoration:none;transition:all .2s}
+.sell-cta .btn-verify:hover{background:rgba(255,255,255,.1)}
 
-        /* Map */
-        #map {
-            width: 100%; height: 220px; border-radius: var(--radius-sm);
-            border: 1px solid var(--border); margin-bottom: 8px;
-        }
-        .location-status {
-            font-size: 0.8125rem; color: var(--text-muted);
-            display: flex; align-items: center; gap: 6px;
-        }
+/* ── Bottom Nav ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#fff;border-top:1px solid #e4e4e7;display:flex;align-items:center;justify-content:space-around;padding:6px 0 env(safe-area-inset-bottom,4px)}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;font-size:.6rem;font-weight:600;color:#a1a1aa;position:relative}
+.bottom-nav a.active{color:#f97316}
+.bottom-nav a svg{width:22px;height:22px}
+.bottom-nav .sell-btn{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f97316,#f59e0b);display:flex;align-items:center;justify-content:center;margin-top:-18px;box-shadow:0 4px 16px rgba(249,115,22,.3);transition:transform .2s}
+.bottom-nav .sell-btn:hover{transform:scale(1.05)}
+.bottom-nav .sell-btn svg{width:26px;height:26px;color:#fff}
+.bottom-nav .msg-badge{position:absolute;top:-2px;right:-4px;background:#ef4444;color:#fff;width:16px;height:16px;border-radius:50%;font-size:.55rem;font-weight:800;display:flex;align-items:center;justify-content:center}
 
-        /* Buttons */
-        .form-actions { display: flex; gap: 12px; margin-top: 8px; }
-        .btn-submit {
-            flex: 1; padding: 14px 24px; background: var(--pi-purple); color: #fff;
-            border: none; border-radius: var(--radius-sm); font-weight: 700;
-            font-size: 0.9375rem; cursor: pointer; transition: all 0.2s; font-family: inherit;
-        }
-        .btn-submit:hover { background: #6d28d9; transform: translateY(-1px); }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+/* ── Modal ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;justify-content:center;align-items:flex-end}
+.modal-bg.open{display:flex}
+.modal-box{background:#fff;border-radius:16px 16px 0 0;max-height:92vh;width:100%;max-width:640px;overflow-y:auto;position:relative}
+@media(min-width:640px){.modal-box{border-radius:16px;margin:auto}}
+.modal-box .close-btn{position:absolute;right:12px;top:12px;z-index:10;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.4);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-box .carousel{position:relative;height:280px;overflow:hidden;background:#f4f4f5}
+.modal-box .carousel img{width:100%;height:100%;object-fit:cover}
+.modal-box .carousel .nav-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.4);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-box .carousel .nav-arrow.left{left:8px}
+.modal-box .carousel .nav-arrow.right{right:8px}
+.modal-box .thumbs{display:flex;gap:6px;padding:8px 12px;overflow-x:auto}
+.modal-box .thumbs button{width:52px;height:52px;border-radius:8px;overflow:hidden;flex-shrink:0;border:2px solid transparent;cursor:pointer;padding:0}
+.modal-box .thumbs button.active{border-color:#f97316}
+.modal-box .thumbs button img{width:100%;height:100%;object-fit:cover}
+.modal-box .detail{padding:16px}
+.modal-box .detail .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.68rem;font-weight:700;margin-right:4px;margin-bottom:6px}
+.modal-box .detail h2{font-size:1.1rem;font-weight:800;color:#18181b}
+.modal-box .detail .seller{font-size:.78rem;color:#71717a;margin-top:2px}
+.modal-box .detail .price-row{margin-top:12px;display:flex;align-items:baseline;gap:8px}
+.modal-box .detail .price-row .price{font-size:1.5rem;font-weight:800;color:#dc2626}
+.modal-box .detail .desc{font-size:.82rem;color:#52525b;margin-top:12px;line-height:1.6}
+.modal-box .detail .trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;text-align:center}
+.modal-box .detail .trust-grid div{background:#f9fafb;border-radius:10px;padding:10px 4px}
+.modal-box .detail .trust-grid .t-label{font-size:.72rem;font-weight:700;color:#3f3f46}
+.modal-box .detail .trust-grid .t-sub{font-size:.62rem;color:#a1a1aa}
+.modal-box .detail .action-btns{display:flex;gap:8px;margin-top:16px}
+.modal-box .detail .action-btns button{flex:1;padding:14px;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit;border:none;transition:all .2s}
+.modal-box .detail .action-btns .buy-btn{background:#f97316;color:#fff}
+.modal-box .detail .action-btns .buy-btn:hover{background:#ea580c}
+.modal-box .detail .action-btns .msg-btn{background:#fff;color:#f97316;border:2px solid #f97316}
+.modal-box .detail .action-btns .msg-btn:hover{background:#fff7ed}
 
-        /* Footer */
-        footer {
-            padding: 32px max(5%,24px); border-top: 1px solid var(--border);
-            text-align: center; font-size: 0.8125rem; color: var(--text-muted);
-        }
+/* Transport */
+.trans-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+@media(min-width:640px){.trans-grid{grid-template-columns:repeat(3,1fr)}}
+.trans-card{border:1px solid #f4f4f5;border-radius:10px;padding:10px;background:#fff}
+.trans-card .icon-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.trans-card .icon{font-size:1.2rem}
+.trans-card .t-badge{font-size:.58rem;font-weight:700;padding:2px 8px;border-radius:12px}
+.trans-card .t-name{font-size:.78rem;font-weight:700;color:#18181b}
+.trans-card .t-desc{font-size:.62rem;color:#71717a;line-height:1.3}
+.trans-card .t-price{font-size:.78rem;font-weight:700;color:#dc2626;margin-top:4px}
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            nav { padding: 0 16px; }
-            .nav-center { display: none; }
-            .form-container { padding: 24px 16px 60px; }
-            .form-section { padding: 20px; }
-            .steps { gap: 4px; }
-            .step-line { flex: 0 0 20px; }
-        }
-    </style>
+/* Bills */
+.bill-card{display:flex;align-items:center;gap:8px;border:1px solid #f4f4f5;border-radius:10px;padding:10px;background:#fff}
+.bill-card .b-icon{font-size:1.2rem}
+.bill-card .b-name{font-size:.72rem;font-weight:700;color:#18181b}
+.bill-card .b-desc{font-size:.6rem;color:#71717a}
+
+/* Single Purchase Ease */
+.ease-section{display:flex;align-items:stretch;background:#fff;margin-top:4px;overflow:hidden}
+.ease-section .ease-text{flex:1;padding:16px}
+.ease-section .ease-text h2{font-size:1rem;font-weight:800;color:#18181b}
+.ease-section .ease-text ul{list-style:none;margin-top:8px}
+.ease-section .ease-text li{font-size:.78rem;color:#52525b;display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.ease-section .ease-img{width:120px;flex-shrink:0;background:linear-gradient(135deg,#fff7ed,#fffbeb)}
+.ease-section .ease-img img{width:100%;height:100%;object-fit:cover}
+</style>
 </head>
 <body>
 
-    <!-- Nav -->
-    <nav>
-        <a href="index.html" style="text-decoration:none;color:inherit">
-            <div class="logo">
-                <img src="nib logo jpg.html/994ed221-1162-476b-84d0-2feec5a29d26.jpg                <Link to="/" className="btn">Home</Link>                <Link to="/" className="btn">Home</Link>                <Link to="/" className="btn">Home</Link>" alt="Nib Logo" style="width:48px;height:48px;border-radius:50%;object-fit:cover;">
-                NIB
-            </div>
-        </a>
-        <div class="nav-center">
-            <a href="index.html">Home</a>
-            <a href="products.html">Products</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-            <span id="company-username" style="color:#f5a623;font-weight:600;font-size:0.85rem;display:none"></span>
-            <a href="products.html" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.82rem;text-decoration:none">All Products</a>
-        </div>
-    </nav>
+<!-- ── TOP HEADER ── -->
+<div class="top-header">
+  <img src="nib logo jpg.html/994ed221-1162-476b-84d0-2feec5a29d26.jpg" alt="Omenda Pi Pays Logo" onerror="this.style.background='#7c3aed';this.alt='π'">
+  <h1>Omenda Pi Pays</h1>
+  <p class="handle" id="pi-handle">@Omfidxx</p>
+</div>
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <img src="nib-logo.jpg" alt="Nib Logo" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:16px;">
-        <h1 id="company-title">Nib Congo Product Company</h1>
-        <p id="company-desc">Welcome to Nib. Explore our range of products and services for the Congo region.</p>
+<!-- ── NAV TABS ── -->
+<div class="nav-tabs hide-scrollbar">
+  <a href="marketplace-preview.html">Services</a>
+  <a href="form.html">Map</a>
+  <a href="social.html">Social</a>
+  <span class="spacer"></span>
+  <span class="lang-badge">🇬🇧 EN ▾</span>
+  <a href="about.html" class="profile-badge"><span class="dot">O</span> <span id="pi-username-display">@Omfidxx</span></a>
+</div>
+
+<!-- ── SEARCH ── -->
+<div class="search-wrap">
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search all products & services...">
+    <button class="cam-btn" title="Camera search">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </button>
+    <button class="go-btn" onclick="doSearch()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ── CATEGORY TABS ── -->
+<div class="cat-tabs hide-scrollbar" id="catTabs"></div>
+
+<!-- ── MAIN CONTENT ── -->
+<div id="app"></div>
+
+<!-- ── BOTTOM NAVIGATION ── -->
+<nav class="bottom-nav">
+  <a href="NIB.html" class="active">
+    <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+    Home
+  </a>
+  <a href="marketplace-preview.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+    Buy Now
+  </a>
+  <a href="Submit.html">
+    <div class="sell-btn">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
     </div>
+    Sell
+  </a>
+  <a href="social.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+    <span class="msg-badge">3</span>
+    Messages
+  </a>
+  <a href="about.html">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+    My Account
+  </a>
+</nav>
 
-    <!-- Product List -->
-    <div class="form-container">
-        <div class="form-section">
-            <h3 class="form-section-title">Featured Products</h3>
-            <p class="form-section-desc">Browse our top products below.</p>
-            <div class="gallery grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
-                <div class="relative">
-                    <img src="product1.jpg" alt="Product 1" class="rounded shadow w-full h-48 object-cover" />
-                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold">Buy</button>
-                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold buy-btn">Buy</button>
-                </div>
-                <div class="relative">
-                    <img src="product2.jpg" alt="Product 2" class="rounded shadow w-full h-48 object-cover" />
-                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold">Buy</button>
-                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold buy-btn">Buy</button>
-                </div>
-                <div class="relative">
-                    <img src="product3.jpg" alt="Product 3" class="rounded shadow w-full h-48 object-cover" />
-                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold">Buy</button>
-                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold buy-btn">Buy</button>
-                </div>
-                <div class="relative">
-                    <img src="product4.jpg" alt="Product 4" class="rounded shadow w-full h-48 object-cover" />
-                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold">Buy</button>
-                    <button class="absolute bottom-2 right-2 bg-amber-400 text-black px-3 py-1 rounded font-bold buy-btn">Buy</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- ── PRODUCT MODAL ── -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()" id="modal-content"></div>
+</div>
 
-    <!-- Footer -->
-    <footer>
-        &copy; 2026 Nib Congo Product Company &mdash; Serving Congo with quality products.
-        <br><span style="display:inline-block;margin-top:8px;color:#71717a">Nib, Kinshasa, Congo | <a href="mailto:support@nib.com" style="color:#71717a;text-decoration:none">support@nib.com</a></span>
-        &nbsp;|&nbsp; <a href="privacy-policy.html" style="color:#71717a;text-decoration:none">Privacy Policy</a>
-        &nbsp;&bull;&nbsp; <a href="terms-of-service.html" style="color:#71717a;text-decoration:none">Terms of Service</a>
-    </footer>
+<script>
+/* ══════════════════════════════════════════════════════════════
+   DATA — Static catalog + live products from backend
+   ══════════════════════════════════════════════════════════════ */
+var marketProducts = [
+  {id:"e1",title:"17 PRO MAX Smartphone",price:"\u03C00.003",priceHigh:"0.005",stat:"100+ Heats",image:"https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1592750475338-74b7b21085ab?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1565849904461-04a58ad377e0?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580910051074-3eb694886571?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=400&auto=format&fit=crop"],tag:"Most Popular",tagColor:"#e11d48",category:"Electronics"},
+  {id:"e2",title:"DELL Latitude x360 7320",price:"\u03C00.004",stat:"50+ sold",image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e3",title:"MacBook Air M3 2024",price:"\u03C00.004",stat:"120+ views",image:"https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1517336714739-489689fd1ca8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1629131726692-1acfc0d42e2a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e4",title:"Smart Watch Ultra",price:"\u03C00.001",priceHigh:"0.002",stat:"1100+",image:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1546868871-af0de0ae72be?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?q=80&w=400&auto=format&fit=crop"],tag:"Most Wished",tagColor:"#7c3aed",category:"Electronics"},
+  {id:"e5",title:"Wireless Earbuds Pro",price:"\u03C00.0005",stat:"200+ sold",image:"https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1590658268037-6bf12f032f55?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1631176093617-63490a3d785a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1613040809024-b4ef7ba99bc3?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"e6",title:"4K Monitor 27\"",price:"\u03C00.002",stat:"15+ sold",image:"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585792180666-f7347c490ee2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1616763355548-1b606f439f86?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1593640408182-31c70c8268f5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=400&auto=format&fit=crop"],category:"Electronics"},
+  {id:"f1",title:"Leather Crossbody Bag",price:"\u03C00.0003",stat:"40+ sold",image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&auto=format&fit=crop"],tag:"New Releases",tagColor:"#d97706",category:"Fashion"},
+  {id:"f2",title:"Running Sneakers",price:"\u03C00.0004",stat:"85+ sold",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f3",title:"Sunglasses UV400",price:"\u03C00.0001",stat:"60+ sold",image:"https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1577803645773-f96470509666?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1509695507497-903c140c43b0?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f4",title:"Leather Belt Set",price:"\u03C00.0001",priceHigh:"0.0002",stat:"6 Pieces (MOQ)",image:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1624222247344-550fb60583dc?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1603487742131-4160ec999306?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585487000160-6ebcfceb0d44?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1608505362930-da3c8e0a43a4?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"f5",title:"Fashion T-Shirts Bundle",price:"\u03C00.00003",stat:"1 Piece (MOQ)",image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503341504253-dff4f94032fc?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=400&auto=format&fit=crop"],category:"Fashion"},
+  {id:"hg1",title:"Premium Hair Dryer Kit",price:"\u03C00.0004",stat:"New",image:"https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585747860036-4cb2f4c6ea5c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1576426863848-c21f53c60b19?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg2",title:"7-Layer Shoe Rack",price:"\u03C00.0002",stat:"Popular",image:"https://images.unsplash.com/photo-1616628182509-6f8046f8cb07?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1616628182509-6f8046f8cb07?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1558997519-83ea9252edf8?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"hg3",title:"Portable Blender",price:"\u03C00.0003",stat:"25+ sold",image:"https://images.unsplash.com/photo-1570222094114-d054a817e56b?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1570222094114-d054a817e56b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1585515320310-259814833e62?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1622480916113-9000ac49b79d?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1517142089942-ba376ce32a2e?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544148103-0773bf10d330?q=80&w=400&auto=format&fit=crop"],category:"Home & Garden"},
+  {id:"c1",title:"Mercedes-Benz GLE 350",price:"\u03C00.19",stat:"Premium",image:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1619682817481-e994891cd1f5?q=80&w=400&auto=format&fit=crop"],tag:"Movers & Shakers",tagColor:"#059669",category:"Cars"},
+  {id:"c2",title:"Toyota Camry SE 2018",price:"\u03C00.08",stat:"Clean title",image:"https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1549317661-bd32c8ce0afa?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  {id:"c3",title:"Range Rover Evoque 2019",price:"\u03C00.17",stat:"Automatic",image:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1606611013016-969c19ba27a5?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=400&auto=format&fit=crop"],category:"Cars"},
+  {id:"c4",title:"Honda Civic 2021",price:"\u03C00.09",stat:"Low mileage",image:"https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop",images:["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400&auto=format&fit=crop","https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=400&auto=format&fit=crop"],category:"Cars"}
+];
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Handle form submission with loading state and redirect
-        document.getElementById('businessForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-submit');
-            const form = e.target;
-            const formData = new FormData(form);
+var hotels = [
+  {id:"h1",name:"Serena Hotel Dar es Salaam",location:"Dar es Salaam, Tanzania",rating:4.8,pricePerNight:0.0006,image:"https://picsum.photos/seed/serena/600/400",type:"luxury"},
+  {id:"h2",name:"Hyatt Regency",location:"Nairobi, Kenya",rating:4.6,pricePerNight:0.0005,image:"https://picsum.photos/seed/hyatt/600/400",type:"luxury"},
+  {id:"h3",name:"Zanzibar Beach Resort",location:"Zanzibar, Tanzania",rating:4.9,pricePerNight:0.001,image:"https://picsum.photos/seed/zanzibar/600/400",type:"luxury"},
+  {id:"h4",name:"City Lodge Hotel",location:"Kampala, Uganda",rating:4.2,pricePerNight:0.0002,image:"https://picsum.photos/seed/citylodge/600/400",type:"standard"},
+  {id:"h5",name:"Mountain View Inn",location:"Arusha, Tanzania",rating:4.4,pricePerNight:0.0003,image:"https://picsum.photos/seed/mountainview/600/400",type:"standard"},
+  {id:"h6",name:"Pioneer Backpackers",location:"Mombasa, Kenya",rating:4.0,pricePerNight:0.00008,image:"https://picsum.photos/seed/backpack/600/400",type:"budget"}
+];
 
-            btn.textContent = 'Submitting…';
-            btn.disabled = true;
+var transportServices = [
+  {id:"tr1",icon:"\uD83D\uDE97",name:"Economy Ride",price:"0.00001-0.00003 \u03C0",desc:"Affordable everyday rides",badge:"Popular"},
+  {id:"tr2",icon:"\uD83D\uDE99",name:"Comfort Plus",price:"0.00003-0.00005 \u03C0",desc:"Spacious SUVs, premium"},
+  {id:"tr3",icon:"\uD83C\uDFCE\uFE0F",name:"Luxury",price:"0.00005-0.0001 \u03C0",desc:"Executive VIP transport",badge:"Premium"},
+  {id:"tr4",icon:"\uD83D\uDE95",name:"City Taxi",price:"0.00001-0.00003 \u03C0",desc:"Licensed metered taxis",badge:"Popular"},
+  {id:"tr5",icon:"\u2708\uFE0F\uD83D\uDE95",name:"Airport Transfer",price:"0.00003-0.00007 \u03C0",desc:"Airport pickup & drop"},
+  {id:"tr6",icon:"\uD83C\uDFCD\uFE0F",name:"Boda / Motorbike",price:"0.000003-0.00001 \u03C0",desc:"Quick motorcycle rides"},
+  {id:"tr7",icon:"\uD83D\uDEFA",name:"Tuk-Tuk",price:"0.000006-0.00002 \u03C0",desc:"Short city trips",badge:"New"},
+  {id:"tr8",icon:"\uD83D\uDCE6",name:"Express Delivery",price:"0.000006-0.00002 \u03C0",desc:"Same-day delivery",badge:"Popular"},
+  {id:"tr9",icon:"\uD83D\uDE9B",name:"Heavy Cargo",price:"0.00003-0.0001 \u03C0",desc:"Furniture & large items"}
+];
 
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            })
-            .then(function(response) {
-                if (response.ok) {
-                    window.location.href = 'submit%20success%20full.html';
-                } else {
-                    throw new Error('Submission failed');
-                }
-            })
-            .catch(function() {
-                alert('Submission failed. Please check your connection and try again.');
-                btn.textContent = 'Submit Registration';
-                btn.disabled = false;
-            });
-        });
-    </script>
-    <script>
-        function waitForPiSdk(timeout) {
-            return new Promise(function(resolve, reject) {
-                if (window.Pi) return resolve(window.Pi);
-                var elapsed = 0, interval = 120;
-                var t = setInterval(function() {
-                    if (window.Pi) { clearInterval(t); resolve(window.Pi); return; }
-                    elapsed += interval;
-                    if (elapsed >= timeout) { clearInterval(t); reject(new Error('Pi SDK did not load within ' + timeout + 'ms')); }
-                }, interval);
-            });
-        }
-        var _piInitPromise = null;
-        function usePiSandbox() {
-            return /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname);
-        }
-        function ensurePiInitialized() {
-            if (_piInitPromise) return _piInitPromise;
-            _piInitPromise = waitForPiSdk(10000).then(function() {
-                return Pi.init({ version: '2.0', sandbox: usePiSandbox() });
-            }).catch(function(e) { _piInitPromise = null; return Promise.reject(e); });
-            return _piInitPromise;
-        }
-        var isPiBrowser = /PiBrowser/i.test(navigator.userAgent) || typeof window.Pi !== 'undefined';
-        function setConnectedState(username) {
-            document.getElementById('pi-username').textContent = '@' + username;
-            document.getElementById('pi-username').style.display = 'inline';
-            document.getElementById('pi-connect-btn').textContent = 'Connected';
-            document.getElementById('pi-connect-btn').style.background = '#16a34a';
-        }
-        function restoreConnectedState() {
-            var u = sessionStorage.getItem('piUser');
-            if (u) { var user = JSON.parse(u); setConnectedState(user.username); return true; }
-            return false;
-        }
-        function piConnect(silent) {
-            if (!isPiBrowser) {
-                if (!silent) alert('Please open this app in Pi Browser to connect.');
-                return Promise.resolve(null);
-            }
-            return ensurePiInitialized().then(function() {
-                return Pi.authenticate(['username','payments'], {
-                    onIncompletePaymentFound: function(p) { console.log('Incomplete payment:', p); }
-                });
-            }).then(function(auth) {
-                setConnectedState(auth.user.username);
-                sessionStorage.setItem('piUser', JSON.stringify(auth.user));
-                return auth;
-            }).catch(function(e) { if (!silent) console.error('Pi auth error:', e); });
-        }
-        (function() {
-            if (!restoreConnectedState() && isPiBrowser) piConnect(true);
-        })();
+var billProviders = [
+  {id:"b1",name:"TANESCO",icon:"\u26A1",description:"Tanzania Electric Supply"},
+  {id:"b2",name:"DAWASCO",icon:"\uD83D\uDCA7",description:"Dar es Salaam Water"},
+  {id:"b3",name:"Vodacom",icon:"\uD83D\uDCF1",description:"Vodacom Tanzania"},
+  {id:"b4",name:"Airtel",icon:"\uD83D\uDCF1",description:"Airtel Tanzania"},
+  {id:"b5",name:"Tigo/MIC",icon:"\uD83D\uDCF1",description:"MIC Tanzania (Tigo)"},
+  {id:"b6",name:"TTCL Fiber",icon:"\uD83C\uDF10",description:"TTCL Internet"},
+  {id:"b7",name:"DSTV",icon:"\uD83D\uDCFA",description:"MultiChoice DSTV"},
+  {id:"b8",name:"Kenya Power",icon:"\u26A1",description:"Kenya Power & Lighting"}
+];
 
-        // Pi SDK — Request camera permission for business photo uploads
+var allCategories = ["All","Electronics","Fashion","Home & Garden","Cars","Hotels","Transport","Bills"];
 
-        function piRequestPermission(perm) {
-            if (isPiBrowser && Pi.requestPermission) Pi.requestPermission(perm);
-        }
-        function piShare(title, message) {
-            if (isPiBrowser && Pi.openShareDialog) Pi.openShareDialog(title, message);
-            else if (navigator.share) navigator.share({ title: title, text: message });
-        }
-        function piCopy(text) {
-            if (isPiBrowser && Pi.copyText) Pi.copyText(text);
-            else if (navigator.clipboard) navigator.clipboard.writeText(text);
-            alert('Copied: ' + text);
-        }
-        function piOpenUrl(url) {
-            if (isPiBrowser && Pi.openUrlInSystemBrowser) Pi.openUrlInSystemBrowser(url);
-            else window.open(url, '_blank');
-        }
-        function piNativeFeatures() {
-            if (isPiBrowser && Pi.nativeFeaturesList) return Pi.nativeFeaturesList();
-            return [];
-        }
-        function piChat(id) {
-            if (isPiBrowser && Pi.openConversation) Pi.openConversation(id);
-        }
-        async function piShowAd() {
-            if (!isPiBrowser || !Pi.Ads) return;
-            try { await Pi.Ads.requestAd('interstitial'); var r = await Pi.Ads.isAdReady('interstitial'); if (r) await Pi.Ads.showAd('interstitial'); } catch(e) {}
-        }
+// ── STATE ──
+var activeTab = "All";
+var search = "";
+var modalImgIdx = 0;
+var selectedProduct = null;
+var liveProducts = [];
 
-        // Auto-request camera permission when file upload is clicked
-        document.querySelectorAll('input[type="file"]').forEach(function(el) {
-            el.addEventListener('click', function() { piRequestPermission('camera'); });
-        });
-    </script>
-    <script src="clear-button.js"></script>
+// ── Fetch live products from backend ──
+(function loadLiveProducts() {
+  fetch('backend/list_products.php')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success && Array.isArray(data.products)) {
+        liveProducts = data.products;
+        render();
+      }
+    })
+    .catch(function() { /* backend offline */ });
+})();
+
+// ── HELPERS ──
+function esc(s) { if (s == null) return ""; var d = document.createElement("div"); d.textContent = String(s); return d.innerHTML; }
+function doSearch() { var input = document.getElementById('searchInput'); search = input ? input.value : ''; render(); }
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════════════════════════ */
+function render() {
+  var q = search.toLowerCase();
+  var filtered = marketProducts.filter(function(p) {
+    var matchTab = activeTab === "All" || p.category === activeTab;
+    var matchSearch = !q || p.title.toLowerCase().indexOf(q) !== -1;
+    return matchTab && matchSearch;
+  });
+  var showHotels = activeTab === "All" || activeTab === "Hotels";
+  var showTransport = activeTab === "All" || activeTab === "Transport";
+  var showBills = activeTab === "All" || activeTab === "Bills";
+
+  // Category tabs
+  var tabsHtml = '';
+  allCategories.forEach(function(tab) {
+    tabsHtml += '<button onclick="setTab(\'' + tab.replace(/'/g, "\\'") + '\')" class="' + (tab === activeTab ? 'active' : '') + '">' + esc(tab) + '</button>';
+  });
+  document.getElementById('catTabs').innerHTML = tabsHtml;
+
+  var html = '';
+
+  // ── Trending Row ──
+  if (activeTab === "All" && !search) {
+    var tagged = marketProducts.filter(function(p) { return p.tag; });
+    html += '<div class="trending-row hide-scrollbar">';
+    tagged.forEach(function(p) {
+      html += '<div class="trending-card" onclick="openModal(\'' + p.id + '\')">' +
+        '<div class="img-wrap"><img src="' + p.image + '" alt="' + esc(p.title) + '" loading="lazy">' +
+        (p.tag ? '<div class="tag" style="background:' + p.tagColor + '">' + esc(p.tag) + '</div>' : '') +
+        '</div><div class="price">' + esc(p.price) + (p.priceHigh ? '-' + esc(p.priceHigh) : '') + '</div>' +
+        '<div class="stat">' + esc(p.stat) + '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  // ── Secured Trading Service ──
+  if (activeTab === "All" && !search) {
+    html += '<div class="secured-row"><div><h3>Secured Trading Service</h3><p>Money safe \u00B7 Multiple payments \u00B7 Online support</p></div>' +
+      '<svg width="16" height="16" fill="none" stroke="#a1a1aa" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>';
+  }
+
+  // ── All Products Grid ──
+  if (filtered.length > 0) {
+    html += '<div class="section"><div class="section-title">' + (activeTab === "All" ? "All Products" : esc(activeTab)) +
+      '<span class="section-count">(' + filtered.length + ')</span></div><div class="prod-grid">';
+    filtered.forEach(function(item) {
+      html += '<div class="prod-card" onclick="openModal(\'' + item.id + '\')">' +
+        '<div class="img-box"><img src="' + item.images[0] + '" alt="' + esc(item.title) + '" loading="lazy">' +
+        '<span class="img-count">1/' + item.images.length + '</span>' +
+        (item.tag ? '<div class="tag-overlay" style="background:' + item.tagColor + '">' + esc(item.tag) + '</div>' : '') +
+        '</div><div class="info"><div class="name">' + esc(item.title) + '</div>' +
+        '<div class="price">' + esc(item.price) + (item.priceHigh ? '-' + esc(item.priceHigh) : '') + '</div>' +
+        (item.stat ? '<div class="meta">' + esc(item.stat) + '</div>' : '') +
+        '</div></div>';
+    });
+    html += '</div></div>';
+  }
+
+  // ── Live Products from Backend ──
+  if (liveProducts.length > 0) {
+    var fLive = liveProducts.filter(function(p) {
+      var matchTab = activeTab === 'All' || p.category === activeTab;
+      var matchSearch = !q || p.name.toLowerCase().indexOf(q) !== -1;
+      return matchTab && matchSearch;
+    });
+    if (fLive.length > 0) {
+      html += '<div class="section"><div style="display:flex;align-items:center;justify-content:space-between">' +
+        '<div class="section-title">\uD83C\uDF1F Pioneer Listings <span class="section-count">(' + fLive.length + ')</span></div>' +
+        '<span style="background:#d1fae5;color:#065f46;font-size:.6rem;font-weight:700;padding:3px 10px;border-radius:12px">LIVE</span></div>' +
+        '<div class="prod-grid">';
+      fLive.forEach(function(item) {
+        var imgSrc = item.image1 ? (item.image1.indexOf('http') === 0 ? item.image1 : 'backend/' + item.image1) : 'https://via.placeholder.com/400x300?text=No+Image';
+        var imgCount = [item.image1,item.image2,item.image3,item.image4,item.image5,item.image6].filter(Boolean).length;
+        html += '<div class="prod-card" onclick="openLiveModal(' + item.id + ')">' +
+          '<div class="img-box"><img src="' + imgSrc + '" alt="' + esc(item.name) + '" loading="lazy">' +
+          '<span class="img-count">' + imgCount + ' pic' + (imgCount !== 1 ? 's' : '') + '</span>' +
+          (item.condition ? '<span class="condition-tag">' + esc(item.condition) + '</span>' : '') +
+          '</div><div class="info"><div class="name">' + esc(item.name) + '</div>' +
+          '<div class="price">\u03C0' + esc(item.price) + '</div>' +
+          '<div class="meta">' + esc(item.category) + ' \u00B7 ' + esc(item.seller_name || 'Pioneer') + '</div>' +
+          '</div></div>';
+      });
+      html += '</div></div>';
+    }
+  }
+
+  // ── Hotels ──
+  if (showHotels) {
+    var fHotels = hotels.filter(function(h) { return !q || h.name.toLowerCase().indexOf(q) !== -1 || h.location.toLowerCase().indexOf(q) !== -1; });
+    if (fHotels.length > 0) {
+      html += '<div class="section"><div class="section-title">\uD83C\uDFE8 Hotels <span class="section-count">(' + fHotels.length + ')</span></div>' +
+        '<div class="h-scroll hide-scrollbar" style="margin-top:8px">';
+      fHotels.forEach(function(h) {
+        html += '<div class="h-card"><div class="h-img"><img src="' + h.image + '" alt="' + esc(h.name) + '" loading="lazy">' +
+          '<span class="badge-overlay" style="left:6px;top:6px;background:rgba(0,0,0,.6);color:#fff;text-transform:capitalize">' + esc(h.type) + '</span>' +
+          '<span class="badge-overlay" style="right:6px;top:6px;background:#f59e0b;color:#000">\u2605 ' + h.rating + '</span>' +
+          '</div><div class="h-body"><div class="h-name">' + esc(h.name) + '</div>' +
+          '<div class="h-loc">\uD83D\uDCCD ' + esc(h.location) + '</div>' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">' +
+          '<span class="h-price">' + h.pricePerNight + ' \u03C0</span>' +
+          '<span style="background:#f97316;color:#fff;padding:3px 10px;border-radius:6px;font-size:.68rem;font-weight:700;cursor:pointer">Book</span>' +
+          '</div></div></div>';
+      });
+      html += '</div></div>';
+    }
+  }
+
+  // ── Transport & Delivery ──
+  if (showTransport) {
+    html += '<div class="section"><div class="section-title">\uD83D\uDE97 Transport & Delivery</div><div class="trans-grid">';
+    transportServices.forEach(function(s) {
+      var badgeBg = s.badge === 'Popular' ? '#fef3c7;color:#92400e' : s.badge === 'Premium' ? '#ede9fe;color:#6d28d9' : '#d1fae5;color:#065f46';
+      html += '<div class="trans-card"><div class="icon-row"><span class="icon">' + s.icon + '</span>' +
+        (s.badge ? '<span class="t-badge" style="background:' + badgeBg + '">' + esc(s.badge) + '</span>' : '') +
+        '</div><div class="t-name">' + esc(s.name) + '</div><div class="t-desc">' + esc(s.desc) + '</div><div class="t-price">' + esc(s.price) + '</div></div>';
+    });
+    html += '</div></div>';
+  }
+
+  // ── Bills ──
+  if (showBills) {
+    var fBills = billProviders.filter(function(b) { return !q || b.name.toLowerCase().indexOf(q) !== -1; });
+    if (fBills.length > 0) {
+      html += '<div class="section"><div class="section-title">\uD83D\uDCB3 Pay Bills <span class="section-count">(' + fBills.length + ')</span></div><div class="prod-grid">';
+      fBills.forEach(function(b) {
+        html += '<div class="bill-card"><span class="b-icon">' + b.icon + '</span><div><div class="b-name">' + esc(b.name) + '</div><div class="b-desc">' + esc(b.description) + '</div></div></div>';
+      });
+      html += '</div></div>';
+    }
+  }
+
+  // ── Single Purchase Ease ──
+  if (activeTab === "All" && !search) {
+    html += '<div class="ease-section"><div class="ease-text"><h2>Single Purchase Ease</h2><ul>' +
+      '<li><svg width="14" height="14" fill="#22c55e" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Bulk Flexibility</li>' +
+      '<li><svg width="14" height="14" fill="#22c55e" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Certified Sellers</li>' +
+      '<li><svg width="14" height="14" fill="#22c55e" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Secure Pi Trading</li>' +
+      '</ul></div><div class="ease-img"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=400&auto=format&fit=crop" alt="Secure" loading="lazy"></div></div>';
+  }
+
+  // ── Sell CTA ──
+  html += '<div class="sell-cta"><div class="glow1"></div><div class="glow2"></div>' +
+    '<div style="position:relative;z-index:1">' +
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="display:flex;width:32px;height:32px;align-items:center;justify-content:center;background:rgba(255,255,255,.1);border-radius:8px;font-size:1rem">\uD83D\uDCB0</span>' +
+    '<span style="background:rgba(255,255,255,.1);padding:3px 10px;border-radius:12px;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px">Pi Commerce</span></div>' +
+    '<h2>Sell Your Product for Pi</h2>' +
+    '<p>Post your item, chat with buyers, and accept Pi cryptocurrency securely through our marketplace.</p>' +
+    '<div class="btns"><a href="Submit.html" class="btn-sell">\uD83D\uDE80 Sell Now</a><a href="form.html?redirect=Submit.html" class="btn-verify">Get Verified</a></div>' +
+    '</div></div>';
+
+  html += '<div style="height:16px"></div>';
+  document.getElementById('app').innerHTML = html;
+
+  // Re-bind search
+  var si = document.getElementById('searchInput');
+  if (si) {
+    si.value = search;
+    si.addEventListener('input', function() { search = this.value; render(); });
+  }
+}
+
+function setTab(tab) { activeTab = tab; render(); }
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL — Static products
+   ══════════════════════════════════════════════════════════════ */
+function openModal(id) {
+  selectedProduct = marketProducts.find(function(p) { return p.id === id; });
+  if (!selectedProduct) return;
+  modalImgIdx = 0;
+  renderModal();
+  document.getElementById('modal-bg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+  document.body.style.overflow = '';
+  selectedProduct = null;
+}
+function setModalImg(i) { modalImgIdx = i; renderModal(); }
+function nextModalImg() { if (!selectedProduct) return; modalImgIdx = (modalImgIdx + 1) % selectedProduct.images.length; renderModal(); }
+function prevModalImg() { if (!selectedProduct) return; modalImgIdx = (modalImgIdx - 1 + selectedProduct.images.length) % selectedProduct.images.length; renderModal(); }
+
+function renderModal() {
+  var p = selectedProduct;
+  if (!p) return;
+  var imgs = p.images;
+  var h = '';
+  h += '<button class="close-btn" onclick="closeModal()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>';
+  h += '<div class="carousel"><img src="' + imgs[modalImgIdx] + '" alt="' + esc(p.title) + '">';
+  h += '<button class="nav-arrow left" onclick="event.stopPropagation();prevModalImg()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>';
+  h += '<button class="nav-arrow right" onclick="event.stopPropagation();nextModalImg()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>';
+  h += '<span style="position:absolute;right:12px;top:12px;background:rgba(0,0,0,.5);color:#fff;padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:700">' + (modalImgIdx + 1) + '/' + imgs.length + '</span></div>';
+  h += '<div class="thumbs hide-scrollbar">';
+  imgs.forEach(function(src, i) {
+    h += '<button onclick="event.stopPropagation();setModalImg(' + i + ')" class="' + (i === modalImgIdx ? 'active' : '') + '"><img src="' + src + '" alt="Thumb"></button>';
+  });
+  h += '</div>';
+  h += '<div class="detail">';
+  if (p.tag) h += '<span class="badge" style="background:#fff7ed;color:#c2410c">' + esc(p.tag) + '</span>';
+  h += '<span class="badge" style="background:#f3f4f6;color:#374151">' + esc(p.category) + '</span>';
+  h += '<h2>' + esc(p.title) + '</h2>';
+  h += '<div class="seller">' + esc(p.category) + ' \u00B7 ' + esc(p.stat) + '</div>';
+  h += '<div class="price-row"><span class="price">' + esc(p.price) + '</span>';
+  if (p.priceHigh) h += '<span style="color:#a1a1aa;font-size:.88rem"> \u2013 ' + esc(p.priceHigh) + '</span>';
+  h += '<span style="color:#a1a1aa;font-size:.72rem;margin-left:4px">GCV</span></div>';
+  h += '<div class="trust-grid"><div><div class="t-label">Pi Secured</div><div class="t-sub">Safe Trade</div></div><div><div class="t-label">Verified</div><div class="t-sub">Seller</div></div><div><div class="t-label">Global</div><div class="t-sub">Shipping</div></div></div>';
+  h += '<div class="action-btns"><button class="buy-btn">\u03C0 Buy Now (' + esc(p.price) + ')</button><button class="msg-btn">Add to Cart</button></div>';
+  h += '</div>';
+  document.getElementById('modal-content').innerHTML = h;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL — Live products from backend
+   ══════════════════════════════════════════════════════════════ */
+function openLiveModal(id) {
+  var p = liveProducts.find(function(x) { return x.id == id; });
+  if (!p) return;
+  var imgs = [p.image1, p.image2, p.image3, p.image4, p.image5, p.image6].filter(Boolean).map(function(src) {
+    return src.indexOf('http') === 0 ? src : 'backend/' + src;
+  });
+  if (imgs.length === 0) imgs = ['https://via.placeholder.com/600x400?text=No+Image'];
+  var h = '';
+  h += '<button class="close-btn" onclick="closeModal()"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>';
+  h += '<div class="carousel"><img id="live-img" src="' + imgs[0] + '" alt="' + esc(p.name) + '">';
+  h += '<span style="position:absolute;right:12px;top:12px;background:rgba(0,0,0,.5);color:#fff;padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:700">1/' + imgs.length + '</span></div>';
+  if (imgs.length > 1) {
+    h += '<div class="thumbs hide-scrollbar">';
+    imgs.forEach(function(src, i) {
+      h += '<button onclick="event.stopPropagation();document.getElementById(\'live-img\').src=\'' + src + '\'" class="' + (i === 0 ? 'active' : '') + '"><img src="' + src + '" alt="Thumb"></button>';
+    });
+    h += '</div>';
+  }
+  h += '<div class="detail">';
+  if (p.condition) h += '<span class="badge" style="background:#d1fae5;color:#065f46">' + esc(p.condition) + '</span>';
+  h += '<span class="badge" style="background:#ede9fe;color:#6d28d9">' + esc(p.category) + '</span>';
+  h += '<h2>' + esc(p.name) + '</h2>';
+  h += '<div class="seller">by ' + esc(p.seller_name || 'Pioneer') + '</div>';
+  h += '<div class="price-row"><span class="price">\u03C0' + esc(p.price) + '</span><span style="color:#a1a1aa;font-size:.72rem;margin-left:6px">Pi</span></div>';
+  if (p.description) h += '<div class="desc">' + esc(p.description) + '</div>';
+  h += '<div class="trust-grid"><div><div class="t-label">Pi Secured</div><div class="t-sub">Safe Trade</div></div><div><div class="t-label">KYC Verified</div><div class="t-sub">Seller</div></div><div><div class="t-label">Escrow</div><div class="t-sub">Protected</div></div></div>';
+  h += '<div class="action-btns"><button class="buy-btn">\u03C0 Buy Now</button><button class="msg-btn">Message Seller</button></div>';
+  h += '</div>';
+  document.getElementById('modal-content').innerHTML = h;
+  document.getElementById('modal-bg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// Keyboard
+document.addEventListener('keydown', function(e) {
+  if (!selectedProduct) return;
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'ArrowLeft') prevModalImg();
+  if (e.key === 'ArrowRight') nextModalImg();
+});
+
+/* ── Pi SDK Integration ── */
+var isPiBrowser = /PiBrowser/i.test(navigator.userAgent) || typeof window.Pi !== 'undefined';
+function setConnectedState(username) {
+  var el = document.getElementById('pi-handle');
+  if (el) el.textContent = '@' + username;
+  var el2 = document.getElementById('pi-username-display');
+  if (el2) el2.textContent = '@' + username;
+}
+function restoreConnectedState() {
+  var u = sessionStorage.getItem('piUser');
+  if (u) { var user = JSON.parse(u); setConnectedState(user.username); return true; }
+  return false;
+}
+(function() {
+  if (!restoreConnectedState() && isPiBrowser && window.Pi) {
+    try {
+      Pi.init({ version: '2.0', sandbox: /^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname) });
+      Pi.authenticate(['username','payments'], {
+        onIncompletePaymentFound: function() {}
+      }).then(function(auth) {
+        setConnectedState(auth.user.username);
+        sessionStorage.setItem('piUser', JSON.stringify(auth.user));
+      }).catch(function() {});
+    } catch(e) {}
+  }
+})();
+
+// ── INIT ──
+render();
+</script>
+<script src="clear-button.js"></script>
 </body>
 </html>
-</html>
-<script>
-// Attach event listeners to all Buy buttons
-document.querySelectorAll('.buy-btn').forEach(function(btn, idx) {
-    btn.addEventListener('click', function() {
-        // Example product data, replace with real data as needed
-        const product = {
-            name: 'Product ' + (idx + 1),
-            price_pi: 10 + idx * 5,
-            seller_username: 'demo_seller',
-            category: 'NIB',
-            description: 'Auto-purchase from NIB.html',
-            images: 'product' + (idx + 1) + '.jpg',
-        };
-        // Optionally trigger Pi payment here (if Pi SDK is available)
-        if (window.Pi && typeof Pi.createPayment === 'function') {
-            Pi.createPayment({
-                amount: product.price_pi,
-                memo: 'Buy ' + product.name,
-                metadata: product
-            }, {
-                onReadyForServerApproval: function(paymentId) {},
-                onReadyForServerCompletion: function(paymentId, txid) {
-                    // Post purchase to backend after payment
-                    fetch('backend/add_product.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(product)
-                    });
-                    alert('Purchase complete! TxID: ' + txid);
-                },
-                onCancel: function(paymentId) { alert('Payment cancelled.'); },
-                onError: function(error) { alert('Payment error: ' + error); }
-            });
-        } else {
-            // Fallback: just post to backend
-            fetch('backend/add_product.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(product)
-            }).then(() => alert('Purchase recorded (no Pi payment).'));
-        }
-    });
-});
-</script>
